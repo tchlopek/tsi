@@ -1,13 +1,15 @@
 project(
     'cpprange',
     'cpp',
-    default_options : [
-    'buildtype=debug',
-    'cpp_std=c++11'
+    default_options: [
+        'buildtype=debug',
+        'cpp_std=c++11',
 ])
 
 cmake = import('cmake')
-gtest = cmake.subproject('googletest')
+cmake_opt = cmake.subproject_options()
+cmake_opt.add_cmake_defines({'INSTALL_GTEST': false})
+gtest = cmake.subproject('googletest', options: cmake_opt)
 
 ut_deps = [
     gtest.dependency('gtest'),
