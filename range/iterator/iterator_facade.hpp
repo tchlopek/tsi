@@ -27,7 +27,7 @@ protected:
 public:
     using iterator_category = std::forward_iterator_tag;
     using value_type = typename std::iterator_traits<inner_iterator>::value_type;
-    using difference_type = typename std::iterator_traits<inner_iterator>::value_type;
+    using difference_type = typename std::iterator_traits<inner_iterator>::difference_type;
     using pointer = typename std::iterator_traits<inner_iterator>::pointer;
     using reference = typename std::iterator_traits<inner_iterator>::reference;
 
