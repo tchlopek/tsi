@@ -4,8 +4,8 @@ namespace cppiter::range {
 
 template<typename Iterator>
 struct range_types_facade {
-    using value_type = typename Iterator::value_type;
-    using reference = typename Iterator::reference;
+    using value_type = typename std::iterator_traits<Iterator>::value_type;
+    using reference = typename std::iterator_traits<Iterator>::reference;
     using iterator = Iterator;
     using const_iterator = Iterator;
 };
