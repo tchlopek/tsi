@@ -22,3 +22,8 @@ template<typename R, typename P>
 filter_range<R, P> filter(R& range, P pred) {
     return { range, pred };
 }
+
+template<typename R, typename P>
+filter_range<const R, P> filter(const R& range, P pred) {
+    return { range, pred };
+}
