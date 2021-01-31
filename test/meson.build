@@ -1,6 +1,7 @@
 src_test = [
     'main.cpp',
-    'filter_iterator_test.cpp'
+    'filter_range_test.cpp',
+    'reverse_range_test.cpp'
 ]
 
 ut_bin = executable(
