@@ -1,14 +1,14 @@
 #pragma once
 
 #include "range_facade.hpp"
-#include "range_traits.hpp"
+#include "range_iterator.hpp"
 
 namespace cppiter::range {
 
 template<typename R>
 class identity_range :
-    public range_facade<typename detail::range_traits<R>::iterator> {
-    using BaseRange = range_facade<typename detail::range_traits<R>::iterator>;
+    public range_facade<detail::range_iterator_t<R>> {
+    using BaseRange = range_facade<detail::range_iterator_t<R>>;
 
 public:
     explicit identity_range(R& range) :
