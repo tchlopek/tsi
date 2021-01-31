@@ -1,6 +1,8 @@
 #pragma once
 #include <iterator>
 
+namespace cppiter::range::iter {
+
 namespace detail {
 
 template<typename IteratorWrapper>
@@ -129,3 +131,5 @@ class iterator_facade :
     DerivedIterator& derived() = delete;
     const DerivedIterator& derived() const = delete;
 };
+
+}

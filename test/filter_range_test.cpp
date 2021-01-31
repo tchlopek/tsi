@@ -5,18 +5,15 @@
 #include <list>
 #include <forward_list>
 
-#include <filter_range.hpp>
+#include <iter.hpp>
 
 using namespace testing;
+using cppiter::iter;
 
 namespace {
 
 bool odd(int e) {
     return e % 2 == 1;
-}
-
-bool divisibleBy3(int e) {
-    return e % 3 == 0;
 }
 
 }
@@ -27,9 +24,5 @@ public:
 };
 
 TEST_F(FilterRangeForRandomAccessTest, FilteredNumbersAreOdd) {
-    ASSERT_THAT(filter(v, odd), ElementsAre(1, 3, 5, 7, 9));
-}
-
-TEST_F(FilterRangeForRandomAccessTest, FilterDivisibleBy3AfterFilterOdd) {
-    ASSERT_THAT(filter(filter(v, odd), divisibleBy3), ElementsAre(3, 9));
+    ASSERT_THAT(iter(v).filter(odd), ElementsAre(1, 3, 5, 7, 9));
 }

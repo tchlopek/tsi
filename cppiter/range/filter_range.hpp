@@ -5,9 +5,14 @@
 
 #include "iterator/filter_iterator.hpp"
 
+namespace cppiter::range {
+
 template<typename R, typename P>
-class filter_range : public range_facade<filter_iterator<typename range_traits<R>::iterator, P>> {
-    using BaseRange = range_facade<filter_iterator<typename range_traits<R>::iterator, P>>;
+class filter_range :
+    public range_facade<
+        iter::filter_iterator<typename detail::range_traits<R>::iterator, P>> {
+    using BaseRange = range_facade<
+        iter::filter_iterator<typename detail::range_traits<R>::iterator, P>>;
 
 public:
     filter_range(R& range, P pred) :
@@ -26,4 +31,6 @@ filter_range<R, P> filter(R& range, P pred) {
 template<typename R, typename P>
 filter_range<const R, P> filter(const R& range, P pred) {
     return { range, pred };
+}
+
 }

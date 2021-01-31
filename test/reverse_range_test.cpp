@@ -5,9 +5,10 @@
 #include <list>
 #include <forward_list>
 
-#include <reverse_range.hpp>
+#include <iter.hpp>
 
 using namespace testing;
+using cppiter::iter;
 
 class ReverseRangeForRandomAccessTest : public Test {
 public:
@@ -15,9 +16,9 @@ public:
 };
 
 TEST_F(ReverseRangeForRandomAccessTest, ReversedRangeHasOppositeOrderOfElements) {
-    ASSERT_THAT(reverse(v), ElementsAre(5, 4, 3, 2, 1));
+    ASSERT_THAT(iter(v).reverse(), ElementsAre(5, 4, 3, 2, 1));
 }
 
 TEST_F(ReverseRangeForRandomAccessTest, DoublyReversedRangeHasSameOrderOfElements) {
-    ASSERT_THAT(reverse(reverse(v)), ElementsAreArray(v));
+    ASSERT_THAT(iter(v).reverse().reverse(), ElementsAreArray(v));
 }

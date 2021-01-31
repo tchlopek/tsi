@@ -2,6 +2,8 @@
 
 #include "iterator_facade.hpp"
 
+namespace cppiter::range::iter {
+
 template<typename BaseIter, typename Pred>
 class filter_iterator : public iterator_facade<filter_iterator<BaseIter, Pred>> {
     using BaseType = iterator_facade<filter_iterator<BaseIter, Pred>>;
@@ -42,3 +44,5 @@ private:
     BaseIter end;
     Pred predicate;
 };
+
+}
