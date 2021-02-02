@@ -16,22 +16,36 @@ struct inner_iterator<IteratorWrapper<InnerIterator, Ts...>> {
 template<typename IteratorWrapper>
 using inner_iterator_t = typename inner_iterator<IteratorWrapper>::type;
 
+template<typename ExternalTraits, typename DefaultTraits>
+struct conditional_iterator_traits {
+    using type = std::iterator_traits<
+        typename std::conditional<
+            std::is_same<ExternalTraits, void>::value,
+            DefaultTraits,
+            ExternalTraits>::type>;
+};
+
+template<typename ExternalTraits, typename DefaultTraits>
+using conditional_iterator_traits_t = typename conditional_iterator_traits<
+    ExternalTraits,
+    DefaultTraits>::type;
+
 }
 
-template<typename DerivedIterator, typename Category>
+template<typename DerivedIterator, typename Traits, typename Category>
 class iterator_facade_impl;
 
-template<typename DerivedIterator>
-class iterator_facade_impl<DerivedIterator, std::forward_iterator_tag> {
-protected:
-    using inner_iterator = detail::inner_iterator_t<DerivedIterator>;
+template<typename DerivedIterator, typename Traits>
+class iterator_facade_impl<DerivedIterator, Traits, std::forward_iterator_tag> {
+    using InnerIterator = detail::inner_iterator_t<DerivedIterator>;
+    using IteratorTraits = detail::conditional_iterator_traits_t<Traits, InnerIterator>;
 
 public:
     using iterator_category = std::forward_iterator_tag;
-    using value_type = typename std::iterator_traits<inner_iterator>::value_type;
-    using difference_type = typename std::iterator_traits<inner_iterator>::difference_type;
-    using pointer = typename std::iterator_traits<inner_iterator>::pointer;
-    using reference = typename std::iterator_traits<inner_iterator>::reference;
+    using value_type = typename IteratorTraits::value_type;
+    using difference_type = typename IteratorTraits::difference_type;
+    using pointer = typename IteratorTraits::pointer;
+    using reference = typename IteratorTraits::reference;
 
     reference operator*() {
         return derived().dereference();
@@ -65,12 +79,12 @@ public:
     }
 };
 
-template<typename DerivedIterator>
-class iterator_facade_impl<DerivedIterator, std::bidirectional_iterator_tag> :
-    public iterator_facade_impl<DerivedIterator, std::forward_iterator_tag> {
+template<typename DerivedIterator, typename Traits>
+class iterator_facade_impl<DerivedIterator, Traits, std::bidirectional_iterator_tag> :
+    public iterator_facade_impl<DerivedIterator, Traits, std::forward_iterator_tag> {
 
 protected:
-    using iterator_facade_impl<DerivedIterator, std::forward_iterator_tag>::derived;
+    using iterator_facade_impl<DerivedIterator, Traits, std::forward_iterator_tag>::derived;
 
 public:
     using iterator_category = std::bidirectional_iterator_tag;
@@ -87,10 +101,10 @@ public:
     }
 };
 
-template<typename DerivedIterator>
-class iterator_facade_impl<DerivedIterator, std::random_access_iterator_tag> :
-    public iterator_facade_impl<DerivedIterator, std::bidirectional_iterator_tag> {
-    using Base = iterator_facade_impl<DerivedIterator, std::bidirectional_iterator_tag>;
+template<typename DerivedIterator, typename Traits>
+class iterator_facade_impl<DerivedIterator, Traits, std::random_access_iterator_tag> :
+    public iterator_facade_impl<DerivedIterator, Traits, std::bidirectional_iterator_tag> {
+    using Base = iterator_facade_impl<DerivedIterator, Traits, std::bidirectional_iterator_tag>;
     using Base::derived;
 
 public:
@@ -123,11 +137,14 @@ public:
     }
 };
 
-template<typename DerivedIterator>
+template<typename DerivedIterator, typename Traits = void>
 class iterator_facade :
     public iterator_facade_impl<
         DerivedIterator,
-        typename std::iterator_traits<detail::inner_iterator_t<DerivedIterator>>::iterator_category> {
+        Traits,
+        typename detail::conditional_iterator_traits_t<
+            Traits,
+            detail::inner_iterator_t<DerivedIterator>>::iterator_category> {
     DerivedIterator& derived() = delete;
     const DerivedIterator& derived() const = delete;
 };

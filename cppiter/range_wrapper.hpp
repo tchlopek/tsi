@@ -3,6 +3,7 @@
 #include "range/range_facade.hpp"
 #include "range/filter_range.hpp"
 #include "range/reverse_range.hpp"
+#include "range/map_range.hpp"
 
 namespace cppiter {
 
@@ -28,6 +29,11 @@ public:
 
     range_wrapper<range::reverse_range<R>> reverse() {
         return range_wrapper<range::reverse_range<R>>{ range::reverse(r) };
+    }
+
+    template<typename F>
+    range_wrapper<range::map_range<R, F>> map(F func) {
+        return range_wrapper<range::map_range<R, F>>{ range::map(r, func) };
     }
 
 private:
