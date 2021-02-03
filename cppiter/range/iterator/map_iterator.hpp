@@ -45,6 +45,14 @@ public:
         return func(*begin);
     }
 
+    void advance(typename BaseType::difference_type n) {
+        begin += n;
+    }
+
+    typename BaseType::difference_type distance_to(const map_iterator& other) const {
+        return begin - other.begin;
+    }
+
 private:
     BaseIter begin;
     Func func;

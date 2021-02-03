@@ -34,6 +34,24 @@ public:
         return *begin;
     }
 
+    typename BaseType::difference_type distance_to(const filter_iterator& other) const {
+        auto tmp = *this;
+        const auto sz = std::distance(tmp.begin, other.begin);
+        typename BaseType::difference_type distance = 0;
+        if (sz > 0) {
+            while (tmp.begin != other.begin) {
+                tmp.increment();
+                --distance;
+            }
+        } else if (sz < 0) {
+            while (tmp.begin != other.begin) {
+                tmp.decrement();
+                ++distance;
+            }
+        }
+        return distance;
+    }
+
 private:
     void align_position() {
         while (begin != end && !predicate(dereference()))
