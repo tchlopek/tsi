@@ -1,29 +1,8 @@
 #pragma once
-#include <iterator>
+
+#include "iterator_helper.hpp"
 
 namespace cppiter::range::iter {
-
-namespace detail {
-
-template<typename IteratorWrapper>
-struct inner_iterator;
-
-template<template<typename...> class IteratorWrapper, typename InnerIterator, typename... Ts>
-struct inner_iterator<IteratorWrapper<InnerIterator, Ts...>> {
-    using type = InnerIterator;
-};
-
-template<typename IteratorWrapper>
-using inner_iterator_t = typename inner_iterator<IteratorWrapper>::type;
-
-template<typename ExternalTraits, typename DefaultTraits>
-using conditional_iterator_traits_t = std::iterator_traits<
-    typename std::conditional_t<
-        std::is_same_v<ExternalTraits, void>,
-        DefaultTraits,
-        ExternalTraits>>;
-
-}
 
 template<typename DerivedIterator, typename Traits, typename Category>
 class iterator_facade_impl;

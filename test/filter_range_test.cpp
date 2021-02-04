@@ -26,9 +26,3 @@ public:
 TEST_F(FilterRangeForRandomAccessTest, FilteredNumbersAreOdd) {
     ASSERT_THAT(iter(v).filter(odd), ElementsAre(1, 3, 5, 7, 9));
 }
-
-TEST_F(FilterRangeForRandomAccessTest, FilterIteratorDistanceTest) {
-    auto fr = iter(v).filter(odd);
-    ASSERT_EQ(std::distance(fr.begin(), fr.end()), 5);
-    ASSERT_EQ(std::distance(fr.end(), fr.begin()), -5);
-}

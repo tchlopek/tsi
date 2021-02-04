@@ -4,9 +4,28 @@
 
 namespace cppiter::range::iter {
 
+namespace detail {
+
+template<typename Base>
+struct filter_iterator_traits {
+    using iterator_category = min_iterator_category_t<
+        typename std::iterator_traits<Base>::iterator_category,
+        std::bidirectional_iterator_tag>;
+    using reference = typename std::iterator_traits<Base>::reference;
+    using difference_type = typename std::iterator_traits<Base>::difference_type;
+    using value_type = typename std::iterator_traits<Base>::value_type;
+    using pointer = typename std::iterator_traits<Base>::pointer;
+};
+
+}
+
 template<typename BaseIter, typename Pred>
-class filter_iterator : public iterator_facade<filter_iterator<BaseIter, Pred>> {
-    using BaseType = iterator_facade<filter_iterator<BaseIter, Pred>>;
+class filter_iterator : public iterator_facade<
+    filter_iterator<BaseIter, Pred>,
+    detail::filter_iterator_traits<BaseIter>> {
+    using BaseType = iterator_facade<
+        filter_iterator<BaseIter, Pred>,
+        detail::filter_iterator_traits<BaseIter>>;
 
 public:
     filter_iterator(BaseIter begin, BaseIter end, Pred pred) :
@@ -32,24 +51,6 @@ public:
 
     typename BaseType::reference dereference() {
         return *begin;
-    }
-
-    typename BaseType::difference_type distance_to(const filter_iterator& other) const {
-        auto tmp = *this;
-        const auto sz = std::distance(tmp.begin, other.begin);
-        typename BaseType::difference_type distance = 0;
-        if (sz > 0) {
-            while (tmp.begin != other.begin) {
-                tmp.increment();
-                --distance;
-            }
-        } else if (sz < 0) {
-            while (tmp.begin != other.begin) {
-                tmp.decrement();
-                ++distance;
-            }
-        }
-        return distance;
     }
 
 private:
