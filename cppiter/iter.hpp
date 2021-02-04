@@ -8,12 +8,12 @@ namespace cppiter {
 
 template<typename R>
 range_wrapper<range::identity_range<R>> iter(R& r) {
-    return range_wrapper<range::identity_range<R>>{ range::identity(r) };
+    return range_wrapper{ range::identity(r) };
 }
 
 template<typename R>
 range_wrapper<range::identity_range<const R>> iter(const R& r) {
-    return range_wrapper<range::identity_range<const R>>{ range::identity(r) };
+    return range_wrapper{ range::identity(r) };
 }
 
 }

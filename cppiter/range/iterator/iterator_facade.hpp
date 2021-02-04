@@ -17,18 +17,11 @@ template<typename IteratorWrapper>
 using inner_iterator_t = typename inner_iterator<IteratorWrapper>::type;
 
 template<typename ExternalTraits, typename DefaultTraits>
-struct conditional_iterator_traits {
-    using type = std::iterator_traits<
-        typename std::conditional<
-            std::is_same<ExternalTraits, void>::value,
-            DefaultTraits,
-            ExternalTraits>::type>;
-};
-
-template<typename ExternalTraits, typename DefaultTraits>
-using conditional_iterator_traits_t = typename conditional_iterator_traits<
-    ExternalTraits,
-    DefaultTraits>::type;
+using conditional_iterator_traits_t = std::iterator_traits<
+    typename std::conditional_t<
+        std::is_same_v<ExternalTraits, void>,
+        DefaultTraits,
+        ExternalTraits>>;
 
 }
 

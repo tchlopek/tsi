@@ -16,7 +16,7 @@ struct range_iterator<const Range> {
 
 template<typename Value, std::size_t Size>
 struct range_iterator<Value[Size]> {
-    using type = typename std::decay<Value[Size]>::type;
+    using type = std::decay_t<Value[Size]>;
 };
 
 template<typename Range>
