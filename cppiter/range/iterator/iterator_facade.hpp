@@ -4,13 +4,29 @@
 
 namespace cppiter::range::iter {
 
+template<typename DerivedIterator>
+class iterator_facade_impl_base {
+public:
+    DerivedIterator& derived() {
+        return *static_cast<DerivedIterator*>(this);
+    }
+
+    const DerivedIterator& derived() const {
+        return *static_cast<const DerivedIterator*>(this);
+    }
+};
+
 template<typename DerivedIterator, typename Traits, typename Category>
 class iterator_facade_impl;
 
 template<typename DerivedIterator, typename Traits>
-class iterator_facade_impl<DerivedIterator, Traits, std::forward_iterator_tag> {
+class iterator_facade_impl<DerivedIterator, Traits, std::forward_iterator_tag> :
+    public iterator_facade_impl_base<DerivedIterator> {
     using InnerIterator = detail::inner_iterator_t<DerivedIterator>;
     using IteratorTraits = detail::conditional_iterator_traits_t<Traits, InnerIterator>;
+
+protected:
+    using iterator_facade_impl_base<DerivedIterator>::derived;
 
 public:
     using iterator_category = std::forward_iterator_tag;
@@ -41,14 +57,6 @@ public:
     bool operator!=(const DerivedIterator& other) const {
         return !derived().equal(other);
     }
-
-    DerivedIterator& derived() {
-        return *static_cast<DerivedIterator*>(this);
-    }
-
-    const DerivedIterator& derived() const {
-        return *static_cast<const DerivedIterator*>(this);
-    }
 };
 
 template<typename DerivedIterator, typename Traits>
@@ -77,6 +85,8 @@ template<typename DerivedIterator, typename Traits>
 class iterator_facade_impl<DerivedIterator, Traits, std::random_access_iterator_tag> :
     public iterator_facade_impl<DerivedIterator, Traits, std::bidirectional_iterator_tag> {
     using Base = iterator_facade_impl<DerivedIterator, Traits, std::bidirectional_iterator_tag>;
+
+protected:
     using Base::derived;
 
 public:
