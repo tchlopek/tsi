@@ -4,9 +4,18 @@
 
 namespace cppiter::range::iter {
 
-template<typename DerivedIterator>
+template<typename DerivedIterator, typename Traits>
 class iterator_facade_impl_base {
+    using InnerIterator = detail::inner_iterator_t<DerivedIterator>;
+    using IteratorTraits = detail::conditional_iterator_traits_t<Traits, InnerIterator>; 
+
 public:
+    using iterator_category = std::forward_iterator_tag;
+    using value_type = typename IteratorTraits::value_type;
+    using difference_type = typename IteratorTraits::difference_type;
+    using pointer = typename IteratorTraits::pointer;
+    using reference = typename IteratorTraits::reference;
+
     DerivedIterator& derived() {
         return *static_cast<DerivedIterator*>(this);
     }
@@ -21,21 +30,14 @@ class iterator_facade_impl;
 
 template<typename DerivedIterator, typename Traits>
 class iterator_facade_impl<DerivedIterator, Traits, std::forward_iterator_tag> :
-    public iterator_facade_impl_base<DerivedIterator> {
-    using InnerIterator = detail::inner_iterator_t<DerivedIterator>;
-    using IteratorTraits = detail::conditional_iterator_traits_t<Traits, InnerIterator>;
+    public iterator_facade_impl_base<DerivedIterator, Traits> {
+    using Base = iterator_facade_impl_base<DerivedIterator, Traits>;
 
 protected:
-    using iterator_facade_impl_base<DerivedIterator>::derived;
+    using Base::derived;
 
 public:
-    using iterator_category = std::forward_iterator_tag;
-    using value_type = typename IteratorTraits::value_type;
-    using difference_type = typename IteratorTraits::difference_type;
-    using pointer = typename IteratorTraits::pointer;
-    using reference = typename IteratorTraits::reference;
-
-    reference operator*() {
+    typename Base::reference operator*() {
         return derived().dereference();
     }
 
