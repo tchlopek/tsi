@@ -5,6 +5,7 @@
 #include "filter_range.hpp"
 #include "reverse_range.hpp"
 #include "map_range.hpp"
+#include "take_range.hpp"
 
 namespace cppiter::range {
 
@@ -37,6 +38,10 @@ public:
     template<typename F>
     auto map(F func) {
         return range_factory<map_range<R, F>>{ map_range<R, F>{ begin(), end(), func } };
+    }
+
+    auto take(std::size_t n) {
+        return range_factory<take_range<R>>{ take_range<R>{ begin(), end(), n } };
     }
 };
 

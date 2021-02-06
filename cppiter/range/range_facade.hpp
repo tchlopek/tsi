@@ -80,6 +80,10 @@ public:
         return e;
     }
 
+    bool empty() const {
+        return b == e;
+    }
+
 private:
     Iterator b;
     Iterator e;

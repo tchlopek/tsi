@@ -26,35 +26,35 @@ class map_iterator : public iterator_facade<
         detail::map_iterator_traits<BaseIter, Func>>;
 
 public:
-    map_iterator(BaseIter begin, Func func) : begin{ begin }, func{ func }
+    map_iterator(BaseIter iter, Func func) : iter{ iter }, func{ func }
     {}
 
     bool equal(const map_iterator& other) const {
-        return begin == other.begin;
+        return iter == other.iter;
     }
 
     void increment() {
-        ++begin;
+        ++iter;
     }
 
     void decrement() {
-        --begin;
+        --iter;
     }
 
     typename BaseType::reference dereference() {
-        return func(*begin);
+        return func(*iter);
     }
 
     void advance(typename BaseType::difference_type n) {
-        begin += n;
+        iter += n;
     }
 
     typename BaseType::difference_type distance_to(const map_iterator& other) const {
-        return begin - other.begin;
+        return iter - other.iter;
     }
 
 private:
-    BaseIter begin;
+    BaseIter iter;
     Func func;
 };
 
