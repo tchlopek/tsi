@@ -41,7 +41,7 @@ public:
         --iter;
     }
 
-    typename BaseType::reference dereference() {
+    typename BaseType::reference dereference() const {
         return func(*iter);
     }
 

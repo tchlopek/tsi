@@ -38,7 +38,7 @@ protected:
 public:
     using iterator_category = std::forward_iterator_tag;
 
-    typename Base::reference operator*() {
+    typename Base::reference operator*() const {
         return derived().dereference();
     }
 

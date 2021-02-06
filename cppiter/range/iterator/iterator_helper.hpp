@@ -15,12 +15,16 @@ struct inner_iterator<IteratorWrapper<InnerIterator, Ts...>> {
 template<typename IteratorWrapper>
 using inner_iterator_t = typename inner_iterator<IteratorWrapper>::type;
 
+/* ========================================================================= */
+
 template<typename ExternalTraits, typename DefaultTraits>
 using conditional_iterator_traits_t = std::iterator_traits<
     typename std::conditional_t<
         std::is_same_v<ExternalTraits, void>,
         DefaultTraits,
         ExternalTraits>>;
+
+/* ========================================================================= */
 
 template<typename C> constexpr std::size_t iterator_category_rank;
 template<> constexpr std::size_t iterator_category_rank<std::input_iterator_tag> = 0;
@@ -50,5 +54,33 @@ struct min_iterator_category {
 
 template<typename C1, typename C2>
 using min_iterator_category_t = typename min_iterator_category<C1, C2>::type;
+
+/* ========================================================================= */
+
+template<typename T>
+struct add_ref_const;
+
+template<typename T>
+struct add_ref_const<T&> {
+    using type = const T&;
+};
+
+template<typename T>
+struct add_ref_const<const T&> {
+    using type = const T&;
+};
+
+template<typename T>
+struct add_ref_const<T*> {
+    using type = const T*;
+};
+
+template<typename T>
+struct add_ref_const<const T*> {
+    using type = const T*;
+};
+
+template<typename T>
+using add_ref_const_t = typename add_ref_const<T>::type;
 
 }

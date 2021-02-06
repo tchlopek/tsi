@@ -39,7 +39,7 @@ public:
         while (++iter != end && dereference() == beginVal);
     }
 
-    typename BaseType::reference dereference() {
+    typename BaseType::reference dereference() const {
         return *iter;
     }
 
