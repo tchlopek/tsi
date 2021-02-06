@@ -117,6 +117,10 @@ public:
     typename Base::difference_type operator-(const DerivedIterator& other) const {
         return derived().distance_to(other);
     }
+
+    typename Base::reference operator[](typename Base::difference_type n) const {
+        return (*this + n).dereference();
+    }
 };
 
 template<typename DerivedIterator, typename Traits = void>

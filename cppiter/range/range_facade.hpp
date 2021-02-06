@@ -1,18 +1,23 @@
 #pragma once
 
-namespace cppiter::range {
+#include "iterator/iterator_helper.hpp"
 
-template<typename Iterator>
-struct range_types_facade {
-    using value_type = typename std::iterator_traits<Iterator>::value_type;
-    using reference = typename std::iterator_traits<Iterator>::reference;
-    using iterator = Iterator;
-    using const_iterator = Iterator;
-};
+namespace cppiter::range {
 
 template<typename Derived>
 class range_facade_impl_base {
+    using Iterator = iter::detail::inner_iterator_t<Derived>;
+
 public:
+    using value_type = typename std::iterator_traits<Iterator>::value_type;
+    using difference_type = typename std::iterator_traits<Iterator>::difference_type;
+    using reference = typename std::iterator_traits<Iterator>::reference;
+    using const_reference = reference;
+    using pointer = typename std::iterator_traits<Iterator>::pointer;
+    using const_pointer = pointer;
+    using iterator = Iterator;
+    using const_iterator = Iterator;
+
     Derived& derived() {
         return *static_cast<Derived*>(this);
     }
@@ -42,19 +47,27 @@ protected:
 template<typename Derived>
 class range_facade_impl<Derived, std::random_access_iterator_tag> :
     public range_facade_impl<Derived, std::bidirectional_iterator_tag> {
+    using Base = range_facade_impl<Derived, std::bidirectional_iterator_tag>;
+
 protected:
     using range_facade_impl<Derived, std::bidirectional_iterator_tag>::derived;
 
 public:
+    typename Base::reference operator[](typename Base::difference_type n) const {
+        return *(derived().begin() + n);
+    }
+
     std::size_t size() const {
         return std::distance(derived().begin(), derived().end());
     }
+
+
 };
 
 template<typename Iterator>
 class range_facade :
-    public range_types_facade<Iterator>,
     public range_facade_impl<range_facade<Iterator>, typename Iterator::iterator_category> {
+
 public:
     range_facade(Iterator begin, Iterator end) : b{ begin }, e{ end }
     {}
