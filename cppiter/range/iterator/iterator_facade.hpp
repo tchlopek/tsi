@@ -10,7 +10,6 @@ class iterator_facade_impl_base {
     using IteratorTraits = detail::conditional_iterator_traits_t<Traits, InnerIterator>; 
 
 public:
-    using iterator_category = std::forward_iterator_tag;
     using value_type = typename IteratorTraits::value_type;
     using difference_type = typename IteratorTraits::difference_type;
     using pointer = typename IteratorTraits::pointer;
@@ -37,6 +36,8 @@ protected:
     using Base::derived;
 
 public:
+    using iterator_category = std::forward_iterator_tag;
+
     typename Base::reference operator*() {
         return derived().dereference();
     }

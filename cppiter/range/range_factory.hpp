@@ -2,9 +2,11 @@
 
 #include "range_facade.hpp"
 #include "range_iterator.hpp"
+
 #include "filter_range.hpp"
-#include "reverse_range.hpp"
 #include "map_range.hpp"
+#include "replace_range.hpp"
+#include "reverse_range.hpp"
 #include "take_range.hpp"
 
 namespace cppiter::range {
@@ -28,20 +30,32 @@ public:
 
     template<typename P>
     auto filter(P pred) {
-        return range_factory<filter_range<R, P>>{ filter_range<R, P>{ begin(), end(), pred } };
-    }
-
-    auto reverse() {
-        return range_factory<reverse_range<R>>{ reverse_range<R>{ begin(), end() } };
+        return range_factory<filter_range<R, P>>{ { begin(), end(), pred } };
     }
 
     template<typename F>
     auto map(F func) {
-        return range_factory<map_range<R, F>>{ map_range<R, F>{ begin(), end(), func } };
+        return range_factory<map_range<R, F>>{ { begin(), end(), func } };
+    }
+
+    template<typename P>
+    auto replace(P pred, const typename R::value_type& newVal) {
+        return range_factory<replace_range<R, P>>{ { begin(), end(), pred, newVal } };
+    }
+
+    auto replace(const typename R::value_type& oldVal, const typename R::value_type& newVal) {
+        const auto pred = [oldVal](const auto& current){ return oldVal == current; };
+        return range_factory<replace_range<R, decltype(pred)>>{
+            { begin(), end(), pred, newVal }
+        };
+    }
+
+    auto reverse() {
+        return range_factory<reverse_range<R>>{ { begin(), end() } };
     }
 
     auto take(std::size_t n) {
-        return range_factory<take_range<R>>{ take_range<R>{ begin(), end(), n } };
+        return range_factory<take_range<R>>{ { begin(), end(), n } };
     }
 };
 

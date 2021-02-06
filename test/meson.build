@@ -1,8 +1,9 @@
 src_test = [
     'main.cpp',
     'filter_range_test.cpp',
-    'reverse_range_test.cpp',
     'map_range_test.cpp',
+    'replace_range_test.cpp',
+    'reverse_range_test.cpp',
     'take_range_test.cpp'
 ]
 
