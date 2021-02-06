@@ -18,7 +18,7 @@ public:
         P pred,
         const typename BaseRange::value_type& newVal) :
             BaseRange{ { begin, pred, newVal }, { end, pred, newVal } }
-    {}
+        {}
 };
 
 }

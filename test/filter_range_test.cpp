@@ -2,10 +2,10 @@
 #include <gmock/gmock.h>
 
 #include <vector>
-#include <list>
-#include <forward_list>
 
 #include <iter.hpp>
+
+#include "matcher.hpp"
 
 using namespace testing;
 using cppiter::iter;
@@ -25,4 +25,8 @@ public:
 
 TEST_F(FilterRangeForRandomAccessTest, FilteredNumbersAreOdd) {
     ASSERT_THAT(iter(v).filter(odd), ElementsAre(1, 3, 5, 7, 9));
+}
+
+TEST_F(FilterRangeForRandomAccessTest, EmptyTest) {
+    ASSERT_THAT(iter(std::vector<int>{}).filter(odd), utest::IsEmpty());
 }

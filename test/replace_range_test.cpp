@@ -2,10 +2,10 @@
 #include <gmock/gmock.h>
 
 #include <vector>
-#include <list>
-#include <forward_list>
 
 #include <iter.hpp>
+
+#include "matcher.hpp"
 
 using namespace testing;
 using cppiter::iter;
@@ -29,4 +29,8 @@ TEST_F(ReplaceRangeForRandomAccessTest, ReplacedElementsUsingPredicate) {
 
 TEST_F(ReplaceRangeForRandomAccessTest, ElementsReplacedUsingValueMatcher) {
     ASSERT_THAT(iter(v).replace(4, 7), ElementsAre(7, 2, 3, 7, 5));
+}
+
+TEST_F(ReplaceRangeForRandomAccessTest, EmptyTest) {
+    ASSERT_THAT(iter(std::vector<int>{}).replace(0, 1), utest::IsEmpty());
 }

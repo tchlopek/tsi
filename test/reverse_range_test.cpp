@@ -2,10 +2,10 @@
 #include <gmock/gmock.h>
 
 #include <vector>
-#include <list>
-#include <forward_list>
 
 #include <iter.hpp>
+
+#include "matcher.hpp"
 
 using namespace testing;
 using cppiter::iter;
@@ -21,4 +21,8 @@ TEST_F(ReverseRangeForRandomAccessTest, ReversedRangeHasOppositeOrderOfElements)
 
 TEST_F(ReverseRangeForRandomAccessTest, DoublyReversedRangeHasSameOrderOfElements) {
     ASSERT_THAT(iter(v).reverse().reverse(), ElementsAreArray(v));
+}
+
+TEST_F(ReverseRangeForRandomAccessTest, EmptyTest) {
+    ASSERT_THAT(iter(std::vector<int>{}).reverse(), utest::IsEmpty());
 }

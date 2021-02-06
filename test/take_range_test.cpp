@@ -2,8 +2,6 @@
 #include <gmock/gmock.h>
 
 #include <vector>
-#include <list>
-#include <forward_list>
 
 #include <iter.hpp>
 
@@ -23,4 +21,8 @@ TEST_F(TakeRangeForRandomAccessTest, TakeHasOnlyThreeElements) {
 
 TEST_F(TakeRangeForRandomAccessTest, TakeIsEmpty) {
     ASSERT_THAT(iter(v).take(0), utest::IsEmpty());
+}
+
+TEST_F(TakeRangeForRandomAccessTest, EmptyTest) {
+    ASSERT_THAT(iter(std::vector<int>{}).take(10), utest::IsEmpty());
 }

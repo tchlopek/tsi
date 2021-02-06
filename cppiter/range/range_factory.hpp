@@ -8,6 +8,7 @@
 #include "replace_range.hpp"
 #include "reverse_range.hpp"
 #include "take_range.hpp"
+#include "unique_range.hpp"
 
 namespace cppiter::range {
 
@@ -24,7 +25,7 @@ public:
         BaseRange{ std::begin(range), std::end(range) }
     {}
 
-    range_factory(const R& range) :
+    range_factory(R&& range) :
         BaseRange{ std::begin(range), std::end(range) }
     {}
 
@@ -56,6 +57,10 @@ public:
 
     auto take(std::size_t n) {
         return range_factory<take_range<R>>{ { begin(), end(), n } };
+    }
+
+    auto unique() {
+        return range_factory<unique_range<R>>{ { begin(), end() } };
     }
 };
 
