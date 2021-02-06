@@ -12,19 +12,9 @@ class map_range :
     using BaseRange = range_facade<iter::map_iterator<detail::range_iterator_t<R>, F>>;
 
 public:
-    map_range(R& range, F func) :
-        BaseRange { { std::begin(range), func }, { std::end(range), func } }
+    map_range(detail::range_iterator_t<R> begin, detail::range_iterator_t<R> end, F func) :
+        BaseRange{ { begin, func }, { end, func } }
     {}
 };
-
-template<typename R, typename F>
-map_range<R, F> map(R& range, F func) {
-    return { range, func };
-}
-
-template<typename R, typename F>
-map_range<const R, F> map(const R& range, F func) {
-    return { range, func };
-}
 
 }

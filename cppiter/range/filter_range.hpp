@@ -13,22 +13,9 @@ class filter_range :
     using BaseRange = range_facade<iter::filter_iterator<detail::range_iterator_t<R>, P>>;
 
 public:
-    filter_range(R& range, P pred) :
-        BaseRange { 
-            { std::begin(range), std::end(range), pred },
-            { std::end(range), std::end(range), pred }
-        }
+    filter_range(detail::range_iterator_t<R> begin, detail::range_iterator_t<R> end, P pred) :
+        BaseRange{ { begin, end, pred }, { end, end, pred } }
     {}
 };
-
-template<typename R, typename P>
-filter_range<R, P> filter(R& range, P pred) {
-    return { range, pred };
-}
-
-template<typename R, typename P>
-filter_range<const R, P> filter(const R& range, P pred) {
-    return { range, pred };
-}
 
 }

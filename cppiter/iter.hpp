@@ -1,19 +1,17 @@
 #pragma once
 
-#include "range_wrapper.hpp"
-
-#include "range/identity_range.hpp"
+#include "range/range_factory.hpp"
 
 namespace cppiter {
 
 template<typename R>
-range_wrapper<range::identity_range<R>> iter(R& r) {
-    return range_wrapper{ range::identity(r) };
+range::range_factory<R> iter(R& r) {
+    return range::range_factory<R>{ r };
 }
 
 template<typename R>
-range_wrapper<range::identity_range<const R>> iter(const R& r) {
-    return range_wrapper{ range::identity(r) };
+range::range_factory<const R> iter(const R& r) {
+    return range::range_factory<const R>{ r };
 }
 
 }

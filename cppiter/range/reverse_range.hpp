@@ -12,22 +12,9 @@ class reverse_range :
     using BaseRange = range_facade<ReverseIterator>;
 
 public:
-    explicit reverse_range(R& range) :
-        BaseRange {
-            ReverseIterator{ std::end(range) },
-            ReverseIterator{ std::begin(range) }
-        }
+    reverse_range(detail::range_iterator_t<R> begin, detail::range_iterator_t<R> end) :
+        BaseRange{ ReverseIterator{ end }, ReverseIterator{ begin } }
     {}
 };
-
-template<typename R>
-reverse_range<R> reverse(R& range) {
-    return reverse_range<R>{ range };
-}
-
-template<typename R>
-reverse_range<const R> reverse(const R& range) {
-    return reverse_range<R>{ range };
-}
 
 }
