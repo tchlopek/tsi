@@ -3,6 +3,7 @@
 #include "range_facade.hpp"
 #include "range_iterator.hpp"
 
+#include "enumerate_range.hpp"
 #include "filter_range.hpp"
 #include "map_range.hpp"
 #include "replace_range.hpp"
@@ -28,6 +29,10 @@ public:
     range_factory(R&& range) :
         BaseRange{ std::begin(range), std::end(range) }
     {}
+
+    auto enumerate(typename R::difference_type index = {}) {
+        return range_factory<enumerate_range<R>>{ { begin(), end(), index } };
+    }
 
     template<typename P>
     auto filter(P pred) {

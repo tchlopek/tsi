@@ -1,5 +1,6 @@
 src_test = [
     'main.cpp',
+    'enumerate_range_test.cpp',
     'filter_range_test.cpp',
     'map_range_test.cpp',
     'replace_range_test.cpp',
