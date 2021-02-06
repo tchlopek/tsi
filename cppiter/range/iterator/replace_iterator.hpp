@@ -8,11 +8,11 @@ namespace detail {
 
 template<typename Base>
 struct replace_iterator_traits {
-    using iterator_category = typename std::iterator_traits<Base>::iterator_category;
-    using reference = detail::add_ref_const_t<typename std::iterator_traits<Base>::reference>;
-    using difference_type = typename std::iterator_traits<Base>::difference_type;
-    using value_type = typename std::iterator_traits<Base>::value_type;
-    using pointer = detail::add_ref_const_t<typename std::iterator_traits<Base>::pointer>;
+    using iterator_category = iterator_category_t<Base>;
+    using reference = add_ref_const_t<reference_t<Base>>;
+    using difference_type = difference_t<Base>;
+    using value_type = value_t<Base>;
+    using pointer = add_ref_const_t<pointer_t<Base>>;
 };
 
 }

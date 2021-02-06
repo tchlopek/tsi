@@ -83,4 +83,21 @@ struct add_ref_const<const T*> {
 template<typename T>
 using add_ref_const_t = typename add_ref_const<T>::type;
 
+/* ========================================================================= */
+
+template<typename Iterator>
+using value_t = typename std::iterator_traits<Iterator>::value_type;
+
+template<typename Iterator>
+using reference_t = typename std::iterator_traits<Iterator>::reference;
+
+template<typename Iterator>
+using iterator_category_t = typename std::iterator_traits<Iterator>::iterator_category;
+
+template<typename Iterator>
+using pointer_t = typename std::iterator_traits<Iterator>::pointer;
+
+template<typename Iterator>
+using difference_t = typename std::iterator_traits<Iterator>::difference_type;
+
 }

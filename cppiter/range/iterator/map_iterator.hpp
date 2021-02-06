@@ -8,9 +8,9 @@ namespace detail {
 
 template<typename Base, typename F>
 struct map_iterator_traits {
-    using iterator_category = typename std::iterator_traits<Base>::iterator_category;
-    using reference = std::invoke_result_t<F, typename Base::reference>;
-    using difference_type = typename std::iterator_traits<Base>::difference_type;
+    using iterator_category = iterator_category_t<Base>;
+    using reference = std::invoke_result_t<F, reference_t<Base>>;
+    using difference_type = difference_t<Base>;
     using value_type = std::decay_t<reference>;
     using pointer = std::add_pointer_t<reference>;
 };

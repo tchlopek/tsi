@@ -9,12 +9,12 @@ namespace detail {
 template<typename Base>
 struct take_iterator_traits {
     using iterator_category = min_iterator_category_t<
-        typename std::iterator_traits<Base>::iterator_category,
+        iterator_category_t<Base>,
         std::forward_iterator_tag>;
-    using reference = typename std::iterator_traits<Base>::reference;
-    using difference_type = typename std::iterator_traits<Base>::difference_type;
-    using value_type = typename std::iterator_traits<Base>::value_type;
-    using pointer = typename std::iterator_traits<Base>::pointer;
+    using reference = reference_t<Base>;
+    using difference_type = difference_t<Base>;
+    using value_type = value_t<Base>;
+    using pointer = pointer_t<Base>;
 };
 
 }

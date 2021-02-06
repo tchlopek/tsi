@@ -10,10 +10,10 @@ class iterator_facade_impl_base {
     using IteratorTraits = detail::conditional_iterator_traits_t<Traits, InnerIterator>; 
 
 public:
-    using value_type = typename IteratorTraits::value_type;
-    using difference_type = typename IteratorTraits::difference_type;
-    using pointer = typename IteratorTraits::pointer;
-    using reference = typename IteratorTraits::reference;
+    using value_type = detail::value_t<IteratorTraits>;
+    using difference_type = detail::difference_t<IteratorTraits>;
+    using pointer = detail::pointer_t<IteratorTraits>;
+    using reference = detail::reference_t<IteratorTraits>;
 
     DerivedIterator& derived() {
         return *static_cast<DerivedIterator*>(this);
