@@ -27,6 +27,8 @@ class filter_iterator : public iterator_facade<
         filter_iterator<BaseIter, Pred>,
         detail::filter_iterator_traits<BaseIter>>;
 
+    friend class derived_access;
+
 public:
     filter_iterator(BaseIter iter, BaseIter end, Pred pred) :
         iter{ iter }, end{ end }, predicate{ pred }
@@ -34,6 +36,7 @@ public:
         align_position();
     }
 
+private:
     bool equal(const filter_iterator& other) const {
         return iter == other.iter;
     }
@@ -53,7 +56,6 @@ public:
         return *iter;
     }
 
-private:
     void align_position() {
         while (iter != end && !predicate(dereference()))
             ++iter;

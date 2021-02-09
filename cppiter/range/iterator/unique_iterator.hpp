@@ -26,10 +26,13 @@ class unique_iterator :
         unique_iterator<BaseIter>,
         detail::unique_iterator_traits<BaseIter>>;
 
+    friend class derived_access;
+
 public:
     unique_iterator(BaseIter iter, BaseIter end) : iter{ iter }, end{ end }
     {}
 
+private:
     bool equal(const unique_iterator& other) const {
         return iter == other.iter;
     }
@@ -43,7 +46,6 @@ public:
         return *iter;
     }
 
-private:
     BaseIter iter;
     BaseIter end;
 };

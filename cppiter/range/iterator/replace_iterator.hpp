@@ -27,11 +27,14 @@ class replace_iterator :
         detail::replace_iterator_traits<BaseIter>>;
     using ValueType = typename BaseType::value_type;
 
+    friend class derived_access;
+
 public:
     replace_iterator(BaseIter iter, Pred pred, const ValueType& newVal) :
         iter{ iter }, newVal{ newVal }, pred{ pred }
     {}
 
+private:
     bool equal(const replace_iterator& other) const {
         return iter == other.iter;
     }
@@ -56,7 +59,6 @@ public:
         return iter - other.iter;
     }
 
-private:
     BaseIter iter;
     ValueType newVal;
     Pred pred;

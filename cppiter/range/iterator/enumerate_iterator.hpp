@@ -29,10 +29,13 @@ class enumerate_iterator : public iterator_facade<
         detail::enumerate_iterator_traits<BaseIter>>;
     using Difference = typename BaseType::difference_type;
 
+    friend class derived_access;
+
 public:
     enumerate_iterator(BaseIter iter, Difference index) : iter{ iter }, index{ index }
     {}
 
+private:
     bool equal(const enumerate_iterator& other) const {
         return iter == other.iter;
     }
@@ -60,7 +63,6 @@ public:
         return iter - other.iter;
     }
 
-private:
     BaseIter iter;
     Difference index;
 };

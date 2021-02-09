@@ -12,11 +12,14 @@ class stride_iterator<BaseIter, std::forward_iterator_tag> :
     public iterator_facade<stride_iterator<BaseIter, std::forward_iterator_tag>> {
     using BaseType = iterator_facade<stride_iterator<BaseIter, std::forward_iterator_tag>>;
 
+    friend class derived_access;
+
 public:
     stride_iterator(BaseIter iter, BaseIter end, detail::difference_t<BaseType> step) :
         iter{ iter }, end{ end }, step{ step }
     {}
 
+private:
     bool equal(const stride_iterator& other) const {
         return iter == other.iter;
     }
@@ -29,7 +32,6 @@ public:
         return *iter;
     }
 
-private:
     BaseIter iter;
     BaseIter end;
     detail::difference_t<BaseType> step;
@@ -42,6 +44,8 @@ class stride_iterator<BaseIter, std::bidirectional_iterator_tag> :
         BaseIter,
         std::bidirectional_iterator_tag>>;
 
+    friend class derived_access;
+
 public:
     stride_iterator(
         BaseIter iter,
@@ -53,6 +57,7 @@ public:
         }
     }
 
+private:
     bool equal(const stride_iterator& other) const {
         return offset + index == other.offset + other.index;
     }
@@ -72,7 +77,6 @@ public:
         return *iter;
     }
 
-private:
     mutable BaseIter iter;
     mutable detail::difference_t<BaseType> offset;
     mutable detail::difference_t<BaseType> index;
@@ -86,6 +90,8 @@ class stride_iterator<BaseIter, std::random_access_iterator_tag>:
         BaseIter,
         std::random_access_iterator_tag>>;
 
+    friend class derived_access;
+
 public:
     stride_iterator(BaseIter begin, BaseIter iter, detail::difference_t<BaseType> step) :
         begin{ begin }, iter{ iter }, index{ iter - begin }, step{ step } {
@@ -94,6 +100,7 @@ public:
         }
     }
 
+private:
     bool equal(const stride_iterator& other) const {
         return index == other.index;
     }
@@ -120,7 +127,6 @@ public:
         return (other.index - index) / step;
     }
 
-private:
     BaseIter begin;
     mutable BaseIter iter;
     detail::difference_t<BaseType> index;

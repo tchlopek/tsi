@@ -26,6 +26,8 @@ class take_iterator :
         take_iterator<BaseIter>,
         detail::take_iterator_traits<BaseIter>>;
 
+    friend class derived_access;
+
 public:
     take_iterator(BaseIter iter, BaseIter end, std::size_t n) :
         iter{ iter }, end{ end }, n{ n }
@@ -33,6 +35,7 @@ public:
         align_iter();
     }
 
+private:
     bool equal(const take_iterator& other) const {
         return iter == other.iter;
     }
@@ -47,7 +50,6 @@ public:
         return *iter;
     }
 
-private:
     void align_iter() {
         if (n == 0) {
             iter = end;

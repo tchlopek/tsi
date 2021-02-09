@@ -25,10 +25,13 @@ class map_iterator : public iterator_facade<
         map_iterator<BaseIter, Func>,
         detail::map_iterator_traits<BaseIter, Func>>;
 
+    friend class derived_access;
+
 public:
     map_iterator(BaseIter iter, Func func) : iter{ iter }, func{ func }
     {}
 
+private:
     bool equal(const map_iterator& other) const {
         return iter == other.iter;
     }
@@ -53,7 +56,6 @@ public:
         return iter - other.iter;
     }
 
-private:
     BaseIter iter;
     Func func;
 };
