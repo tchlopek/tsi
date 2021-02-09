@@ -27,7 +27,6 @@ class enumerate_iterator : public iterator_facade<
     using BaseType = iterator_facade<
         enumerate_iterator<BaseIter>,
         detail::enumerate_iterator_traits<BaseIter>>;
-
     using Difference = typename BaseType::difference_type;
 
 public:

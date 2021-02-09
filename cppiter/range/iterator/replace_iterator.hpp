@@ -25,7 +25,6 @@ class replace_iterator :
     using BaseType = iterator_facade<
         replace_iterator<BaseIter, Pred>,
         detail::replace_iterator_traits<BaseIter>>;
-
     using ValueType = typename BaseType::value_type;
 
 public:
