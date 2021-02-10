@@ -65,7 +65,7 @@ public:
         return range_factory<stride_range<R>>{ { begin(), end(), n } };
     }
 
-    auto take(std::size_t n) {
+    auto take(typename R::difference_type n) {
         return range_factory<take_range<R>>{ { begin(), end(), n } };
     }
 

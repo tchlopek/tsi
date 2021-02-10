@@ -4,36 +4,87 @@
 
 namespace cppiter::range::iter {
 
-namespace detail {
-
-template<typename Base>
-struct take_iterator_traits {
-    using iterator_category = min_iterator_category_t<
-        iterator_category_t<Base>,
-        std::forward_iterator_tag>;
-    using reference = reference_t<Base>;
-    using difference_type = difference_t<Base>;
-    using value_type = value_t<Base>;
-    using pointer = pointer_t<Base>;
-};
-
-}
+template<typename BaseIter, typename Category>
+class take_iterator;
 
 template<typename BaseIter>
-class take_iterator :
-    public iterator_facade<take_iterator<BaseIter>, detail::take_iterator_traits<BaseIter>> {
-    using BaseType = iterator_facade<
-        take_iterator<BaseIter>,
-        detail::take_iterator_traits<BaseIter>>;
+class take_iterator<BaseIter, std::forward_iterator_tag> :
+    public iterator_facade<take_iterator<BaseIter, std::forward_iterator_tag>> {
+    using BaseType = iterator_facade<take_iterator<BaseIter, std::forward_iterator_tag>>;
 
     friend class derived_access;
 
 public:
-    take_iterator(BaseIter iter, BaseIter end, std::size_t n) :
-        iter{ iter }, end{ end }, n{ n }
-    {
-        align_iter();
+    take_iterator(BaseIter iter, detail::difference_t<BaseType> index) :
+        iter{ iter }, index{ index }
+    {}
+
+private:
+    bool equal(const take_iterator& other) const {
+        return iter == other.iter || index == other.index;
     }
+
+    void increment() {
+        ++index;
+        ++iter;
+    }
+
+    typename BaseType::reference dereference() const {
+        return *iter;
+    }
+
+    BaseIter iter;
+    detail::difference_t<BaseType> index;
+};
+
+template<typename BaseIter>
+class take_iterator<BaseIter, std::bidirectional_iterator_tag> :
+    public iterator_facade<take_iterator<BaseIter, std::bidirectional_iterator_tag>> {
+    using BaseType = iterator_facade<
+        take_iterator<BaseIter, std::bidirectional_iterator_tag>>;
+
+    friend class derived_access;
+
+public:
+    take_iterator(BaseIter iter, detail::difference_t<BaseType> index) :
+        iter{ iter }, index{ index }
+    {}
+
+private:
+    bool equal(const take_iterator& other) const {
+        return iter == other.iter || index == other.index;
+    }
+
+    void increment() {
+        ++index;
+        ++iter;
+    }
+
+
+    void decrement() {
+        --index;
+        --iter;
+    }
+
+    typename BaseType::reference dereference() const {
+        return *iter;
+    }
+
+    BaseIter iter;
+    detail::difference_t<BaseType> index;
+};
+
+template<typename BaseIter>
+class take_iterator<BaseIter, std::random_access_iterator_tag> :
+    public iterator_facade<take_iterator<BaseIter, std::random_access_iterator_tag>> {
+    using BaseType = iterator_facade<
+        take_iterator<BaseIter, std::random_access_iterator_tag>>;
+
+    friend class derived_access;
+
+public:
+    take_iterator(BaseIter iter) : iter{ iter }
+    {}
 
 private:
     bool equal(const take_iterator& other) const {
@@ -41,24 +92,27 @@ private:
     }
 
     void increment() {
-        --n;
         ++iter;
-        align_iter();
+    }
+
+
+    void decrement() {
+        --iter;
     }
 
     typename BaseType::reference dereference() const {
         return *iter;
     }
 
-    void align_iter() {
-        if (n == 0) {
-            iter = end;
-        }
+    void advance(typename BaseType::difference_type n) {
+        iter += n;
+    }
+
+    typename BaseType::difference_type distance_to(const take_iterator& other) const {
+        return iter - other.iter;
     }
 
     BaseIter iter;
-    BaseIter end;
-    std::size_t n;
 };
 
 }

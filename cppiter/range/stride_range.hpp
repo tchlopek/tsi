@@ -18,6 +18,12 @@ class stride_range :
         iter::detail::iterator_category_t<Iterator>>>;
     using Difference = iter::detail::difference_t<Iterator>;
 
+public:
+    stride_range(Iterator begin, Iterator end, Difference n) :
+        stride_range{ begin, end, n, iter::detail::iterator_category_t<Iterator>{} }
+    {}
+
+private:
     stride_range(Iterator begin, Iterator end, Difference n, std::forward_iterator_tag) :
         BaseRange{ { begin, end, n }, { end, end, n } }
     {}
@@ -28,11 +34,6 @@ class stride_range :
 
     stride_range(Iterator begin, Iterator end, Difference n, std::random_access_iterator_tag) :
         BaseRange{ { begin, begin, n }, { begin, end, n } }
-    {}
-
-public:
-    stride_range(Iterator begin, Iterator end, Difference n) :
-        stride_range{ begin, end, n, iter::detail::iterator_category_t<Iterator>{} }
     {}
 };
 

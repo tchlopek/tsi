@@ -52,7 +52,7 @@ public:
         detail::difference_t<BaseType> index,
         detail::difference_t<BaseType> step) :
         iter{ iter }, offset{}, index{ index }, step{ step } {
-        if (step && index % step != 0) {
+        if (step > 0 && index % step != 0) {
             this->index += step - index % step;
         }
     }
@@ -95,7 +95,7 @@ class stride_iterator<BaseIter, std::random_access_iterator_tag>:
 public:
     stride_iterator(BaseIter begin, BaseIter iter, detail::difference_t<BaseType> step) :
         begin{ begin }, iter{ iter }, index{ iter - begin }, step{ step } {
-        if (step && index % step != 0) {
+        if (step > 0 && index % step != 0) {
             this->index += step - index % step;
         }
     }
