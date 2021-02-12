@@ -5,8 +5,6 @@
 
 #include <iter.hpp>
 
-#include "matcher.hpp"
-
 using namespace testing;
 using cppiter::iter;
 
@@ -28,5 +26,5 @@ TEST_F(FilterRangeForRandomAccessTest, FilteredNumbersAreOdd) {
 }
 
 TEST_F(FilterRangeForRandomAccessTest, EmptyTest) {
-    ASSERT_THAT(iter(std::vector<int>{}).filter(odd), utest::IsEmpty());
+    ASSERT_THAT(iter(std::vector<int>{}).filter(odd), IsEmpty());
 }

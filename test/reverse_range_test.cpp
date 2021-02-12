@@ -5,8 +5,6 @@
 
 #include <iter.hpp>
 
-#include "matcher.hpp"
-
 using namespace testing;
 using cppiter::iter;
 
@@ -24,5 +22,5 @@ TEST_F(ReverseRangeForRandomAccessTest, DoublyReversedRangeHasSameOrderOfElement
 }
 
 TEST_F(ReverseRangeForRandomAccessTest, EmptyTest) {
-    ASSERT_THAT(iter(std::vector<int>{}).reverse(), utest::IsEmpty());
+    ASSERT_THAT(iter(std::vector<int>{}).reverse(), IsEmpty());
 }

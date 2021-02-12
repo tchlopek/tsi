@@ -5,8 +5,6 @@
 
 #include <iter.hpp>
 
-#include "matcher.hpp"
-
 using namespace testing;
 using cppiter::iter;
 
@@ -30,5 +28,5 @@ TEST_F(UniqueRangeForRandomAccessTest, OutputIsSingleValueFromUniformValuedArray
 }
 
 TEST_F(UniqueRangeForRandomAccessTest, EmptyTest) {
-    ASSERT_THAT(iter(std::vector<int>{}).unique(), utest::IsEmpty());
+    ASSERT_THAT(iter(std::vector<int>{}).unique(), IsEmpty());
 }

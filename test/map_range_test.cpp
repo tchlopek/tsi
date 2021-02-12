@@ -5,8 +5,6 @@
 
 #include <iter.hpp>
 
-#include "matcher.hpp"
-
 using namespace testing;
 using cppiter::iter;
 
@@ -20,5 +18,5 @@ TEST_F(MapRangeForRandomAccessTest, NumbersAreSquared) {
 }
 
 TEST_F(MapRangeForRandomAccessTest, EmptyTest) {
-    ASSERT_THAT(iter(std::vector<int>{}).map([](int v){ return v * v; }), utest::IsEmpty());
+    ASSERT_THAT(iter(std::vector<int>{}).map([](int v){ return v * v; }), IsEmpty());
 }

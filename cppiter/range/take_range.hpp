@@ -33,7 +33,7 @@ private:
     {}
 
     take_range(Iterator begin, Iterator end, Difference n, std::random_access_iterator_tag) :
-        BaseRange{ { begin }, { begin + (end - begin < n ? end - begin : n) } }
+        BaseRange{ { begin }, { begin + std::min(end - begin, n) } }
     {}
 };
 

@@ -60,7 +60,6 @@ private:
         ++iter;
     }
 
-
     void decrement() {
         --index;
         --iter;
@@ -94,7 +93,6 @@ private:
     void increment() {
         ++iter;
     }
-
 
     void decrement() {
         --iter;

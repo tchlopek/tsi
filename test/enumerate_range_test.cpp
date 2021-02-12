@@ -5,8 +5,6 @@
 
 #include <iter.hpp>
 
-#include "matcher.hpp"
-
 using namespace testing;
 using cppiter::iter;
 
@@ -22,5 +20,5 @@ TEST_F(EnumerateRangeForRandomAccessTest, ElementsAreNumeratedFromOne) {
 }
 
 TEST_F(EnumerateRangeForRandomAccessTest, EmptyTest) {
-    ASSERT_THAT(iter(std::vector<int>{}).enumerate(), utest::IsEmpty());
+    ASSERT_THAT(iter(std::vector<int>{}).enumerate(), IsEmpty());
 }

@@ -7,8 +7,6 @@
 
 #include <iter.hpp>
 
-#include "matcher.hpp"
-
 using namespace testing;
 using cppiter::iter;
 
@@ -25,6 +23,13 @@ TEST_F(StrideRangeForForwardIterator, ForwardIteratorTestFor3) {
     ASSERT_THAT(iter(v).stride(3), ElementsAre(1, 4));
 }
 
+TEST_F(StrideRangeForForwardIterator, ExceededStrideReturnsFirstElement) {
+    ASSERT_THAT(iter(v).stride(10), ElementsAre(1));
+}
+
+TEST_F(StrideRangeForForwardIterator, EmptyTest) {
+    ASSERT_THAT(iter(std::forward_list<int>{}).stride(3), IsEmpty());
+}
 
 class StrideRangeForBidirectionalIterator : public Test {
 public:
@@ -39,6 +44,13 @@ TEST_F(StrideRangeForBidirectionalIterator, BidirectionalIteratorTestFor3) {
     ASSERT_THAT(iter(v).stride(3), ElementsAre(1, 4));
 }
 
+TEST_F(StrideRangeForBidirectionalIterator, ExceededStrideReturnsFirstElement) {
+    ASSERT_THAT(iter(v).stride(10), ElementsAre(1));
+}
+
+TEST_F(StrideRangeForBidirectionalIterator, EmptyTest) {
+    ASSERT_THAT(iter(std::list<int>{}).stride(3), IsEmpty());
+}
 
 class StrideRangeForRandomAccess : public Test {
 public:
@@ -53,3 +65,10 @@ TEST_F(StrideRangeForRandomAccess, RandomAccessIteratorTestFor3) {
     ASSERT_THAT(iter(v).stride(3), ElementsAre(1, 4));
 }
 
+TEST_F(StrideRangeForRandomAccess, ExceededStrideReturnsFirstElement) {
+    ASSERT_THAT(iter(v).stride(10), ElementsAre(1));
+}
+
+TEST_F(StrideRangeForRandomAccess, EmptyTest) {
+    ASSERT_THAT(iter(std::vector<int>{}).stride(3), IsEmpty());
+}

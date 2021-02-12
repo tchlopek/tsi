@@ -35,6 +35,11 @@ class range_facade_impl<Derived, std::forward_iterator_tag> :
     public range_facade_impl_base<Derived> {
 protected:
     using range_facade_impl_base<Derived>::derived;
+
+public:
+    std::size_t size() const {
+        return std::distance(derived().begin(), derived().end());
+    }
 };
 
 template<typename Derived>
@@ -56,12 +61,6 @@ public:
     typename Base::reference operator[](typename Base::difference_type n) const {
         return *(derived().begin() + n);
     }
-
-    std::size_t size() const {
-        return std::distance(derived().begin(), derived().end());
-    }
-
-
 };
 
 template<typename Iterator>

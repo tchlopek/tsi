@@ -5,8 +5,6 @@
 
 #include <iter.hpp>
 
-#include "matcher.hpp"
-
 using namespace testing;
 using cppiter::iter;
 
@@ -32,5 +30,5 @@ TEST_F(ReplaceRangeForRandomAccessTest, ElementsReplacedUsingValueMatcher) {
 }
 
 TEST_F(ReplaceRangeForRandomAccessTest, EmptyTest) {
-    ASSERT_THAT(iter(std::vector<int>{}).replace(0, 1), utest::IsEmpty());
+    ASSERT_THAT(iter(std::vector<int>{}).replace(0, 1), IsEmpty());
 }

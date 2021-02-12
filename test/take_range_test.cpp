@@ -7,8 +7,6 @@
 
 #include <iter.hpp>
 
-#include "matcher.hpp"
-
 using namespace testing;
 using cppiter::iter;
 
@@ -26,11 +24,11 @@ TEST_F(TakeRangeForForwardIterator, ExceededTakeReturnSourceRange) {
 }
 
 TEST_F(TakeRangeForForwardIterator, TakeIsEmpty) {
-    ASSERT_THAT(iter(v).take(0), utest::IsEmpty());
+    ASSERT_THAT(iter(v).take(0), IsEmpty());
 }
 
 TEST_F(TakeRangeForForwardIterator, EmptyTest) {
-    ASSERT_THAT(iter(std::vector<int>{}).take(10), utest::IsEmpty());
+    ASSERT_THAT(iter(std::forward_list<int>{}).take(10), IsEmpty());
 }
 
 class TakeRangeForBidirectionalIterator : public Test {
@@ -47,11 +45,11 @@ TEST_F(TakeRangeForBidirectionalIterator, ExceededTakeReturnSourceRange) {
 }
 
 TEST_F(TakeRangeForBidirectionalIterator, TakeIsEmpty) {
-    ASSERT_THAT(iter(v).take(0), utest::IsEmpty());
+    ASSERT_THAT(iter(v).take(0), IsEmpty());
 }
 
 TEST_F(TakeRangeForBidirectionalIterator, EmptyTest) {
-    ASSERT_THAT(iter(std::vector<int>{}).take(10), utest::IsEmpty());
+    ASSERT_THAT(iter(std::list<int>{}).take(10), IsEmpty());
 }
 
 class TakeRangeForRandomAccessIterator : public Test {
@@ -68,9 +66,9 @@ TEST_F(TakeRangeForRandomAccessIterator, ExceededTakeReturnSourceRange) {
 }
 
 TEST_F(TakeRangeForRandomAccessIterator, TakeIsEmpty) {
-    ASSERT_THAT(iter(v).take(0), utest::IsEmpty());
+    ASSERT_THAT(iter(v).take(0), IsEmpty());
 }
 
 TEST_F(TakeRangeForRandomAccessIterator, EmptyTest) {
-    ASSERT_THAT(iter(std::vector<int>{}).take(10), utest::IsEmpty());
+    ASSERT_THAT(iter(std::vector<int>{}).take(10), IsEmpty());
 }
