@@ -4,6 +4,7 @@
 #include "range_iterator.hpp"
 
 #include "enumerate_range.hpp"
+#include "flatten_range.hpp"
 #include "filter_range.hpp"
 #include "map_range.hpp"
 #include "replace_range.hpp"
@@ -39,6 +40,10 @@ public:
     template<typename P>
     auto filter(P pred) {
         return range_factory<filter_range<R, P>>{ { begin(), end(), pred } };
+    }
+
+    auto flatten() {
+        return range_factory<flatten_range<R>>{ { begin(), end() } };
     }
 
     template<typename F>
