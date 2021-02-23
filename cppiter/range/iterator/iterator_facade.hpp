@@ -75,6 +75,10 @@ public:
         return derived_access::dereference(derived());
     }
 
+    typename Base::pointer operator->() const {
+        return std::addressof(derived_access::dereference(derived()));
+    }
+
     DerivedIterator& operator++() {
         derived_access::increment(derived());
         return derived();

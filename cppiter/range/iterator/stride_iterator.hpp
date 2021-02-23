@@ -118,8 +118,7 @@ private:
         return *iter;
     }
 
-    void advance(typename BaseType::difference_type n)
-    {
+    void advance(typename BaseType::difference_type n) {
         index += step * n;
     }
 

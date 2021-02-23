@@ -57,9 +57,10 @@ private:
     }
 
     void align_position() {
-        while (iter != end && !predicate(dereference()))
+        while (iter != end && !predicate(dereference())) {
             ++iter;
         }
+    }
 
     BaseIter iter;
     BaseIter end;
