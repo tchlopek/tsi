@@ -9,26 +9,15 @@
 
 using namespace testing;
 using cppiter::iter;
+using Containers = testing::Types<
+    std::vector<std::vector<std::vector<int>>>,
+    std::list<std::vector<std::list<int>>>,
+    std::list<std::list<std::forward_list<int>>>>;
 
-class FlattenRangeForForwardIterator : public Test {
+template<typename T>
+class FlattenRangeTest : public Test {
 public:
-    std::vector<std::forward_list<int>> v1{ {}, {}, { 1, 2, 3 }, {}, { 4, 5, 6 }, {} };
-    std::vector<std::forward_list<int>> v2{ {}, {}, { 1, 2, 3 }, {}, { 4, 5, 6 } };
-};
-
-TEST_F(FlattenRangeForForwardIterator, test1) {
-    ASSERT_THAT(iter(v1).flatten(), ElementsAre(1, 2, 3, 4, 5, 6));
-}
-
-TEST_F(FlattenRangeForForwardIterator, test2) {
-    ASSERT_THAT(iter(v2).flatten(), ElementsAre(1, 2, 3, 4, 5, 6));
-}
-
-class FlattenRangeForBidirectionalIterator : public Test {
-public:
-    std::vector<std::list<int>> v1{ {}, {}, { 1, 2, 3 }, {}, { 4, 5, 6 }, {} };
-    std::vector<std::list<int>> v2{ {}, {}, { 1, 2, 3 }, {}, { 4, 5, 6 } };
-    std::vector<std::vector<std::list<int>>> v3{
+    T nestedContainer {
         {
             {},
             {}
@@ -47,19 +36,15 @@ public:
         },
         {
             { 5, 6 }
+        },
+        {
+            {}
         }
     };
 };
 
-TEST_F(FlattenRangeForBidirectionalIterator, test1) {
-    ASSERT_THAT(iter(v1).flatten(), ElementsAre(1, 2, 3, 4, 5, 6));
-}
+TYPED_TEST_SUITE(FlattenRangeTest, Containers);
 
-TEST_F(FlattenRangeForBidirectionalIterator, test2) {
-    ASSERT_THAT(iter(v2).flatten(), ElementsAre(1, 2, 3, 4, 5, 6));
+TYPED_TEST(FlattenRangeTest, shouldIterateOverNestedElements) {
+    ASSERT_THAT(iter(this->nestedContainer).flatten().flatten(), ElementsAre(1, 2, 3, 4, 5, 6));
 }
-
-TEST_F(FlattenRangeForBidirectionalIterator, test3) {
-    ASSERT_THAT(iter(v3).flatten().flatten(), ElementsAre(1, 2, 3, 4, 5, 6));
-}
-
