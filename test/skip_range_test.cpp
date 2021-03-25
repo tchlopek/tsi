@@ -10,65 +10,31 @@
 using namespace testing;
 using cppiter::iter;
 
-class SkipRangeForForwardIterator : public Test {
+using Containers = testing::Types<
+    std::vector<int>,
+    std::list<int>,
+    std::forward_list<int>>;
+
+template<typename T>
+class SkipRangeTest : public Test {
 public:
-    std::forward_list<int> v{ 1, 2, 3, 4, 5 };
+    T v{ 1, 2, 3, 4, 5 };
 };
 
-TEST_F(SkipRangeForForwardIterator, SkipReturnsTwoLastElements) {
-    ASSERT_THAT(iter(v).skip(3), ElementsAre(4, 5));
+TYPED_TEST_SUITE(SkipRangeTest, Containers);
+
+TYPED_TEST(SkipRangeTest, SkipReturnsTwoLastElements) {
+    ASSERT_THAT(iter(this->v).skip(3), ElementsAre(4, 5));
 }
 
-TEST_F(SkipRangeForForwardIterator, ExceededSkipReturnsEmptyRange) {
-    ASSERT_THAT(iter(v).skip(6), IsEmpty());
+TYPED_TEST(SkipRangeTest, ExceededSkipReturnsEmptyRange) {
+    ASSERT_THAT(iter(this->v).skip(6), IsEmpty());
 }
 
-TEST_F(SkipRangeForForwardIterator, SkipZeroReturnsSourceRange) {
-    ASSERT_THAT(iter(v).skip(0), ElementsAreArray(v));
+TYPED_TEST(SkipRangeTest, SkipZeroReturnsSourceRange) {
+    ASSERT_THAT(iter(this->v).skip(0), ElementsAreArray(this->v));
 }
 
-TEST_F(SkipRangeForForwardIterator, EmptyTest) {
-    ASSERT_THAT(iter(std::forward_list<int>{}).skip(10), IsEmpty());
-}
-
-class SkipRangeForBidirectionalIterator : public Test {
-public:
-    std::list<int> v{ 1, 2, 3, 4, 5 };
-};
-
-TEST_F(SkipRangeForBidirectionalIterator, SkipReturnsTwoLastElements) {
-    ASSERT_THAT(iter(v).skip(3), ElementsAre(4, 5));
-}
-
-TEST_F(SkipRangeForBidirectionalIterator, ExceededSkipReturnsEmptyRange) {
-    ASSERT_THAT(iter(v).skip(5), IsEmpty());
-}
-
-TEST_F(SkipRangeForBidirectionalIterator, SkipZeroReturnsSourceRange) {
-    ASSERT_THAT(iter(v).skip(0), ElementsAreArray(v));
-}
-
-TEST_F(SkipRangeForBidirectionalIterator, EmptyTest) {
-    ASSERT_THAT(iter(std::list<int>{}).skip(10), IsEmpty());
-}
-
-class SkipRangeForRandomAccessIterator : public Test {
-public:
-    std::vector<int> v{ 1, 2, 3, 4, 5 };
-};
-
-TEST_F(SkipRangeForRandomAccessIterator, SkipReturnsFourLastElements) {
-    ASSERT_THAT(iter(v).skip(1), ElementsAre(2, 3, 4, 5));
-}
-
-TEST_F(SkipRangeForRandomAccessIterator, ExceededSkipReturnsEmptyRange) {
-    ASSERT_THAT(iter(v).skip(6), IsEmpty());
-}
-
-TEST_F(SkipRangeForRandomAccessIterator, SkipZeroReturnsSourceRange) {
-    ASSERT_THAT(iter(v).skip(0), ElementsAreArray(v));
-}
-
-TEST_F(SkipRangeForRandomAccessIterator, EmptyTest) {
-    ASSERT_THAT(iter(std::vector<int>{}).skip(10), IsEmpty());
+TYPED_TEST(SkipRangeTest, EmptyTest) {
+    ASSERT_THAT(iter(TypeParam{}).skip(10), IsEmpty());
 }

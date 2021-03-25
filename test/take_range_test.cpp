@@ -10,65 +10,31 @@
 using namespace testing;
 using cppiter::iter;
 
-class TakeRangeForForwardIterator : public Test {
+using Containers = testing::Types<
+    std::vector<int>,
+    std::list<int>,
+    std::forward_list<int>>;
+
+template<typename T>
+class TakeRangeTest : public Test {
 public:
-    std::forward_list<int> v{ 1, 2, 3, 4, 5 };
+    T v{ 1, 2, 3, 4, 5 };
 };
 
-TEST_F(TakeRangeForForwardIterator, TakeHasOnlyThreeElements) {
-    ASSERT_THAT(iter(v).take(3), ElementsAre(1, 2, 3));
+TYPED_TEST_SUITE(TakeRangeTest, Containers);
+
+TYPED_TEST(TakeRangeTest, TakeHasOnlyThreeElements) {
+    ASSERT_THAT(iter(this->v).take(3), ElementsAre(1, 2, 3));
 }
 
-TEST_F(TakeRangeForForwardIterator, ExceededTakeReturnSourceRange) {
-    ASSERT_THAT(iter(v).take(10), ElementsAreArray(v));
+TYPED_TEST(TakeRangeTest, ExceededTakeReturnSourceRange) {
+    ASSERT_THAT(iter(this->v).take(10), ElementsAreArray(this->v));
 }
 
-TEST_F(TakeRangeForForwardIterator, TakeIsEmpty) {
-    ASSERT_THAT(iter(v).take(0), IsEmpty());
+TYPED_TEST(TakeRangeTest, TakeIsEmpty) {
+    ASSERT_THAT(iter(this->v).take(0), IsEmpty());
 }
 
-TEST_F(TakeRangeForForwardIterator, EmptyTest) {
-    ASSERT_THAT(iter(std::forward_list<int>{}).take(10), IsEmpty());
-}
-
-class TakeRangeForBidirectionalIterator : public Test {
-public:
-    std::list<int> v{ 1, 2, 3, 4, 5 };
-};
-
-TEST_F(TakeRangeForBidirectionalIterator, TakeHasOnlyThreeElements) {
-    ASSERT_THAT(iter(v).take(3), ElementsAre(1, 2, 3));
-}
-
-TEST_F(TakeRangeForBidirectionalIterator, ExceededTakeReturnSourceRange) {
-    ASSERT_THAT(iter(v).take(10), ElementsAreArray(v));
-}
-
-TEST_F(TakeRangeForBidirectionalIterator, TakeIsEmpty) {
-    ASSERT_THAT(iter(v).take(0), IsEmpty());
-}
-
-TEST_F(TakeRangeForBidirectionalIterator, EmptyTest) {
-    ASSERT_THAT(iter(std::list<int>{}).take(10), IsEmpty());
-}
-
-class TakeRangeForRandomAccessIterator : public Test {
-public:
-    std::vector<int> v{ 1, 2, 3, 4, 5 };
-};
-
-TEST_F(TakeRangeForRandomAccessIterator, TakeHasOnlyThreeElements) {
-    ASSERT_THAT(iter(v).take(3), ElementsAre(1, 2, 3));
-}
-
-TEST_F(TakeRangeForRandomAccessIterator, ExceededTakeReturnSourceRange) {
-    ASSERT_THAT(iter(v).take(10), ElementsAreArray(v));
-}
-
-TEST_F(TakeRangeForRandomAccessIterator, TakeIsEmpty) {
-    ASSERT_THAT(iter(v).take(0), IsEmpty());
-}
-
-TEST_F(TakeRangeForRandomAccessIterator, EmptyTest) {
-    ASSERT_THAT(iter(std::vector<int>{}).take(10), IsEmpty());
+TYPED_TEST(TakeRangeTest, EmptyTest) {
+    ASSERT_THAT(iter(TypeParam{}).take(10), IsEmpty());
 }
