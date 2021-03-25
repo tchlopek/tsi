@@ -2,15 +2,14 @@
 
 #include "range_facade.hpp"
 #include "range_iterator.hpp"
-#include "iterator/skip_iterator.hpp"
 
 namespace cppiter::range {
 
 template<typename R>
 class skip_range :
-    public range_facade<iter::skip_iterator<detail::range_iterator_t<R>>> {
+    public range_facade<detail::range_iterator_t<R>> {
     using Iterator = detail::range_iterator_t<R>;
-    using BaseRange = range_facade<iter::skip_iterator<Iterator>>;
+    using BaseRange = range_facade<Iterator>;
     using IteratorCategory = iter::detail::iterator_category_t<Iterator>;
 
 public:
