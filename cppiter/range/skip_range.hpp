@@ -7,8 +7,8 @@ namespace cppiter::range {
 
 template<typename R>
 class skip_range :
-    public range_facade<detail::range_iterator_t<R>> {
-    using Iterator = detail::range_iterator_t<R>;
+    public range_facade<range_iterator_t<R>> {
+    using Iterator = range_iterator_t<R>;
     using BaseRange = range_facade<Iterator>;
     using IteratorCategory = iter::category_t<Iterator>;
 

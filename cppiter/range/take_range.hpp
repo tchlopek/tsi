@@ -7,8 +7,8 @@
 namespace cppiter::range {
 
 template<typename R>
-class take_range : public range_facade<iter::take_iterator<detail::range_iterator_t<R>>> {
-    using Iterator = detail::range_iterator_t<R>;
+class take_range : public range_facade<iter::take_iterator<range_iterator_t<R>>> {
+    using Iterator = range_iterator_t<R>;
     using BaseRange = range_facade<iter::take_iterator<Iterator>>;
     using Difference = iter::difference_t<Iterator>;
 

@@ -8,13 +8,13 @@ namespace cppiter::range {
 
 template<typename R, typename P>
 class replace_range :
-    public range_facade<iter::replace_iterator<detail::range_iterator_t<R>, P>> {
-    using BaseRange = range_facade<iter::replace_iterator<detail::range_iterator_t<R>, P>>;
+    public range_facade<iter::replace_iterator<range_iterator_t<R>, P>> {
+    using BaseRange = range_facade<iter::replace_iterator<range_iterator_t<R>, P>>;
 
 public:
     replace_range(
-        detail::range_iterator_t<R> begin,
-        detail::range_iterator_t<R> end,
+        range_iterator_t<R> begin,
+        range_iterator_t<R> end,
         P pred,
         const typename BaseRange::value_type& newVal) :
             BaseRange{ { begin, pred, newVal }, { end, pred, newVal } }

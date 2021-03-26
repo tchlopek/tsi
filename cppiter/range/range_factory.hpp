@@ -18,8 +18,8 @@ namespace cppiter::range {
 
 template<typename R>
 class range_factory :
-    public range_facade<detail::range_iterator_t<R>> {
-    using BaseRange = range_facade<detail::range_iterator_t<R>>;
+    public range_facade<range_iterator_t<R>> {
+    using BaseRange = range_facade<range_iterator_t<R>>;
 
 public:
     using BaseRange::begin;

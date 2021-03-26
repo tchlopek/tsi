@@ -7,7 +7,7 @@ namespace cppiter::range::iter {
 namespace detail {
 
 template<typename I>
-using inner_iterator_t = range::detail::range_iterator_t<value_t<I>>;
+using inner_iterator_t = range::range_iterator_t<value_t<I>>;
 
 template<typename BaseIter>
 struct flatten_iterator_traits {
