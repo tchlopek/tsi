@@ -17,7 +17,7 @@ class stride_iterator_impl<BaseIter, std::forward_iterator_tag> :
     friend class iter::derived_access;
 
 public:
-    stride_iterator_impl(BaseIter iter, BaseIter end, detail::difference_t<BaseType> step) :
+    stride_iterator_impl(BaseIter iter, BaseIter end, difference_t<BaseType> step) :
         iter{ iter }, end{ end }, step{ step }
     {}
 
@@ -27,7 +27,7 @@ private:
     }
 
     void increment() {
-        for (detail::difference_t<BaseType> i = 0; iter != end && i != step; ++i, ++iter);
+        for (difference_t<BaseType> i = 0; iter != end && i != step; ++i, ++iter);
     }
 
     typename BaseType::reference dereference() const {
@@ -36,7 +36,7 @@ private:
 
     BaseIter iter;
     BaseIter end;
-    detail::difference_t<BaseType> step;
+    difference_t<BaseType> step;
 };
 
 template<typename BaseIter>
@@ -50,8 +50,8 @@ class stride_iterator_impl<BaseIter, std::bidirectional_iterator_tag> :
 public:
     stride_iterator_impl(
         BaseIter iter,
-        detail::difference_t<BaseType> index,
-        detail::difference_t<BaseType> step) :
+        difference_t<BaseType> index,
+        difference_t<BaseType> step) :
         iter{ iter }, offset{}, index{ index }, step{ step } {
         if (step > 0 && index % step != 0) {
             this->index += step - index % step;
@@ -79,9 +79,9 @@ private:
     }
 
     mutable BaseIter iter;
-    mutable detail::difference_t<BaseType> offset;
-    mutable detail::difference_t<BaseType> index;
-    detail::difference_t<BaseType> step;
+    mutable difference_t<BaseType> offset;
+    mutable difference_t<BaseType> index;
+    difference_t<BaseType> step;
 };
 
 template<typename BaseIter>
@@ -93,7 +93,7 @@ class stride_iterator_impl<BaseIter, std::random_access_iterator_tag>:
     friend class iter::derived_access;
 
 public:
-    stride_iterator_impl(BaseIter begin, BaseIter iter, detail::difference_t<BaseType> step) :
+    stride_iterator_impl(BaseIter begin, BaseIter iter, difference_t<BaseType> step) :
         begin{ begin }, iter{ iter }, index{ iter - begin }, step{ step } {
         if (step > 0 && index % step != 0) {
             this->index += step - index % step;
@@ -128,18 +128,16 @@ private:
 
     BaseIter begin;
     mutable BaseIter iter;
-    detail::difference_t<BaseType> index;
-    detail::difference_t<BaseType> step;
+    difference_t<BaseType> index;
+    difference_t<BaseType> step;
 };
 
 }
 
 template<typename BaseIter>
-class stride_iterator :
-    public detail::stride_iterator_impl<BaseIter, detail::iterator_category_t<BaseIter>> {
+class stride_iterator : public detail::stride_iterator_impl<BaseIter, category_t<BaseIter>> {
 public:
-    using detail::stride_iterator_impl<BaseIter, detail::iterator_category_t<BaseIter>>::
-        stride_iterator_impl;
+    using detail::stride_iterator_impl<BaseIter, category_t<BaseIter>>::stride_iterator_impl;
 };
 
 }

@@ -10,11 +10,11 @@ template<typename R>
 class take_range : public range_facade<iter::take_iterator<detail::range_iterator_t<R>>> {
     using Iterator = detail::range_iterator_t<R>;
     using BaseRange = range_facade<iter::take_iterator<Iterator>>;
-    using Difference = iter::detail::difference_t<Iterator>;
+    using Difference = iter::difference_t<Iterator>;
 
 public:
     take_range(Iterator begin, Iterator end, Difference n) :
-        take_range{ begin, end, n, iter::detail::iterator_category_t<Iterator>{} }
+        take_range{ begin, end, n, iter::category_t<Iterator>{} }
     {}
 
 private:

@@ -12,7 +12,7 @@ public:
     }
 
     template<typename I>
-    static detail::reference_t<I> dereference(I& iter) {
+    static reference_t<I> dereference(I& iter) {
         return iter.dereference();
     }
 
@@ -27,12 +27,12 @@ public:
     }
 
     template<typename I>
-    static void advance(I& iter, detail::difference_t<I> n) {
+    static void advance(I& iter, difference_t<I> n) {
         iter.advance(n);
     }
 
     template<typename I>
-    static detail::difference_t<I> distance_to(const I& lhs, const I& rhs) {
+    static difference_t<I> distance_to(const I& lhs, const I& rhs) {
         return lhs.distance_to(rhs);
     }
 };
@@ -43,10 +43,10 @@ class iterator_facade_impl_base {
     using IteratorTraits = detail::conditional_iterator_traits_t<Traits, InnerIterator>; 
 
 public:
-    using value_type = detail::value_t<IteratorTraits>;
-    using difference_type = detail::difference_t<IteratorTraits>;
-    using pointer = detail::pointer_t<IteratorTraits>;
-    using reference = detail::reference_t<IteratorTraits>;
+    using value_type = value_t<IteratorTraits>;
+    using difference_type = difference_t<IteratorTraits>;
+    using pointer = pointer_t<IteratorTraits>;
+    using reference = reference_t<IteratorTraits>;
 
     DerivedIterator& derived() {
         return *static_cast<DerivedIterator*>(this);
@@ -168,9 +168,10 @@ class iterator_facade :
     public iterator_facade_impl<
         DerivedIterator,
         Traits,
-        typename detail::conditional_iterator_traits_t<
-            Traits,
-            detail::wrapped_iterator_t<DerivedIterator>>::iterator_category> {
+        category_t<
+            detail::conditional_iterator_traits_t<
+                Traits,
+                detail::wrapped_iterator_t<DerivedIterator>>>> {
     DerivedIterator& derived() = delete;
     const DerivedIterator& derived() const = delete;
 };

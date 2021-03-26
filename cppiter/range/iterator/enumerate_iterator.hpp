@@ -9,9 +9,9 @@ namespace detail {
 template<typename Base>
 struct enumerate_iterator_traits {
     using iterator_category = std::conditional_t<
-        std::is_same_v<iterator_category_t<Base>, std::bidirectional_iterator_tag>,
+        std::is_same_v<category_t<Base>, std::bidirectional_iterator_tag>,
         std::forward_iterator_tag,
-        iterator_category_t<Base>>;
+        category_t<Base>>;
     using difference_type = difference_t<Base>;
     using value_type = std::pair<difference_type, value_t<Base>>;
     using reference = std::pair<difference_type, reference_t<Base>>;

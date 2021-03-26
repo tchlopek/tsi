@@ -7,14 +7,14 @@ namespace cppiter::range::iter {
 namespace detail {
 
 template<typename I>
-using inner_iterator_t = range::detail::range_iterator_t<iter::detail::value_t<I>>;
+using inner_iterator_t = range::detail::range_iterator_t<value_t<I>>;
 
 template<typename BaseIter>
 struct flatten_iterator_traits {
     using iterator_category = min_iterator_category_t<
-        iterator_category_t<BaseIter>,
+        category_t<BaseIter>,
         min_iterator_category_t<
-            iterator_category_t<inner_iterator_t<BaseIter>>,
+            category_t<inner_iterator_t<BaseIter>>,
             std::bidirectional_iterator_tag>>;
     using reference = reference_t<inner_iterator_t<BaseIter>>;
     using difference_type = difference_t<inner_iterator_t<BaseIter>>;
@@ -113,11 +113,10 @@ private:
 template<typename BaseIter>
 class flatten_iterator : 
     public detail::flatten_iterator_impl<
-        BaseIter, typename detail::flatten_iterator_traits<BaseIter>::iterator_category> {
+        BaseIter, category_t<detail::flatten_iterator_traits<BaseIter>>> {
 public:
     using detail::flatten_iterator_impl<
-        BaseIter, typename detail::flatten_iterator_traits<BaseIter>::iterator_category>::
-            flatten_iterator_impl;
+        BaseIter, category_t<detail::flatten_iterator_traits<BaseIter>>>::flatten_iterator_impl;
 };
 
 }

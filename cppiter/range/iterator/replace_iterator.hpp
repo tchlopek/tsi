@@ -8,7 +8,7 @@ namespace detail {
 
 template<typename Base>
 struct replace_iterator_traits {
-    using iterator_category = iterator_category_t<Base>;
+    using iterator_category = category_t<Base>;
     using reference = add_ref_const_t<reference_t<Base>>;
     using difference_type = difference_t<Base>;
     using value_type = value_t<Base>;

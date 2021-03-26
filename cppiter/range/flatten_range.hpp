@@ -13,7 +13,7 @@ class flatten_range : public range_facade<iter::flatten_iterator<detail::range_i
 
 public:
     flatten_range(detail::range_iterator_t<R> begin, detail::range_iterator_t<R> end) :
-        flatten_range{ begin, end, iter::detail::iterator_category_t<Iterator>{} }
+        flatten_range{ begin, end, iter::category_t<Iterator>{} }
     {}
 
 private:

@@ -9,7 +9,7 @@ namespace detail {
 template<typename Base>
 struct filter_iterator_traits {
     using iterator_category = min_iterator_category_t<
-        iterator_category_t<Base>,
+        category_t<Base>,
         std::bidirectional_iterator_tag>;
     using reference = reference_t<Base>;
     using difference_type = difference_t<Base>;

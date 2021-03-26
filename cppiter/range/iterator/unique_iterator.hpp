@@ -8,9 +8,7 @@ namespace detail {
 
 template<typename Base>
 struct unique_iterator_traits {
-    using iterator_category = min_iterator_category_t<
-        iterator_category_t<Base>,
-        std::forward_iterator_tag>;
+    using iterator_category = min_iterator_category_t<category_t<Base>, std::forward_iterator_tag>;
     using reference = reference_t<Base>;
     using difference_type = difference_t<Base>;
     using value_type = value_t<Base>;

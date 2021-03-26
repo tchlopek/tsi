@@ -2,7 +2,9 @@
 
 #include <iterator>
 
-namespace cppiter::range::iter::detail {
+namespace cppiter::range::iter {
+
+namespace detail {
 
 template<typename IteratorWrapper>
 struct wrapped_iterator;
@@ -33,21 +35,12 @@ template<> constexpr std::size_t iterator_category_rank<std::forward_iterator_ta
 template<> constexpr std::size_t iterator_category_rank<std::bidirectional_iterator_tag> = 3;
 template<> constexpr std::size_t iterator_category_rank<std::random_access_iterator_tag> = 4;
 
-template<typename C1, typename C2>
-struct max_iterator_category {
-    using type = std::conditional_t<
-        (iterator_category_rank<C1> > iterator_category_rank<C2>),
-        C1,
-        C2>;
-};
-
-template<typename C1, typename C2>
-using max_iterator_category_t = typename max_iterator_category<C1, C2>::type;
+}
 
 template<typename C1, typename C2>
 struct min_iterator_category {
     using type = std::conditional_t<
-        (iterator_category_rank<C1> < iterator_category_rank<C2>),
+        (detail::iterator_category_rank<C1> < detail::iterator_category_rank<C2>),
         C1,
         C2>;
 };
@@ -92,7 +85,7 @@ template<typename Iterator>
 using reference_t = typename std::iterator_traits<Iterator>::reference;
 
 template<typename Iterator>
-using iterator_category_t = typename std::iterator_traits<Iterator>::iterator_category;
+using category_t = typename std::iterator_traits<Iterator>::iterator_category;
 
 template<typename Iterator>
 using pointer_t = typename std::iterator_traits<Iterator>::pointer;

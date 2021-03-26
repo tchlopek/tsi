@@ -10,16 +10,16 @@ class skip_range :
     public range_facade<detail::range_iterator_t<R>> {
     using Iterator = detail::range_iterator_t<R>;
     using BaseRange = range_facade<Iterator>;
-    using IteratorCategory = iter::detail::iterator_category_t<Iterator>;
+    using IteratorCategory = iter::category_t<Iterator>;
 
 public:
-    skip_range(Iterator begin, Iterator end, iter::detail::difference_t<Iterator> n) :
+    skip_range(Iterator begin, Iterator end, iter::difference_t<Iterator> n) :
         BaseRange{ { makeBeginIter<IteratorCategory>(begin, end, n) }, { end } }
     {}
 
 private:
     template<typename Category>
-    Iterator makeBeginIter(Iterator begin, Iterator end, iter::detail::difference_t<Iterator> n) {
+    Iterator makeBeginIter(Iterator begin, Iterator end, iter::difference_t<Iterator> n) {
         if constexpr (std::is_same_v<Category, std::random_access_iterator_tag>) {
             return begin + std::min(end - begin, n);
         } else {

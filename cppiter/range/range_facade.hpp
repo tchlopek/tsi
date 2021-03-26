@@ -9,11 +9,11 @@ class range_facade_impl_base {
     using Iterator = iter::detail::wrapped_iterator_t<Derived>;
 
 public:
-    using value_type = iter::detail::value_t<Iterator>;
-    using difference_type = iter::detail::difference_t<Iterator>;
-    using reference = iter::detail::reference_t<Iterator>;
+    using value_type = iter::value_t<Iterator>;
+    using difference_type = iter::difference_t<Iterator>;
+    using reference = iter::reference_t<Iterator>;
     using const_reference = reference;
-    using pointer = iter::detail::pointer_t<Iterator>;
+    using pointer = iter::pointer_t<Iterator>;
     using const_pointer = pointer;
     using iterator = Iterator;
     using const_iterator = Iterator;

@@ -17,7 +17,7 @@ class take_iterator_impl<BaseIter, std::forward_iterator_tag> :
     friend class iter::derived_access;
 
 public:
-    take_iterator_impl(BaseIter iter, detail::difference_t<BaseType> index) :
+    take_iterator_impl(BaseIter iter, difference_t<BaseType> index) :
         iter{ iter }, index{ index }
     {}
 
@@ -36,7 +36,7 @@ private:
     }
 
     BaseIter iter;
-    detail::difference_t<BaseType> index;
+    difference_t<BaseType> index;
 };
 
 template<typename BaseIter>
@@ -48,7 +48,7 @@ class take_iterator_impl<BaseIter, std::bidirectional_iterator_tag> :
     friend class iter::derived_access;
 
 public:
-    take_iterator_impl(BaseIter iter, detail::difference_t<BaseType> index) :
+    take_iterator_impl(BaseIter iter, difference_t<BaseType> index) :
         iter{ iter }, index{ index }
     {}
 
@@ -72,7 +72,7 @@ private:
     }
 
     BaseIter iter;
-    detail::difference_t<BaseType> index;
+    difference_t<BaseType> index;
 };
 
 template<typename BaseIter>
@@ -118,11 +118,9 @@ private:
 }
 
 template<typename BaseIter>
-class take_iterator :
-    public detail::take_iterator_impl<BaseIter, detail::iterator_category_t<BaseIter>> {
+class take_iterator : public detail::take_iterator_impl<BaseIter, category_t<BaseIter>> {
 public:
-    using detail::take_iterator_impl<BaseIter, detail::iterator_category_t<BaseIter>>::
-        take_iterator_impl;
+    using detail::take_iterator_impl<BaseIter, category_t<BaseIter>>::take_iterator_impl;
 };
 
 }
