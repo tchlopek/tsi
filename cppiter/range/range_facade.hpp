@@ -6,7 +6,7 @@ namespace cppiter::range {
 
 template<typename Derived>
 class range_facade_impl_base {
-    using Iterator = iter::detail::inner_iterator_t<Derived>;
+    using Iterator = iter::detail::wrapped_iterator_t<Derived>;
 
 public:
     using value_type = iter::detail::value_t<Iterator>;

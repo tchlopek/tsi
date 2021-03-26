@@ -7,24 +7,24 @@ namespace cppiter::range::iter {
 namespace detail {
 
 template<typename I>
-using nested_iterator_t = range::detail::range_iterator_t<iter::detail::value_t<I>>;
+using inner_iterator_t = range::detail::range_iterator_t<iter::detail::value_t<I>>;
 
 template<typename BaseIter>
 struct flatten_iterator_traits {
     using iterator_category = min_iterator_category_t<
         iterator_category_t<BaseIter>,
         min_iterator_category_t<
-            iterator_category_t<nested_iterator_t<BaseIter>>,
+            iterator_category_t<inner_iterator_t<BaseIter>>,
             std::bidirectional_iterator_tag>>;
-    using reference = reference_t<nested_iterator_t<BaseIter>>;
-    using difference_type = difference_t<nested_iterator_t<BaseIter>>;
-    using value_type = value_t<nested_iterator_t<BaseIter>>;
-    using pointer = pointer_t<nested_iterator_t<BaseIter>>;
+    using reference = reference_t<inner_iterator_t<BaseIter>>;
+    using difference_type = difference_t<inner_iterator_t<BaseIter>>;
+    using value_type = value_t<inner_iterator_t<BaseIter>>;
+    using pointer = pointer_t<inner_iterator_t<BaseIter>>;
 };
 
 template<typename BaseIter>
 struct flatten_iterator_base {
-    flatten_iterator_base(BaseIter iter, BaseIter end, nested_iterator_t<BaseIter> inner) :
+    flatten_iterator_base(BaseIter iter, BaseIter end, inner_iterator_t<BaseIter> inner) :
         baseIter{ iter }, baseEnd{ end }, innerIter{ inner } {
         while (baseIter != baseEnd && baseIter->empty()) {
             ++baseIter;
@@ -55,7 +55,7 @@ struct flatten_iterator_base {
 
     BaseIter baseIter;
     BaseIter baseEnd;
-    nested_iterator_t<BaseIter> innerIter;
+    inner_iterator_t<BaseIter> innerIter;
 };
 
 template<typename BaseIter, typename Category>
@@ -71,7 +71,7 @@ class flatten_iterator_impl<BaseIter, std::forward_iterator_tag> :
     friend class iter::derived_access;
 
 public:
-    flatten_iterator_impl(BaseIter iter, BaseIter end, nested_iterator_t<BaseIter> inner) :
+    flatten_iterator_impl(BaseIter iter, BaseIter end, inner_iterator_t<BaseIter> inner) :
         flatten_iterator_base<BaseIter>{ iter, end, inner }
     {}
 };
@@ -88,7 +88,7 @@ class flatten_iterator_impl<BaseIter, std::bidirectional_iterator_tag> :
     friend class iter::derived_access;
 
 public:
-    flatten_iterator_impl(BaseIter begin, BaseIter end, BaseIter iter, nested_iterator_t<BaseIter> inner) :
+    flatten_iterator_impl(BaseIter begin, BaseIter end, BaseIter iter, inner_iterator_t<BaseIter> inner) :
         Base{ iter, end, inner }, baseBegin{ begin }
     {}
 

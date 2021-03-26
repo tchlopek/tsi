@@ -39,7 +39,7 @@ public:
 
 template<typename DerivedIterator, typename Traits>
 class iterator_facade_impl_base {
-    using InnerIterator = detail::inner_iterator_t<DerivedIterator>;
+    using InnerIterator = detail::wrapped_iterator_t<DerivedIterator>;
     using IteratorTraits = detail::conditional_iterator_traits_t<Traits, InnerIterator>; 
 
 public:
@@ -170,7 +170,7 @@ class iterator_facade :
         Traits,
         typename detail::conditional_iterator_traits_t<
             Traits,
-            detail::inner_iterator_t<DerivedIterator>>::iterator_category> {
+            detail::wrapped_iterator_t<DerivedIterator>>::iterator_category> {
     DerivedIterator& derived() = delete;
     const DerivedIterator& derived() const = delete;
 };

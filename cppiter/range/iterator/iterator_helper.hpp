@@ -5,15 +5,15 @@
 namespace cppiter::range::iter::detail {
 
 template<typename IteratorWrapper>
-struct inner_iterator;
+struct wrapped_iterator;
 
 template<template<typename...> class IteratorWrapper, typename InnerIterator, typename... Ts>
-struct inner_iterator<IteratorWrapper<InnerIterator, Ts...>> {
+struct wrapped_iterator<IteratorWrapper<InnerIterator, Ts...>> {
     using type = InnerIterator;
 };
 
 template<typename IteratorWrapper>
-using inner_iterator_t = typename inner_iterator<IteratorWrapper>::type;
+using wrapped_iterator_t = typename wrapped_iterator<IteratorWrapper>::type;
 
 /* ========================================================================= */
 
