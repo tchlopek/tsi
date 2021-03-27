@@ -19,15 +19,6 @@ using wrapped_iterator_t = typename wrapped_iterator<IteratorWrapper>::type;
 
 /* ========================================================================= */
 
-template<typename ExternalTraits, typename DefaultTraits>
-using conditional_iterator_traits_t = std::iterator_traits<
-    typename std::conditional_t<
-        std::is_same_v<ExternalTraits, void>,
-        DefaultTraits,
-        ExternalTraits>>;
-
-/* ========================================================================= */
-
 template<typename C> constexpr std::size_t iterator_category_rank;
 template<> constexpr std::size_t iterator_category_rank<std::input_iterator_tag> = 0;
 template<> constexpr std::size_t iterator_category_rank<std::output_iterator_tag> = 1;
