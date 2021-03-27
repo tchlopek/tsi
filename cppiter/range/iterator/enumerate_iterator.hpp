@@ -6,33 +6,28 @@ namespace cppiter::range::iter {
 
 namespace detail {
 
-template<typename Base>
+template<typename Iter>
 struct enumerate_iterator_traits {
     using iterator_category = std::conditional_t<
-        std::is_same_v<category_t<Base>, std::bidirectional_iterator_tag>,
+        std::is_same_v<category_t<Iter>, std::bidirectional_iterator_tag>,
         std::forward_iterator_tag,
-        category_t<Base>>;
-    using difference_type = difference_t<Base>;
-    using value_type = std::pair<difference_type, value_t<Base>>;
-    using reference = std::pair<difference_type, reference_t<Base>>;
-    using pointer = std::pair<difference_type, pointer_t<Base>>;
+        category_t<Iter>>;
+    using difference_type = difference_t<Iter>;
+    using value_type = std::pair<difference_type, value_t<Iter>>;
+    using reference = std::pair<difference_type, reference_t<Iter>>;
+    using pointer = std::pair<difference_type, pointer_t<Iter>>;
 };
 
 }
 
-template<typename BaseIter>
-class enumerate_iterator : public iterator_facade<
-    enumerate_iterator<BaseIter>,
-    detail::enumerate_iterator_traits<BaseIter>> {
-    using BaseType = iterator_facade<
-        enumerate_iterator<BaseIter>,
-        detail::enumerate_iterator_traits<BaseIter>>;
-    using Difference = typename BaseType::difference_type;
+template<typename Iter>
+class enumerate_iterator :
+    public iterator_facade<enumerate_iterator<Iter>, detail::enumerate_iterator_traits<Iter>> {
 
     friend class derived_access;
 
 public:
-    enumerate_iterator(BaseIter iter, Difference index) : iter{ iter }, index{ index }
+    enumerate_iterator(Iter iter, difference_t<Iter> index) : iter{ iter }, index{ index }
     {}
 
 private:
@@ -50,21 +45,21 @@ private:
         --index;
     }
 
-    typename BaseType::reference dereference() const {
+    reference_t<detail::enumerate_iterator_traits<Iter>> dereference() const {
         return { index, std::ref(*iter) };
     }
 
-    void advance(Difference n) {
+    void advance(difference_t<Iter> n) {
         iter += n;
         index += n;
     }
 
-    Difference distance_to(const enumerate_iterator& other) const {
+    difference_t<Iter> distance_to(const enumerate_iterator& other) const {
         return iter - other.iter;
     }
 
-    BaseIter iter;
-    Difference index;
+    Iter iter;
+    difference_t<Iter> index;
 };
 
 }

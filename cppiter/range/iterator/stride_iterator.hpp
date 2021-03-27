@@ -6,18 +6,17 @@ namespace cppiter::range::iter {
 
 namespace detail {
 
-template<typename BaseIter, typename Category>
+template<typename Iter, typename Category>
 class stride_iterator_impl;
 
-template<typename BaseIter>
-class stride_iterator_impl<BaseIter, std::forward_iterator_tag> :
-    public iterator_facade<stride_iterator_impl<BaseIter, std::forward_iterator_tag>> {
-    using BaseType = iterator_facade<stride_iterator_impl<BaseIter, std::forward_iterator_tag>>;
+template<typename Iter>
+class stride_iterator_impl<Iter, std::forward_iterator_tag> :
+    public iterator_facade<stride_iterator_impl<Iter, std::forward_iterator_tag>> {
 
     friend class iter::derived_access;
 
 public:
-    stride_iterator_impl(BaseIter iter, BaseIter end, difference_t<BaseType> step) :
+    stride_iterator_impl(Iter iter, Iter end, difference_t<Iter> step) :
         iter{ iter }, end{ end }, step{ step }
     {}
 
@@ -27,31 +26,26 @@ private:
     }
 
     void increment() {
-        for (difference_t<BaseType> i = 0; iter != end && i != step; ++i, ++iter);
+        for (difference_t<Iter> i = 0; iter != end && i != step; ++i, ++iter);
     }
 
-    typename BaseType::reference dereference() const {
+    reference_t<Iter> dereference() const {
         return *iter;
     }
 
-    BaseIter iter;
-    BaseIter end;
-    difference_t<BaseType> step;
+    Iter iter;
+    Iter end;
+    difference_t<Iter> step;
 };
 
-template<typename BaseIter>
-class stride_iterator_impl<BaseIter, std::bidirectional_iterator_tag> :
-    public iterator_facade<stride_iterator_impl<BaseIter, std::bidirectional_iterator_tag>> {
-    using BaseType = iterator_facade<
-        stride_iterator_impl<BaseIter, std::bidirectional_iterator_tag>>;
+template<typename Iter>
+class stride_iterator_impl<Iter, std::bidirectional_iterator_tag> :
+    public iterator_facade<stride_iterator_impl<Iter, std::bidirectional_iterator_tag>> {
 
     friend class iter::derived_access;
 
 public:
-    stride_iterator_impl(
-        BaseIter iter,
-        difference_t<BaseType> index,
-        difference_t<BaseType> step) :
+    stride_iterator_impl(Iter iter, difference_t<Iter> index, difference_t<Iter> step) :
         iter{ iter }, offset{}, index{ index }, step{ step } {
         if (step > 0 && index % step != 0) {
             this->index += step - index % step;
@@ -71,29 +65,27 @@ private:
         offset -= step;
     }
 
-    typename BaseType::reference dereference() const {
+    reference_t<Iter> dereference() const {
         std::advance(iter, offset);
         index += offset;
         offset = 0;
         return *iter;
     }
 
-    mutable BaseIter iter;
-    mutable difference_t<BaseType> offset;
-    mutable difference_t<BaseType> index;
-    difference_t<BaseType> step;
+    mutable Iter iter;
+    mutable difference_t<Iter> offset;
+    mutable difference_t<Iter> index;
+    difference_t<Iter> step;
 };
 
-template<typename BaseIter>
-class stride_iterator_impl<BaseIter, std::random_access_iterator_tag>:
-    public iterator_facade<stride_iterator_impl<BaseIter, std::random_access_iterator_tag>> {
-    using BaseType = iterator_facade<
-        stride_iterator_impl<BaseIter, std::random_access_iterator_tag>>;
+template<typename Iter>
+class stride_iterator_impl<Iter, std::random_access_iterator_tag>:
+    public iterator_facade<stride_iterator_impl<Iter, std::random_access_iterator_tag>> {
 
     friend class iter::derived_access;
 
 public:
-    stride_iterator_impl(BaseIter begin, BaseIter iter, difference_t<BaseType> step) :
+    stride_iterator_impl(Iter begin, Iter iter, difference_t<Iter> step) :
         begin{ begin }, iter{ iter }, index{ iter - begin }, step{ step } {
         if (step > 0 && index % step != 0) {
             this->index += step - index % step;
@@ -113,31 +105,31 @@ private:
         index -= step;
     }
 
-    typename BaseType::reference dereference() const {
+    reference_t<Iter> dereference() const {
         iter = begin + index;
         return *iter;
     }
 
-    void advance(typename BaseType::difference_type n) {
+    void advance(difference_t<Iter> n) {
         index += step * n;
     }
 
-    typename BaseType::difference_type distance_to(const stride_iterator_impl& other) const {
+    difference_t<Iter> distance_to(const stride_iterator_impl& other) const {
         return (other.index - index) / step;
     }
 
-    BaseIter begin;
-    mutable BaseIter iter;
-    difference_t<BaseType> index;
-    difference_t<BaseType> step;
+    Iter begin;
+    mutable Iter iter;
+    difference_t<Iter> index;
+    difference_t<Iter> step;
 };
 
 }
 
-template<typename BaseIter>
-class stride_iterator : public detail::stride_iterator_impl<BaseIter, category_t<BaseIter>> {
+template<typename Iter>
+class stride_iterator : public detail::stride_iterator_impl<Iter, category_t<Iter>> {
 public:
-    using detail::stride_iterator_impl<BaseIter, category_t<BaseIter>>::stride_iterator_impl;
+    using detail::stride_iterator_impl<Iter, category_t<Iter>>::stride_iterator_impl;
 };
 
 }

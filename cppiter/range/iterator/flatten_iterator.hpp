@@ -9,22 +9,22 @@ namespace detail {
 template<typename I>
 using inner_iterator_t = range::range_iterator_t<value_t<I>>;
 
-template<typename BaseIter>
+template<typename Iter>
 struct flatten_iterator_traits {
     using iterator_category = min_iterator_category_t<
-        category_t<BaseIter>,
+        category_t<Iter>,
         min_iterator_category_t<
-            category_t<inner_iterator_t<BaseIter>>,
+            category_t<inner_iterator_t<Iter>>,
             std::bidirectional_iterator_tag>>;
-    using reference = reference_t<inner_iterator_t<BaseIter>>;
-    using difference_type = difference_t<inner_iterator_t<BaseIter>>;
-    using value_type = value_t<inner_iterator_t<BaseIter>>;
-    using pointer = pointer_t<inner_iterator_t<BaseIter>>;
+    using reference = reference_t<inner_iterator_t<Iter>>;
+    using difference_type = difference_t<inner_iterator_t<Iter>>;
+    using value_type = value_t<inner_iterator_t<Iter>>;
+    using pointer = pointer_t<inner_iterator_t<Iter>>;
 };
 
-template<typename BaseIter>
+template<typename Iter>
 struct flatten_iterator_base {
-    flatten_iterator_base(BaseIter iter, BaseIter end, inner_iterator_t<BaseIter> inner) :
+    flatten_iterator_base(Iter iter, Iter end, inner_iterator_t<Iter> inner) :
         baseIter{ iter }, baseEnd{ end }, innerIter{ inner } {
         while (baseIter != baseEnd && baseIter->empty()) {
             ++baseIter;
@@ -53,42 +53,42 @@ struct flatten_iterator_base {
         }
     }
 
-    BaseIter baseIter;
-    BaseIter baseEnd;
-    inner_iterator_t<BaseIter> innerIter;
+    Iter baseIter;
+    Iter baseEnd;
+    inner_iterator_t<Iter> innerIter;
 };
 
-template<typename BaseIter, typename Category>
+template<typename Iter, typename Category>
 class flatten_iterator_impl;
 
-template<typename BaseIter>
-class flatten_iterator_impl<BaseIter, std::forward_iterator_tag> :
+template<typename Iter>
+class flatten_iterator_impl<Iter, std::forward_iterator_tag> :
     public iterator_facade<
-        flatten_iterator_impl<BaseIter, std::forward_iterator_tag>,
-        flatten_iterator_traits<BaseIter>>,
-    private flatten_iterator_base<BaseIter> {
+        flatten_iterator_impl<Iter, std::forward_iterator_tag>,
+        flatten_iterator_traits<Iter>>,
+    private flatten_iterator_base<Iter> {
 
     friend class iter::derived_access;
 
 public:
-    flatten_iterator_impl(BaseIter iter, BaseIter end, inner_iterator_t<BaseIter> inner) :
-        flatten_iterator_base<BaseIter>{ iter, end, inner }
+    flatten_iterator_impl(Iter iter, Iter end, inner_iterator_t<Iter> inner) :
+        flatten_iterator_base<Iter>{ iter, end, inner }
     {}
 };
 
-template<typename BaseIter>
-class flatten_iterator_impl<BaseIter, std::bidirectional_iterator_tag> :
+template<typename Iter>
+class flatten_iterator_impl<Iter, std::bidirectional_iterator_tag> :
     public iterator_facade<
-        flatten_iterator_impl<BaseIter, std::bidirectional_iterator_tag>,
-        flatten_iterator_traits<BaseIter>>,
-    private flatten_iterator_base<BaseIter> {
+        flatten_iterator_impl<Iter, std::bidirectional_iterator_tag>,
+        flatten_iterator_traits<Iter>>,
+    private flatten_iterator_base<Iter> {
 
-    using Base = flatten_iterator_base<BaseIter>;
+    using Base = flatten_iterator_base<Iter>;
 
     friend class iter::derived_access;
 
 public:
-    flatten_iterator_impl(BaseIter begin, BaseIter end, BaseIter iter, inner_iterator_t<BaseIter> inner) :
+    flatten_iterator_impl(Iter begin, Iter end, Iter iter, inner_iterator_t<Iter> inner) :
         Base{ iter, end, inner }, baseBegin{ begin }
     {}
 
@@ -105,18 +105,17 @@ private:
         --Base::innerIter;
     }
 
-    BaseIter baseBegin;
+    Iter baseBegin;
 };
 
 }
 
-template<typename BaseIter>
+template<typename Iter>
 class flatten_iterator : 
-    public detail::flatten_iterator_impl<
-        BaseIter, category_t<detail::flatten_iterator_traits<BaseIter>>> {
+    public detail::flatten_iterator_impl<Iter, category_t<detail::flatten_iterator_traits<Iter>>> {
 public:
-    using detail::flatten_iterator_impl<
-        BaseIter, category_t<detail::flatten_iterator_traits<BaseIter>>>::flatten_iterator_impl;
+    using detail::flatten_iterator_impl<Iter, category_t<detail::flatten_iterator_traits<Iter>>>::
+        flatten_iterator_impl;
 };
 
 }

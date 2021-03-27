@@ -6,33 +6,28 @@ namespace cppiter::range::iter {
 
 namespace detail {
 
-template<typename Base>
+template<typename Iter>
 struct filter_iterator_traits {
     using iterator_category = min_iterator_category_t<
-        category_t<Base>,
+        category_t<Iter>,
         std::bidirectional_iterator_tag>;
-    using reference = reference_t<Base>;
-    using difference_type = difference_t<Base>;
-    using value_type = value_t<Base>;
-    using pointer = pointer_t<Base>;
+    using reference = reference_t<Iter>;
+    using difference_type = difference_t<Iter>;
+    using value_type = value_t<Iter>;
+    using pointer = pointer_t<Iter>;
 };
 
 }
 
-template<typename BaseIter, typename Pred>
-class filter_iterator : public iterator_facade<
-    filter_iterator<BaseIter, Pred>,
-    detail::filter_iterator_traits<BaseIter>> {
-    using BaseType = iterator_facade<
-        filter_iterator<BaseIter, Pred>,
-        detail::filter_iterator_traits<BaseIter>>;
+template<typename Iter, typename Pred>
+class filter_iterator :
+    public iterator_facade<filter_iterator<Iter, Pred>, detail::filter_iterator_traits<Iter>> {
 
     friend class derived_access;
 
 public:
-    filter_iterator(BaseIter iter, BaseIter end, Pred pred) :
-        iter{ iter }, end{ end }, predicate{ pred }
-    {
+    filter_iterator(Iter iter, Iter end, Pred pred) :
+        iter{ iter }, end{ end }, predicate{ pred } {
         align_position();
     }
 
@@ -52,7 +47,7 @@ private:
         } while (!predicate(dereference()));
     }
 
-    typename BaseType::reference dereference() const {
+    reference_t<Iter> dereference() const {
         return *iter;
     }
 
@@ -62,8 +57,8 @@ private:
         }
     }
 
-    BaseIter iter;
-    BaseIter end;
+    Iter iter;
+    Iter end;
     Pred predicate;
 };
 

@@ -9,12 +9,13 @@ template<typename R>
 class skip_range :
     public range_facade<range_iterator_t<R>> {
     using Iterator = range_iterator_t<R>;
-    using BaseRange = range_facade<Iterator>;
-    using IteratorCategory = iter::category_t<Iterator>;
 
 public:
     skip_range(Iterator begin, Iterator end, iter::difference_t<Iterator> n) :
-        BaseRange{ { makeBeginIter<IteratorCategory>(begin, end, n) }, { end } }
+        range_facade<Iterator>{
+            { makeBeginIter<iter::category_t<Iterator>>(begin, end, n) },
+            { end }
+        }
     {}
 
 private:

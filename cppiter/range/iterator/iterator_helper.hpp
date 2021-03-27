@@ -78,19 +78,19 @@ using add_ref_const_t = typename add_ref_const<T>::type;
 
 /* ========================================================================= */
 
-template<typename Iterator>
-using value_t = typename std::iterator_traits<Iterator>::value_type;
+template<typename I>
+using value_t = typename std::iterator_traits<I>::value_type;
 
-template<typename Iterator>
-using reference_t = typename std::iterator_traits<Iterator>::reference;
+template<typename I>
+using reference_t = typename std::iterator_traits<I>::reference;
 
-template<typename Iterator>
-using category_t = typename std::iterator_traits<Iterator>::iterator_category;
+template<typename I>
+using category_t = typename std::iterator_traits<I>::iterator_category;
 
-template<typename Iterator>
-using pointer_t = typename std::iterator_traits<Iterator>::pointer;
+template<typename I>
+using pointer_t = typename std::iterator_traits<I>::pointer;
 
-template<typename Iterator>
-using difference_t = typename std::iterator_traits<Iterator>::difference_type;
+template<typename I>
+using difference_t = typename std::iterator_traits<I>::difference_type;
 
 }

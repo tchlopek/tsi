@@ -64,9 +64,7 @@ public:
 };
 
 template<typename Iterator>
-class range_facade :
-    public range_facade_impl<range_facade<Iterator>, typename Iterator::iterator_category> {
-
+class range_facade : public range_facade_impl<range_facade<Iterator>, iter::category_t<Iterator>> {
 public:
     range_facade(Iterator begin, Iterator end) : b{ begin }, e{ end }
     {}

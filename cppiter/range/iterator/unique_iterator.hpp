@@ -6,28 +6,25 @@ namespace cppiter::range::iter {
 
 namespace detail {
 
-template<typename Base>
+template<typename Iter>
 struct unique_iterator_traits {
-    using iterator_category = min_iterator_category_t<category_t<Base>, std::forward_iterator_tag>;
-    using reference = reference_t<Base>;
-    using difference_type = difference_t<Base>;
-    using value_type = value_t<Base>;
-    using pointer = pointer_t<Base>;
+    using iterator_category = min_iterator_category_t<category_t<Iter>, std::forward_iterator_tag>;
+    using reference = reference_t<Iter>;
+    using difference_type = difference_t<Iter>;
+    using value_type = value_t<Iter>;
+    using pointer = pointer_t<Iter>;
 };
 
 }
 
-template<typename BaseIter>
+template<typename Iter>
 class unique_iterator :
-    public iterator_facade<unique_iterator<BaseIter>, detail::unique_iterator_traits<BaseIter>> {
-    using BaseType = iterator_facade<
-        unique_iterator<BaseIter>,
-        detail::unique_iterator_traits<BaseIter>>;
+    public iterator_facade<unique_iterator<Iter>, detail::unique_iterator_traits<Iter>> {
 
     friend class derived_access;
 
 public:
-    unique_iterator(BaseIter iter, BaseIter end) : iter{ iter }, end{ end }
+    unique_iterator(Iter iter, Iter end) : iter{ iter }, end{ end }
     {}
 
 private:
@@ -40,12 +37,12 @@ private:
         while (++iter != end && dereference() == beginVal);
     }
 
-    typename BaseType::reference dereference() const {
+    reference_t<Iter> dereference() const {
         return *iter;
     }
 
-    BaseIter iter;
-    BaseIter end;
+    Iter iter;
+    Iter end;
 };
 
 }
