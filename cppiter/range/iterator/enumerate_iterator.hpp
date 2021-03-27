@@ -7,16 +7,16 @@ namespace cppiter::range::iter {
 namespace detail {
 
 template<typename Iter>
-struct enumerate_iterator_traits {
-    using iterator_category = std::conditional_t<
+struct enumerate_iterator_traits : iterator_traits_facade<
+    Iter,
+    std::conditional_t<
         std::is_same_v<category_t<Iter>, std::bidirectional_iterator_tag>,
         std::forward_iterator_tag,
-        category_t<Iter>>;
-    using difference_type = difference_t<Iter>;
-    using value_type = std::pair<difference_type, value_t<Iter>>;
-    using reference = std::pair<difference_type, reference_t<Iter>>;
-    using pointer = std::pair<difference_type, pointer_t<Iter>>;
-};
+        category_t<Iter>>,
+    std::pair<difference_t<Iter>, value_t<Iter>>,
+    std::pair<difference_t<Iter>, reference_t<Iter>>,
+    std::pair<difference_t<Iter>, pointer_t<Iter>>>
+{};
 
 }
 

@@ -7,13 +7,10 @@ namespace cppiter::range::iter {
 namespace detail {
 
 template<typename Iter>
-struct unique_iterator_traits {
-    using iterator_category = min_iterator_category_t<category_t<Iter>, std::forward_iterator_tag>;
-    using reference = reference_t<Iter>;
-    using difference_type = difference_t<Iter>;
-    using value_type = value_t<Iter>;
-    using pointer = pointer_t<Iter>;
-};
+struct unique_iterator_traits : iterator_traits_facade<
+    Iter,
+    min_iterator_category_t<category_t<Iter>, std::forward_iterator_tag>>
+{};
 
 }
 

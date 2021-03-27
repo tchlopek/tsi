@@ -7,13 +7,13 @@ namespace cppiter::range::iter {
 namespace detail {
 
 template<typename Iter>
-struct replace_iterator_traits {
-    using iterator_category = category_t<Iter>;
-    using reference = add_ref_const_t<reference_t<Iter>>;
-    using difference_type = difference_t<Iter>;
-    using value_type = value_t<Iter>;
-    using pointer = add_ref_const_t<pointer_t<Iter>>;
-};
+struct replace_iterator_traits : iterator_traits_facade<
+    Iter,
+    category_t<Iter>,
+    value_t<Iter>,
+    add_ref_const_t<reference_t<Iter>>,
+    add_ref_const_t<pointer_t<Iter>>>
+{};
 
 }
 

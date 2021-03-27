@@ -10,17 +10,14 @@ template<typename I>
 using inner_iterator_t = range::range_iterator_t<value_t<I>>;
 
 template<typename Iter>
-struct flatten_iterator_traits {
-    using iterator_category = min_iterator_category_t<
+struct flatten_iterator_traits : iterator_traits_facade<
+    inner_iterator_t<Iter>,
+    min_iterator_category_t<
         category_t<Iter>,
         min_iterator_category_t<
             category_t<inner_iterator_t<Iter>>,
-            std::bidirectional_iterator_tag>>;
-    using reference = reference_t<inner_iterator_t<Iter>>;
-    using difference_type = difference_t<inner_iterator_t<Iter>>;
-    using value_type = value_t<inner_iterator_t<Iter>>;
-    using pointer = pointer_t<inner_iterator_t<Iter>>;
-};
+            std::bidirectional_iterator_tag>>>
+{};
 
 template<typename Iter>
 struct flatten_iterator_base {

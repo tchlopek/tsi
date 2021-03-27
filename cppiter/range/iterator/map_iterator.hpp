@@ -7,13 +7,13 @@ namespace cppiter::range::iter {
 namespace detail {
 
 template<typename Iter, typename Func>
-struct map_iterator_traits {
-    using iterator_category = category_t<Iter>;
-    using reference = std::invoke_result_t<Func, reference_t<Iter>>;
-    using difference_type = difference_t<Iter>;
-    using value_type = std::decay_t<reference>;
-    using pointer = std::add_pointer_t<reference>;
-};
+struct map_iterator_traits : iterator_traits_facade<
+    Iter,
+    category_t<Iter>,
+    std::decay_t<std::invoke_result_t<Func, reference_t<Iter>>>,
+    std::invoke_result_t<Func, reference_t<Iter>>,
+    std::add_pointer_t<std::invoke_result_t<Func, reference_t<Iter>>>>
+{};
 
 }
 
