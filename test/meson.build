@@ -13,6 +13,7 @@ ut_deps = [
 
 src_test = [
     'main.cpp',
+    'collect_test.cpp',
     'dereference_range_test.cpp',
     'enumerate_range_test.cpp',
     'filter_range_test.cpp',

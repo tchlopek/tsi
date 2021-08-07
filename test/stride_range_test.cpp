@@ -38,3 +38,8 @@ TYPED_TEST(StrideRangeTest, ExceededStrideReturnsFirstElement) {
 TYPED_TEST(StrideRangeTest, EmptyTest) {
     ASSERT_THAT(iter(TypeParam{}).stride(3), IsEmpty());
 }
+
+TEST(StrideRangeTestList, StrideShouldIterateOverEveryThirdElementRevesed) {
+    EXPECT_THAT(iter(std::vector<int>{ 1, 2, 3, 4, 5 }).stride(3).reverse(), ElementsAre(4, 1));
+    EXPECT_THAT(iter(std::vector<int>{ 1, 2, 3, 4, 5 }).reverse().stride(3), ElementsAre(5, 2));
+}

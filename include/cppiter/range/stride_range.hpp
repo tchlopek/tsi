@@ -18,15 +18,9 @@ public:
     {}
 
 private:
-    stride_range(RngIt begin, RngIt end, Diff n, std::forward_iterator_tag) :
+    template<typename C>
+    stride_range(RngIt begin, RngIt end, Diff n, C) :
         range_facade<StrideIt>{ StrideIt{ begin, end, n }, StrideIt{ end, end, n } }
-    {}
-
-    stride_range(RngIt begin, RngIt end, Diff n, std::bidirectional_iterator_tag) :
-        range_facade<StrideIt>{
-            StrideIt{ begin, 0, n },
-            StrideIt{ end, std::distance(begin, end), n }
-        }
     {}
 
     stride_range(RngIt begin, RngIt end, Diff n, std::random_access_iterator_tag) :

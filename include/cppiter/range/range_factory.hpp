@@ -87,6 +87,17 @@ public:
     auto unique() {
         return range_factory<unique_range<R>>{ { begin(), end() } };
     }
+
+    template<typename T>
+    T collect() {
+        return T{ begin(), end() };
+    }
+
+    template<template<typename...> class C>
+    auto collect() {
+        using VT = typename range_facade<range_iterator_t<R>>::value_type;
+        return C<VT>{ begin(), end() };
+    }
 };
 
 }

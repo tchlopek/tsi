@@ -6,17 +6,23 @@ namespace cppiter::range::iter {
 
 namespace detail {
 
-template<typename Iter, typename Category>
-class stride_iterator_impl;
+template<typename I>
+struct stride_iterator_traits : iterator_traits_facade<
+    I,
+    std::conditional_t<
+        std::is_same_v<category_t<I>, std::bidirectional_iterator_tag>,
+        std::forward_iterator_tag,
+        category_t<I>>>
+{};
 
-template<typename Iter>
-class stride_iterator_impl<Iter, std::forward_iterator_tag> :
-    public iterator_facade<stride_iterator_impl<Iter, std::forward_iterator_tag>> {
+template<typename I, typename C>
+class stride_iterator_impl :
+    public iterator_facade<stride_iterator_impl<I, C>, stride_iterator_traits<I>> {
 
     friend class iter::derived_access;
 
 public:
-    stride_iterator_impl(Iter iter, Iter end, difference_t<Iter> step) :
+    stride_iterator_impl(I iter, I end, difference_t<I> step) :
         iter{ iter }, end{ end }, step{ step }
     {}
 
@@ -26,66 +32,26 @@ private:
     }
 
     void increment() {
-        for (difference_t<Iter> i = 0; iter != end && i != step; ++i, ++iter);
+        for (difference_t<I> i = 0; iter != end && i != step; ++i, ++iter);
     }
 
-    reference_t<Iter> dereference() const {
+    reference_t<I> dereference() const {
         return *iter;
     }
 
-    Iter iter;
-    Iter end;
-    difference_t<Iter> step;
+    I iter;
+    I end;
+    difference_t<I> step;
 };
 
-template<typename Iter>
-class stride_iterator_impl<Iter, std::bidirectional_iterator_tag> :
-    public iterator_facade<stride_iterator_impl<Iter, std::bidirectional_iterator_tag>> {
+template<typename I>
+class stride_iterator_impl<I, std::random_access_iterator_tag>:
+    public iterator_facade<stride_iterator_impl<I, std::random_access_iterator_tag>> {
 
     friend class iter::derived_access;
 
 public:
-    stride_iterator_impl(Iter iter, difference_t<Iter> index, difference_t<Iter> step) :
-        iter{ iter }, offset{}, index{ index }, step{ step } {
-        if (step > 0 && index % step != 0) {
-            this->index += step - index % step;
-        }
-    }
-
-private:
-    bool equal(const stride_iterator_impl& other) const {
-        return offset + index == other.offset + other.index;
-    }
-
-    void increment() {
-        offset += step;
-    }
-
-    void decrement() {
-        offset -= step;
-    }
-
-    reference_t<Iter> dereference() const {
-        std::advance(iter, offset);
-        index += offset;
-        offset = 0;
-        return *iter;
-    }
-
-    mutable Iter iter;
-    mutable difference_t<Iter> offset;
-    mutable difference_t<Iter> index;
-    difference_t<Iter> step;
-};
-
-template<typename Iter>
-class stride_iterator_impl<Iter, std::random_access_iterator_tag>:
-    public iterator_facade<stride_iterator_impl<Iter, std::random_access_iterator_tag>> {
-
-    friend class iter::derived_access;
-
-public:
-    stride_iterator_impl(Iter begin, Iter iter, difference_t<Iter> step) :
+    stride_iterator_impl(I begin, I iter, difference_t<I> step) :
         begin{ begin }, iter{ iter }, index{ iter - begin }, step{ step } {
         if (step > 0 && index % step != 0) {
             this->index += step - index % step;
@@ -105,31 +71,33 @@ private:
         index -= step;
     }
 
-    reference_t<Iter> dereference() const {
+    reference_t<I> dereference() const {
         iter = begin + index;
         return *iter;
     }
 
-    void advance(difference_t<Iter> n) {
+    void advance(difference_t<I> n) {
         index += step * n;
     }
 
-    difference_t<Iter> distance_to(const stride_iterator_impl& other) const {
+    difference_t<I> distance_to(const stride_iterator_impl& other) const {
         return (other.index - index) / step;
     }
 
-    Iter begin;
-    mutable Iter iter;
-    difference_t<Iter> index;
-    difference_t<Iter> step;
+    I begin;
+    mutable I iter;
+    difference_t<I> index;
+    difference_t<I> step;
 };
 
 }
 
-template<typename Iter>
-class stride_iterator : public detail::stride_iterator_impl<Iter, category_t<Iter>> {
+template<typename I>
+class stride_iterator :
+    public detail::stride_iterator_impl<I, category_t<detail::stride_iterator_traits<I>>> {
 public:
-    using detail::stride_iterator_impl<Iter, category_t<Iter>>::stride_iterator_impl;
+    using detail::stride_iterator_impl<I, category_t<detail::stride_iterator_traits<I>>>::
+        stride_iterator_impl;
 };
 
 }
