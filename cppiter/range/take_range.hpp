@@ -8,26 +8,26 @@ namespace cppiter::range {
 
 template<typename R>
 class take_range : public range_facade<iter::take_iterator<range_iterator_t<R>>> {
-    using Iterator = range_iterator_t<R>;
-    using BaseRange = range_facade<iter::take_iterator<Iterator>>;
-    using Difference = iter::difference_t<Iterator>;
+    using RngIt = range_iterator_t<R>;
+    using TakeIt = iter::take_iterator<RngIt>;
+    using Diff = iter::difference_t<RngIt>;
 
 public:
-    take_range(Iterator begin, Iterator end, Difference n) :
-        take_range{ begin, end, n, iter::category_t<Iterator>{} }
+    take_range(RngIt begin, RngIt end, Diff n) :
+        take_range{ begin, end, n, iter::category_t<RngIt>{} }
     {}
 
 private:
-    take_range(Iterator begin, Iterator end, Difference n, std::forward_iterator_tag) :
-        BaseRange{ { begin, 0 }, { end, n } }
+    take_range(RngIt begin, RngIt end, Diff n, std::forward_iterator_tag) :
+        range_facade<TakeIt>{ TakeIt{ begin, 0 }, TakeIt{ end, n } }
     {}
 
-    take_range(Iterator begin, Iterator end, Difference n, std::bidirectional_iterator_tag) :
-        BaseRange{ { begin, 0 }, { end, n } }
+    take_range(RngIt begin, RngIt end, Diff n, std::bidirectional_iterator_tag) :
+        range_facade<TakeIt>{ TakeIt{ begin, 0 }, TakeIt{ end, n } }
     {}
 
-    take_range(Iterator begin, Iterator end, Difference n, std::random_access_iterator_tag) :
-        BaseRange{ { begin }, { begin + std::min(end - begin, n) } }
+    take_range(RngIt begin, RngIt end, Diff n, std::random_access_iterator_tag) :
+        range_facade<TakeIt>{ TakeIt{ begin }, TakeIt{ begin + std::min(end - begin, n) } }
     {}
 };
 

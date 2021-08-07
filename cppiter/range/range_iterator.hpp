@@ -4,14 +4,14 @@
 
 namespace cppiter::range {
 
-template<typename Range>
+template<typename R>
 struct range_iterator {
-    using type = typename Range::iterator;
+    using type = typename R::iterator;
 };
 
-template<typename Range>
-struct range_iterator<const Range> {
-    using type = typename Range::const_iterator;
+template<typename R>
+struct range_iterator<const R> {
+    using type = typename R::const_iterator;
 };
 
 template<typename Value, std::size_t Size>
@@ -19,7 +19,7 @@ struct range_iterator<Value[Size]> {
     using type = std::decay_t<Value[Size]>;
 };
 
-template<typename Range>
-using range_iterator_t = typename range_iterator<Range>::type;
+template<typename R>
+using range_iterator_t = typename range_iterator<R>::type;
 
 }

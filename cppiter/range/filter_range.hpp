@@ -7,8 +7,7 @@
 namespace cppiter::range {
 
 template<typename R, typename P>
-class filter_range :
-    public range_facade<iter::filter_iterator<range_iterator_t<R>, P>> {
+class filter_range : public range_facade<iter::filter_iterator<range_iterator_t<R>, P>> {
     using RngIt = range_iterator_t<R>;
     using FilterIt = iter::filter_iterator<RngIt, P>;
 
@@ -19,9 +18,7 @@ public:
 
 private:
     filter_range(RngIt begin, RngIt end, P pred, std::forward_iterator_tag) :
-        range_facade<FilterIt>{
-            FilterIt{ begin, end, pred },
-            FilterIt{ end, end, pred } }
+        range_facade<FilterIt>{ FilterIt{ begin, end, pred }, FilterIt{ end, end, pred } }
     {}
 
     template<typename Cat>

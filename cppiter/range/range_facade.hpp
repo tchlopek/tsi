@@ -4,9 +4,9 @@
 
 namespace cppiter::range {
 
-template<typename Derived>
+template<typename R>
 class range_facade_impl_base {
-    using Iterator = iter::detail::wrapped_iterator_t<Derived>;
+    using Iterator = iter::detail::wrapped_iterator_t<R>;
 
 public:
     using value_type = iter::value_t<Iterator>;
@@ -18,23 +18,23 @@ public:
     using iterator = Iterator;
     using const_iterator = Iterator;
 
-    Derived& derived() {
-        return *static_cast<Derived*>(this);
+    R& derived() {
+        return *static_cast<R*>(this);
     }
 
-    const Derived& derived() const {
-        return *static_cast<const Derived*>(this);
+    const R& derived() const {
+        return *static_cast<const R*>(this);
     }
 };
 
-template<typename Derived, typename Category>
+template<typename R, typename C>
 class range_facade_impl;
 
-template<typename Derived>
-class range_facade_impl<Derived, std::forward_iterator_tag> :
-    public range_facade_impl_base<Derived> {
+template<typename R>
+class range_facade_impl<R, std::forward_iterator_tag> :
+    public range_facade_impl_base<R> {
 protected:
-    using range_facade_impl_base<Derived>::derived;
+    using range_facade_impl_base<R>::derived;
 
 public:
     std::size_t size() const {
@@ -42,20 +42,20 @@ public:
     }
 };
 
-template<typename Derived>
-class range_facade_impl<Derived, std::bidirectional_iterator_tag> :
-    public range_facade_impl<Derived, std::forward_iterator_tag> {
+template<typename R>
+class range_facade_impl<R, std::bidirectional_iterator_tag> :
+    public range_facade_impl<R, std::forward_iterator_tag> {
 protected:
-    using range_facade_impl<Derived, std::forward_iterator_tag>::derived;
+    using range_facade_impl<R, std::forward_iterator_tag>::derived;
 };
 
-template<typename Derived>
-class range_facade_impl<Derived, std::random_access_iterator_tag> :
-    public range_facade_impl<Derived, std::bidirectional_iterator_tag> {
-    using Base = range_facade_impl<Derived, std::bidirectional_iterator_tag>;
+template<typename R>
+class range_facade_impl<R, std::random_access_iterator_tag> :
+    public range_facade_impl<R, std::bidirectional_iterator_tag> {
+    using Base = range_facade_impl<R, std::bidirectional_iterator_tag>;
 
 protected:
-    using range_facade_impl<Derived, std::bidirectional_iterator_tag>::derived;
+    using range_facade_impl<R, std::bidirectional_iterator_tag>::derived;
 
 public:
     typename Base::reference operator[](typename Base::difference_type n) const {
@@ -63,17 +63,17 @@ public:
     }
 };
 
-template<typename Iterator>
-class range_facade : public range_facade_impl<range_facade<Iterator>, iter::category_t<Iterator>> {
+template<typename I>
+class range_facade : public range_facade_impl<range_facade<I>, iter::category_t<I>> {
 public:
-    range_facade(Iterator begin, Iterator end) : b{ begin }, e{ end }
+    range_facade(I begin, I end) : b{ begin }, e{ end }
     {}
 
-    Iterator begin() const {
+    I begin() const {
         return b;
     }
 
-    Iterator end() const {
+    I end() const {
         return e;
     }
 
@@ -82,8 +82,8 @@ public:
     }
 
 private:
-    Iterator b;
-    Iterator e;
+    I b;
+    I e;
 };
 
 }
