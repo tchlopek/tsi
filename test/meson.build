@@ -1,3 +1,16 @@
+cmake = import('cmake')
+cmake_opt = cmake.subproject_options()
+cmake_opt.add_cmake_defines({'INSTALL_GTEST': false})
+gtest = cmake.subproject('googletest', options: cmake_opt)
+
+ut_deps = [
+    gtest.dependency('gtest'),
+    gtest.dependency('gtest_main'),
+    gtest.dependency('gmock'),
+    gtest.dependency('gmock_main'),
+    cppiter_dep
+]
+
 src_test = [
     'main.cpp',
     'dereference_range_test.cpp',
@@ -17,7 +30,6 @@ src_test = [
 ut_bin = executable(
     'ut-range',
     src_test,
-    dependencies: ut_deps,
-    include_directories: range_incl)
+    dependencies: ut_deps)
 
 test('range unit tests', ut_bin)

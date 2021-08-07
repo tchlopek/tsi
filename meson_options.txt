@@ -1,0 +1,5 @@
+option(
+    'build_utest',
+    type : 'boolean',
+    value: false,
+    description: 'Enables building of the unit tests')

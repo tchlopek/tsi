@@ -1,23 +1,11 @@
 project(
     'cpprange',
     'cpp',
-    default_options: [
-        'buildtype=debug',
-        'cpp_std=c++17',
-])
+    default_options: ['cpp_std=c++17'])
 
-cmake = import('cmake')
-cmake_opt = cmake.subproject_options()
-cmake_opt.add_cmake_defines({'INSTALL_GTEST': false})
-gtest = cmake.subproject('googletest', options: cmake_opt)
+inc = include_directories('include')
+cppiter_dep = declare_dependency(include_directories: inc)
 
-ut_deps = [
-    gtest.dependency('gtest'),
-    gtest.dependency('gtest_main'),
-    gtest.dependency('gmock'),
-    gtest.dependency('gmock_main')
-]
-
-range_incl = include_directories('cppiter')
-
-subdir('test')
+if get_option('build_utest')
+    subdir('test')
+endif
