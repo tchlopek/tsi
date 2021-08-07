@@ -30,3 +30,8 @@ TEST(GenerateRangeTest, CanIterateOverArrays) {
     std::vector v{ 'a', 's', 'd' };
     EXPECT_THAT(gen(v.data()).take(v.size()), ElementsAre(&v[0], &v[1], &v[2]));
 }
+
+TEST(GenerateRangeTest, CanIterateOverArraysWithDeref) {
+    std::vector v{ 'a', 'r', 'r', 'a', 'y' };
+    EXPECT_THAT(gen(v.data()).take(v.size()).deref(), ElementsAre('a', 'r', 'r', 'a', 'y'));
+}
