@@ -25,6 +25,10 @@ TEST_F(FilterRangeForRandomAccessTest, FilteredNumbersAreOdd) {
     ASSERT_THAT(iter(v).filter(odd), ElementsAre(1, 3, 5, 7, 9));
 }
 
+TEST_F(FilterRangeForRandomAccessTest, ReverseFilteredNumbersAreOdd) {
+    ASSERT_THAT(iter(v).filter(odd).reverse(), ElementsAre(9, 7, 5, 3, 1));
+}
+
 TEST_F(FilterRangeForRandomAccessTest, EmptyTest) {
     ASSERT_THAT(iter(std::vector<int>{}).filter(odd), IsEmpty());
 }
