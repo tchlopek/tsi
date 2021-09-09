@@ -19,9 +19,13 @@ struct flatten_iterator_traits : iterator_traits_facade<
             std::bidirectional_iterator_tag>>>
 {};
 
+template<typename Iter, typename C>
+class flatten_iterator_impl;
+
 template<typename Iter>
-struct flatten_iterator_base {
-    flatten_iterator_base(Iter iter, Iter end, inner_iterator_t<Iter> inner) :
+class flatten_iterator_impl<Iter, std::forward_iterator_tag> {
+public:
+    flatten_iterator_impl(Iter iter, Iter end, inner_iterator_t<Iter> inner) :
         baseIter{ iter }, baseEnd{ end }, innerIter{ inner } {
         while (baseIter != baseEnd && baseIter->empty()) {
             ++baseIter;
@@ -31,7 +35,7 @@ struct flatten_iterator_base {
         }
     }
 
-    bool equal(const flatten_iterator_base& other) const {
+    bool equal(const flatten_iterator_impl& other) const {
         return innerIter == other.innerIter;
     }
 
@@ -55,41 +59,17 @@ struct flatten_iterator_base {
     inner_iterator_t<Iter> innerIter;
 };
 
-template<typename Iter, typename Category>
-class flatten_iterator_impl;
-
-template<typename Iter>
-class flatten_iterator_impl<Iter, std::forward_iterator_tag> :
-    public iterator_facade<
-        flatten_iterator_impl<Iter, std::forward_iterator_tag>,
-        flatten_iterator_traits<Iter>>,
-    private flatten_iterator_base<Iter> {
-
-    friend class iter::derived_access;
-
-public:
-    flatten_iterator_impl(Iter iter, Iter end, inner_iterator_t<Iter> inner) :
-        flatten_iterator_base<Iter>{ iter, end, inner }
-    {}
-};
-
 template<typename Iter>
 class flatten_iterator_impl<Iter, std::bidirectional_iterator_tag> :
-    public iterator_facade<
-        flatten_iterator_impl<Iter, std::bidirectional_iterator_tag>,
-        flatten_iterator_traits<Iter>>,
-    private flatten_iterator_base<Iter> {
+    public flatten_iterator_impl<Iter, std::forward_iterator_tag> {
 
-    using Base = flatten_iterator_base<Iter>;
-
-    friend class iter::derived_access;
+    using Base = flatten_iterator_impl<Iter, std::forward_iterator_tag>;
 
 public:
     flatten_iterator_impl(Iter begin, Iter end, Iter iter, inner_iterator_t<Iter> inner) :
         Base{ iter, end, inner }, baseBegin{ begin }
     {}
 
-private:
     void decrement() {
         if (Base::baseIter == Base::baseEnd) {
             --Base::baseIter;
@@ -107,11 +87,15 @@ private:
 
 }
 
-template<typename Iter>
+template<typename I>
 class flatten_iterator : 
-    public detail::flatten_iterator_impl<Iter, category_t<detail::flatten_iterator_traits<Iter>>> {
+    public iterator_facade<flatten_iterator<I>, detail::flatten_iterator_traits<I>>,
+    private detail::flatten_iterator_impl<I, category_t<detail::flatten_iterator_traits<I>>> {
+
+    friend class iter::iterator_accessor;
+
 public:
-    using detail::flatten_iterator_impl<Iter, category_t<detail::flatten_iterator_traits<Iter>>>::
+    using detail::flatten_iterator_impl<I, category_t<detail::flatten_iterator_traits<I>>>::
         flatten_iterator_impl;
 };
 

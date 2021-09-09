@@ -24,7 +24,7 @@ template<typename Iter>
 class enumerate_iterator :
     public iterator_facade<enumerate_iterator<Iter>, detail::enumerate_iterator_traits<Iter>> {
 
-    friend class derived_access;
+    friend class iterator_accessor;
 
 public:
     enumerate_iterator(Iter iter, difference_t<Iter> index) : iter{ iter }, index{ index }

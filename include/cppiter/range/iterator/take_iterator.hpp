@@ -10,17 +10,12 @@ template<typename Iter, typename Category>
 class take_iterator_impl;
 
 template<typename Iter>
-class take_iterator_impl<Iter, std::forward_iterator_tag> :
-    public iterator_facade<take_iterator_impl<Iter, std::forward_iterator_tag>> {
-
-    friend class iter::derived_access;
-
+class take_iterator_impl<Iter, std::forward_iterator_tag> {
 public:
     take_iterator_impl(Iter iter, difference_t<Iter> index) :
         iter{ iter }, index{ index }
     {}
 
-private:
     bool equal(const take_iterator_impl& other) const {
         return iter == other.iter || index == other.index;
     }
@@ -40,49 +35,25 @@ private:
 
 template<typename Iter>
 class take_iterator_impl<Iter, std::bidirectional_iterator_tag> :
-    public iterator_facade<take_iterator_impl<Iter, std::bidirectional_iterator_tag>> {
+    public take_iterator_impl<Iter, std::forward_iterator_tag> {
 
-    friend class iter::derived_access;
+    using Base = take_iterator_impl<Iter, std::forward_iterator_tag>;
 
 public:
-    take_iterator_impl(Iter iter, difference_t<Iter> index) :
-        iter{ iter }, index{ index }
-    {}
-
-private:
-    bool equal(const take_iterator_impl& other) const {
-        return iter == other.iter || index == other.index;
-    }
-
-    void increment() {
-        ++index;
-        ++iter;
-    }
+    using Base::take_iterator_impl;
 
     void decrement() {
-        --index;
-        --iter;
+        --Base::index;
+        --Base::iter;
     }
-
-    reference_t<Iter> dereference() const {
-        return *iter;
-    }
-
-    Iter iter;
-    difference_t<Iter> index;
 };
 
 template<typename Iter>
-class take_iterator_impl<Iter, std::random_access_iterator_tag> :
-    public iterator_facade<take_iterator_impl<Iter, std::random_access_iterator_tag>> {
-
-    friend class iter::derived_access;
-
+class take_iterator_impl<Iter, std::random_access_iterator_tag> {
 public:
     take_iterator_impl(Iter iter) : iter{ iter }
     {}
 
-private:
     bool equal(const take_iterator_impl& other) const {
         return iter == other.iter;
     }
@@ -113,7 +84,12 @@ private:
 }
 
 template<typename Iter>
-class take_iterator : public detail::take_iterator_impl<Iter, category_t<Iter>> {
+class take_iterator :
+    public iterator_facade<take_iterator<Iter>>,
+    private detail::take_iterator_impl<Iter, category_t<Iter>> {
+
+    friend class iter::iterator_accessor;
+
 public:
     using detail::take_iterator_impl<Iter, category_t<Iter>>::take_iterator_impl;
 };

@@ -22,7 +22,7 @@ template<typename T>
 class generate_iterator :
     public iterator_facade<generate_iterator<T>, detail::generate_iterator_traits<T>> {
 
-    friend class derived_access;
+    friend class iterator_accessor;
 
 public:
     explicit generate_iterator(T v) : v{ std::move(v) }

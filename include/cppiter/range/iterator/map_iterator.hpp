@@ -21,7 +21,7 @@ template<typename Iter, typename Func>
 class map_iterator :
     public iterator_facade<map_iterator<Iter, Func>, detail::map_iterator_traits<Iter, Func>> {
 
-    friend class derived_access;
+    friend class iterator_accessor;
 
 public:
     map_iterator(Iter iter, Func func) : iter{ iter }, func{ func }

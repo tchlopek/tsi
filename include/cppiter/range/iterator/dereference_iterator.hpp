@@ -21,7 +21,7 @@ template<typename I>
 class dereference_iterator :
     public iterator_facade<dereference_iterator<I>, detail::dereference_iterator_traits<I>> {
 
-    friend class derived_access;
+    friend class iterator_accessor;
 
 public:
     explicit dereference_iterator(I iter) : iter{ iter }

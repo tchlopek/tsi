@@ -16,20 +16,14 @@ template<typename I, typename P, typename C>
 class filter_iterator_impl;
 
 template<typename I, typename P>
-class filter_iterator_impl<I, P, std::forward_iterator_tag> :
-    public iterator_facade<
-        filter_iterator_impl<I, P, std::forward_iterator_tag>,
-        detail::filter_iterator_traits<I>> {
-
-    friend class iter::derived_access;
-
+class filter_iterator_impl<I, P, std::forward_iterator_tag> {
 public:
     filter_iterator_impl(I iter, I end, P pred) :
         iter{ iter }, end{ end }, pred{ pred } {
     }
 
-private:
     bool equal(const filter_iterator_impl& other) const {
+        align_position();
         return iter == other.iter;
     }
 
@@ -39,7 +33,6 @@ private:
     }
 
     reference_t<I> dereference() const {
-        align_position();
         return *iter;
     }
 
@@ -55,20 +48,14 @@ private:
 };
 
 template<typename I, typename P>
-class filter_iterator_impl<I, P, std::bidirectional_iterator_tag> :
-    public iterator_facade<
-        filter_iterator_impl<I, P, std::bidirectional_iterator_tag>,
-        detail::filter_iterator_traits<I>> {
-
-    friend class iter::derived_access;
-
+class filter_iterator_impl<I, P, std::bidirectional_iterator_tag> {
 public:
     filter_iterator_impl(I iter, std::pair<I, I> bounds, P pred) :
         iter{ iter }, bounds{ bounds }, pred{ pred } {
     }
 
-private:
     bool equal(const filter_iterator_impl& other) const {
+        align_position();
         return iter == other.iter;
     }
 
@@ -83,7 +70,6 @@ private:
     }
 
     reference_t<I> dereference() const {
-        align_position();
         return *iter;
     }
 
@@ -102,11 +88,14 @@ private:
 
 template<typename I, typename P>
 class filter_iterator :
-    public detail::filter_iterator_impl<I, P,
-        category_t<detail::filter_iterator_traits<I>>> {
+    public iterator_facade<filter_iterator<I, P>, detail::filter_iterator_traits<I>>,
+    private detail::filter_iterator_impl<I, P, category_t<detail::filter_iterator_traits<I>>> {
+
+    friend class iter::iterator_accessor;
+
 public:
-    using detail::filter_iterator_impl<I, P,
-        category_t<detail::filter_iterator_traits<I>>>::filter_iterator_impl;
+    using detail::filter_iterator_impl<I, P, category_t<detail::filter_iterator_traits<I>>>::
+        filter_iterator_impl;
 };
 
 }

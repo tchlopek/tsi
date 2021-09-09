@@ -18,7 +18,7 @@ template<typename Iter>
 class unique_iterator :
     public iterator_facade<unique_iterator<Iter>, detail::unique_iterator_traits<Iter>> {
 
-    friend class derived_access;
+    friend class iterator_accessor;
 
 public:
     unique_iterator(Iter iter, Iter end) : iter{ iter }, end{ end }

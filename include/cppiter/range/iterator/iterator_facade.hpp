@@ -4,7 +4,7 @@
 
 namespace cppiter::range::iter {
 
-class derived_access {
+class iterator_accessor {
 public:
     template<typename I>
     static bool equal(const I& lhs, const I& rhs) {
@@ -64,26 +64,26 @@ public:
     using iterator_category = std::forward_iterator_tag;
 
     reference_t<Base> operator*() const {
-        return derived_access::dereference(derived());
+        return iterator_accessor::dereference(derived());
     }
 
     pointer_t<Base> operator->() const {
-        return std::addressof(derived_access::dereference(derived()));
+        return std::addressof(iterator_accessor::dereference(derived()));
     }
 
     DerivedIterator& operator++() {
-        derived_access::increment(derived());
+        iterator_accessor::increment(derived());
         return derived();
     }
 
     DerivedIterator operator++(int) {
         auto current = derived();
-        derived_access::increment(derived());
+        iterator_accessor::increment(derived());
         return current;
     }
 
     bool operator==(const DerivedIterator& other) const {
-        return derived_access::equal(derived(), other);
+        return iterator_accessor::equal(derived(), other);
     }
     
     bool operator!=(const DerivedIterator& other) const {
@@ -102,13 +102,13 @@ public:
     using iterator_category = std::bidirectional_iterator_tag;
 
     DerivedIterator& operator--() {
-        derived_access::decrement(derived());
+        iterator_accessor::decrement(derived());
         return derived();
     }
 
     DerivedIterator operator--(int) {
         auto current = derived();
-        derived_access::decrement(derived());
+        iterator_accessor::decrement(derived());
         return current;
     }
 };
@@ -123,33 +123,33 @@ public:
     using iterator_category = std::random_access_iterator_tag;
 
     DerivedIterator& operator+=(difference_t<Base> n) {
-        derived_access::advance(derived(), n);
+        iterator_accessor::advance(derived(), n);
         return derived();
     }
 
     DerivedIterator& operator-=(difference_t<Base> n) {
-        derived_access::advance(derived(), -n);
+        iterator_accessor::advance(derived(), -n);
         return derived();
     }
 
     DerivedIterator operator+(difference_t<Base> n) const {
         auto current = derived();
-        derived_access::advance(current, n);
+        iterator_accessor::advance(current, n);
         return current;
     }
 
     DerivedIterator operator-(difference_t<Base> n) const {
         auto current = derived();
-        derived_access::advance(current, -n);
+        iterator_accessor::advance(current, -n);
         return current;
     }
 
     difference_t<Base> operator-(const DerivedIterator& other) const {
-        return derived_access::distance_to(derived(), other);
+        return iterator_accessor::distance_to(derived(), other);
     }
 
     reference_t<Base> operator[](difference_t<Base> n) const {
-        return derived_access::dereference(*this + n);
+        return iterator_accessor::dereference(*this + n);
     }
 };
 

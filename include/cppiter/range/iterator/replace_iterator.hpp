@@ -21,7 +21,7 @@ template<typename Iter, typename Pred>
 class replace_iterator :
     public iterator_facade<replace_iterator<Iter, Pred>, detail::replace_iterator_traits<Iter>> {
 
-    friend class derived_access;
+    friend class iterator_accessor;
 
 public:
     replace_iterator(Iter iter, Pred pred, const value_t<Iter>& newVal) :
