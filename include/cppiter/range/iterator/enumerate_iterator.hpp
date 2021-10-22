@@ -1,5 +1,7 @@
 #pragma once
 
+#include <functional>
+
 #include "iterator_facade.hpp"
 
 namespace cppiter::range::iter {
