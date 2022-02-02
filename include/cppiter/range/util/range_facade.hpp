@@ -1,9 +1,10 @@
 #pragma once
 
-#include "iterator/util/iterator_traits_facade.hpp"
-#include "iterator/util/wrapped_iterator.hpp"
+#include <cppiter/range/iterator/util/iterator_traits_facade.hpp>
+#include <cppiter/range/iterator/util/wrapped_iterator.hpp>
 
-namespace cppiter::range {
+namespace cppiter::range::util {
+namespace detail {
 
 template<typename R>
 class range_facade_impl_base {
@@ -63,9 +64,10 @@ public:
         return *(derived().begin() + n);
     }
 };
+}
 
 template<typename I>
-class range_facade : public range_facade_impl<range_facade<I>, iter::util::category_t<I>> {
+class range_facade : public detail::range_facade_impl<range_facade<I>, iter::util::category_t<I>> {
 public:
     range_facade(I begin, I end) : b{ begin }, e{ end }
     {}
@@ -86,5 +88,4 @@ private:
     I b;
     I e;
 };
-
 }

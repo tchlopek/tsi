@@ -1,8 +1,7 @@
 #pragma once
 
+#include "util/iterator_facade.hpp"
 #include "util/min_iterator_category.hpp"
-
-#include "iterator_facade.hpp"
 
 namespace cppiter::range::iter {
 
@@ -91,10 +90,10 @@ public:
 
 template<typename I, typename P>
 class filter_iterator :
-    public iterator_facade<filter_iterator<I, P>, detail::filter_iterator_traits<I>>,
+    public util::iterator_facade<filter_iterator<I, P>, detail::filter_iterator_traits<I>>,
     private detail::filter_iterator_impl<I, P, util::category_t<detail::filter_iterator_traits<I>>> {
 
-    friend class iter::iterator_accessor;
+    friend class util::iterator_accessor;
 
 public:
     using detail::filter_iterator_impl<I, P, util::category_t<detail::filter_iterator_traits<I>>>::

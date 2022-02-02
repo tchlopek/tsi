@@ -1,6 +1,6 @@
 #pragma once
 
-#include "iterator_facade.hpp"
+#include "util/iterator_facade.hpp"
 
 namespace cppiter::range::iter {
 
@@ -85,10 +85,10 @@ public:
 
 template<typename I>
 class stride_iterator :
-    public iterator_facade<stride_iterator<I>, detail::stride_iterator_traits<I>>,
+    public util::iterator_facade<stride_iterator<I>, detail::stride_iterator_traits<I>>,
     private detail::stride_iterator_impl<I, util::category_t<detail::stride_iterator_traits<I>>> {
 
-    friend class iter::iterator_accessor;
+    friend class util::iterator_accessor;
 
 public:
     using detail::stride_iterator_impl<I, util::category_t<detail::stride_iterator_traits<I>>>::

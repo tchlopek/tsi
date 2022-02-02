@@ -2,13 +2,14 @@
 
 #include "iterator/flatten_iterator.hpp"
 
-#include "range_facade.hpp"
+#include "util/range_facade.hpp"
+#include "util/range_iterator.hpp"
 
 namespace cppiter::range {
 
 template<typename R>
-class flatten_range : public range_facade<iter::flatten_iterator<range_iterator_t<R>>> {
-    using RngIt = range_iterator_t<R>;
+class flatten_range : public util::range_facade<iter::flatten_iterator<util::range_iterator_t<R>>> {
+    using RngIt = util::range_iterator_t<R>;
     using FlatIt = iter::flatten_iterator<RngIt>;
 
 public:
@@ -18,7 +19,7 @@ public:
 
 private:
     flatten_range(RngIt begin, RngIt end, std::forward_iterator_tag) :
-        range_facade<FlatIt>{
+        util::range_facade<FlatIt>{
             FlatIt{ begin, end, begin->begin() },
             FlatIt{ end, end, {} }
         }
@@ -26,7 +27,7 @@ private:
 
     template<typename C>
     flatten_range(RngIt begin, RngIt end, C) :
-        range_facade<FlatIt>{
+        util::range_facade<FlatIt>{
             FlatIt{ begin, end, begin, begin->begin() },
             FlatIt{ begin, end, end, {} }
         }

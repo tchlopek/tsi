@@ -1,6 +1,6 @@
 #pragma once
 
-#include "iterator_facade.hpp"
+#include "util/iterator_facade.hpp"
 
 namespace cppiter::range::iter {
 
@@ -86,10 +86,10 @@ public:
 
 template<typename Iter>
 class take_iterator :
-    public iterator_facade<take_iterator<Iter>>,
+    public util::iterator_facade<take_iterator<Iter>>,
     private detail::take_iterator_impl<Iter, util::category_t<Iter>> {
 
-    friend class iter::iterator_accessor;
+    friend class util::iterator_accessor;
 
 public:
     using detail::take_iterator_impl<Iter, util::category_t<Iter>>::take_iterator_impl;

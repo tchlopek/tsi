@@ -1,6 +1,6 @@
 #pragma once
 
-#include "iterator_facade.hpp"
+#include "util/iterator_facade.hpp"
 
 namespace cppiter::range::iter {
 
@@ -20,9 +20,9 @@ struct map_iterator_traits : iterator_traits_facade<
 
 template<typename Iter, typename Func>
 class map_iterator :
-    public iterator_facade<map_iterator<Iter, Func>, detail::map_iterator_traits<Iter, Func>> {
+    public util::iterator_facade<map_iterator<Iter, Func>, detail::map_iterator_traits<Iter, Func>> {
 
-    friend class iterator_accessor;
+    friend class util::iterator_accessor;
 
 public:
     map_iterator(Iter iter, Func func) : iter{ iter }, func{ func }

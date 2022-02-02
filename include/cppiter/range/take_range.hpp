@@ -2,14 +2,14 @@
 
 #include "iterator/take_iterator.hpp"
 
-#include "range_facade.hpp"
-#include "range_iterator.hpp"
+#include "util/range_facade.hpp"
+#include "util/range_iterator.hpp"
 
 namespace cppiter::range {
 
 template<typename R>
-class take_range : public range_facade<iter::take_iterator<range_iterator_t<R>>> {
-    using RngIt = range_iterator_t<R>;
+class take_range : public util::range_facade<iter::take_iterator<util::range_iterator_t<R>>> {
+    using RngIt = util::range_iterator_t<R>;
     using TakeIt = iter::take_iterator<RngIt>;
     using Diff = iter::util::difference_t<RngIt>;
 
@@ -20,15 +20,15 @@ public:
 
 private:
     take_range(RngIt begin, RngIt end, Diff n, std::forward_iterator_tag) :
-        range_facade<TakeIt>{ TakeIt{ begin, 0 }, TakeIt{ end, n } }
+        util::range_facade<TakeIt>{ TakeIt{ begin, 0 }, TakeIt{ end, n } }
     {}
 
     take_range(RngIt begin, RngIt end, Diff n, std::bidirectional_iterator_tag) :
-        range_facade<TakeIt>{ TakeIt{ begin, 0 }, TakeIt{ end, n } }
+        util::range_facade<TakeIt>{ TakeIt{ begin, 0 }, TakeIt{ end, n } }
     {}
 
     take_range(RngIt begin, RngIt end, Diff n, std::random_access_iterator_tag) :
-        range_facade<TakeIt>{ TakeIt{ begin }, TakeIt{ begin + std::min(end - begin, n) } }
+        util::range_facade<TakeIt>{ TakeIt{ begin }, TakeIt{ begin + std::min(end - begin, n) } }
     {}
 };
 

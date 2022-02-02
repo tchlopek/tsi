@@ -1,8 +1,7 @@
 #pragma once
 
 #include "util/add_ref_const.hpp"
-
-#include "iterator_facade.hpp"
+#include "util/iterator_facade.hpp"
 
 namespace cppiter::range::iter {
 
@@ -22,9 +21,9 @@ struct replace_iterator_traits : iterator_traits_facade<
 
 template<typename Iter, typename Pred>
 class replace_iterator :
-    public iterator_facade<replace_iterator<Iter, Pred>, detail::replace_iterator_traits<Iter>> {
+    public util::iterator_facade<replace_iterator<Iter, Pred>, detail::replace_iterator_traits<Iter>> {
 
-    friend class iterator_accessor;
+    friend class util::iterator_accessor;
 
 public:
     replace_iterator(Iter iter, Pred pred, const util::value_t<Iter>& newVal) :

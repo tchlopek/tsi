@@ -1,8 +1,7 @@
 #pragma once
 
+#include "util/iterator_facade.hpp"
 #include "util/min_iterator_category.hpp"
-
-#include "iterator_facade.hpp"
 
 namespace cppiter::range::iter {
 
@@ -19,9 +18,9 @@ struct unique_iterator_traits : iterator_traits_facade<
 
 template<typename Iter>
 class unique_iterator :
-    public iterator_facade<unique_iterator<Iter>, detail::unique_iterator_traits<Iter>> {
+    public util::iterator_facade<unique_iterator<Iter>, detail::unique_iterator_traits<Iter>> {
 
-    friend class iterator_accessor;
+    friend class util::iterator_accessor;
 
 public:
     unique_iterator(Iter iter, Iter end) : iter{ iter }, end{ end }

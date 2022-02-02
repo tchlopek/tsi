@@ -2,7 +2,7 @@
 
 #include <functional>
 
-#include "iterator_facade.hpp"
+#include "util/iterator_facade.hpp"
 
 namespace cppiter::range::iter {
 
@@ -25,9 +25,9 @@ struct enumerate_iterator_traits : iterator_traits_facade<
 
 template<typename Iter>
 class enumerate_iterator :
-    public iterator_facade<enumerate_iterator<Iter>, detail::enumerate_iterator_traits<Iter>> {
+    public util::iterator_facade<enumerate_iterator<Iter>, detail::enumerate_iterator_traits<Iter>> {
 
-    friend class iterator_accessor;
+    friend class util::iterator_accessor;
 
 public:
     enumerate_iterator(Iter iter, util::difference_t<Iter> index) : iter{ iter }, index{ index }

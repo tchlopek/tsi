@@ -1,6 +1,6 @@
 #pragma once
 
-#include "iterator_facade.hpp"
+#include "util/iterator_facade.hpp"
 
 namespace cppiter::range::iter {
 
@@ -20,9 +20,9 @@ struct generate_iterator_traits : util::iterator_traits_facade<
 
 template<typename T>
 class generate_iterator :
-    public iterator_facade<generate_iterator<T>, detail::generate_iterator_traits<T>> {
+    public util::iterator_facade<generate_iterator<T>, detail::generate_iterator_traits<T>> {
 
-    friend class iterator_accessor;
+    friend class util::iterator_accessor;
 
 public:
     explicit generate_iterator(T v) : v{ std::move(v) }

@@ -1,17 +1,17 @@
 #pragma once
 
-#include "range_facade.hpp"
-#include "range_iterator.hpp"
+#include "util/range_facade.hpp"
+#include "util/range_iterator.hpp"
 
 namespace cppiter::range {
 
 template<typename R>
-class skip_range : public range_facade<range_iterator_t<R>> {
-    using I = range_iterator_t<R>;
+class skip_range : public util::range_facade<util::range_iterator_t<R>> {
+    using I = util::range_iterator_t<R>;
 
 public:
     skip_range(I begin, I end, iter::util::difference_t<I> n) :
-        range_facade<I>{ { makeBeginIter<iter::util::category_t<I>>(begin, end, n) }, { end } }
+        util::range_facade<I>{ { makeBeginIter<iter::util::category_t<I>>(begin, end, n) }, { end } }
     {}
 
 private:

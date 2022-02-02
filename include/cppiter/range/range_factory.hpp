@@ -1,7 +1,7 @@
 #pragma once
 
-#include "range_facade.hpp"
-#include "range_iterator.hpp"
+#include "util/range_facade.hpp"
+#include "util/range_iterator.hpp"
 
 #include "dereference_range.hpp"
 #include "enumerate_range.hpp"
@@ -19,8 +19,8 @@ namespace cppiter::range {
 
 template<typename R>
 class range_factory :
-    public range_facade<range_iterator_t<R>> {
-    using BaseRange = range_facade<range_iterator_t<R>>;
+    public util::range_facade<util::range_iterator_t<R>> {
+    using BaseRange = util::range_facade<util::range_iterator_t<R>>;
 
 public:
     using BaseRange::begin;
@@ -95,7 +95,7 @@ public:
 
     template<template<typename...> class C>
     auto collect() {
-        using VT = typename range_facade<range_iterator_t<R>>::value_type;
+        using VT = typename util::range_facade<util::range_iterator_t<R>>::value_type;
         return C<VT>{ begin(), end() };
     }
 };

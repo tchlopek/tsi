@@ -1,8 +1,9 @@
 #pragma once
 
-#include "util/min_iterator_category.hpp"
+#include <cppiter/range/util/range_iterator.hpp>
 
-#include "iterator_facade.hpp"
+#include "util/iterator_facade.hpp"
+#include "util/min_iterator_category.hpp"
 
 namespace cppiter::range::iter {
 
@@ -10,7 +11,7 @@ namespace detail {
 using namespace util;
 
 template<typename I>
-using inner_iterator_t = range::range_iterator_t<value_t<I>>;
+using inner_iterator_t = range::util::range_iterator_t<value_t<I>>;
 
 template<typename Iter>
 struct flatten_iterator_traits : iterator_traits_facade<
@@ -92,10 +93,10 @@ public:
 
 template<typename I>
 class flatten_iterator : 
-    public iterator_facade<flatten_iterator<I>, detail::flatten_iterator_traits<I>>,
+    public util::iterator_facade<flatten_iterator<I>, detail::flatten_iterator_traits<I>>,
     private detail::flatten_iterator_impl<I, util::category_t<detail::flatten_iterator_traits<I>>> {
 
-    friend class iter::iterator_accessor;
+    friend class util::iterator_accessor;
 
 public:
     using detail::flatten_iterator_impl<I, util::category_t<detail::flatten_iterator_traits<I>>>::

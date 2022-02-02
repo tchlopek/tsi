@@ -1,6 +1,6 @@
 #pragma once
 
-#include "iterator_facade.hpp"
+#include "util/iterator_facade.hpp"
 
 namespace cppiter::range::iter {
 
@@ -20,9 +20,9 @@ struct dereference_iterator_traits : iterator_traits_facade<
 
 template<typename I>
 class dereference_iterator :
-    public iterator_facade<dereference_iterator<I>, detail::dereference_iterator_traits<I>> {
+    public util::iterator_facade<dereference_iterator<I>, detail::dereference_iterator_traits<I>> {
 
-    friend class iterator_accessor;
+    friend class util::iterator_accessor;
 
 public:
     explicit dereference_iterator(I iter) : iter{ iter }
