@@ -5,6 +5,7 @@
 namespace cppiter::range::iter {
 
 namespace detail {
+using namespace util;
 
 template<typename Iter, typename Category>
 class take_iterator_impl;
@@ -86,12 +87,12 @@ public:
 template<typename Iter>
 class take_iterator :
     public iterator_facade<take_iterator<Iter>>,
-    private detail::take_iterator_impl<Iter, category_t<Iter>> {
+    private detail::take_iterator_impl<Iter, util::category_t<Iter>> {
 
     friend class iter::iterator_accessor;
 
 public:
-    using detail::take_iterator_impl<Iter, category_t<Iter>>::take_iterator_impl;
+    using detail::take_iterator_impl<Iter, util::category_t<Iter>>::take_iterator_impl;
 };
 
 }

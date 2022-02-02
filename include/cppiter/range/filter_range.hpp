@@ -1,8 +1,8 @@
 #pragma once
 
-#include "range_facade.hpp"
-
 #include "iterator/filter_iterator.hpp"
+
+#include "range_facade.hpp"
 
 namespace cppiter::range {
 
@@ -13,7 +13,7 @@ class filter_range : public range_facade<iter::filter_iterator<range_iterator_t<
 
 public:
     filter_range(RngIt begin, RngIt end, P pred) :
-        filter_range{ begin, end, pred, iter::category_t<RngIt>{} }
+        filter_range{ begin, end, pred, iter::util::category_t<RngIt>{} }
     {}
 
 private:

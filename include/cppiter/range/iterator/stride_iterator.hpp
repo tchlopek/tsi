@@ -5,6 +5,7 @@
 namespace cppiter::range::iter {
 
 namespace detail {
+using namespace util;
 
 template<typename I>
 struct stride_iterator_traits : iterator_traits_facade<
@@ -85,12 +86,12 @@ public:
 template<typename I>
 class stride_iterator :
     public iterator_facade<stride_iterator<I>, detail::stride_iterator_traits<I>>,
-    private detail::stride_iterator_impl<I, category_t<detail::stride_iterator_traits<I>>> {
+    private detail::stride_iterator_impl<I, util::category_t<detail::stride_iterator_traits<I>>> {
 
     friend class iter::iterator_accessor;
 
 public:
-    using detail::stride_iterator_impl<I, category_t<detail::stride_iterator_traits<I>>>::
+    using detail::stride_iterator_impl<I, util::category_t<detail::stride_iterator_traits<I>>>::
         stride_iterator_impl;
 };
 

@@ -7,7 +7,7 @@ namespace cppiter::range::iter {
 namespace detail {
 
 template<typename T>
-struct generate_iterator_traits : iterator_traits_facade<
+struct generate_iterator_traits : util::iterator_traits_facade<
     T,
     std::bidirectional_iterator_tag,
     T,

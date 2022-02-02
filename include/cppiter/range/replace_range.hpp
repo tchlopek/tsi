@@ -1,8 +1,9 @@
 #pragma once
 
+#include "iterator/replace_iterator.hpp"
+
 #include "range_facade.hpp"
 #include "range_iterator.hpp"
-#include "iterator/replace_iterator.hpp"
 
 namespace cppiter::range {
 
@@ -12,7 +13,7 @@ class replace_range : public range_facade<iter::replace_iterator<range_iterator_
     using ReplaceIt = iter::replace_iterator<RngIt, P>;
 
 public:
-    replace_range(RngIt begin, RngIt end, P pred, const iter::value_t<RngIt>& newVal) :
+    replace_range(RngIt begin, RngIt end, P pred, const iter::util::value_t<RngIt>& newVal) :
         range_facade<ReplaceIt>{ ReplaceIt{ begin, pred, newVal }, ReplaceIt{ end, pred, newVal } }
     {}
 };

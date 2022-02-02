@@ -1,10 +1,13 @@
 #pragma once
 
+#include "util/min_iterator_category.hpp"
+
 #include "iterator_facade.hpp"
 
 namespace cppiter::range::iter {
 
 namespace detail {
+using namespace util;
 
 template<typename I>
 using inner_iterator_t = range::range_iterator_t<value_t<I>>;
@@ -90,12 +93,12 @@ public:
 template<typename I>
 class flatten_iterator : 
     public iterator_facade<flatten_iterator<I>, detail::flatten_iterator_traits<I>>,
-    private detail::flatten_iterator_impl<I, category_t<detail::flatten_iterator_traits<I>>> {
+    private detail::flatten_iterator_impl<I, util::category_t<detail::flatten_iterator_traits<I>>> {
 
     friend class iter::iterator_accessor;
 
 public:
-    using detail::flatten_iterator_impl<I, category_t<detail::flatten_iterator_traits<I>>>::
+    using detail::flatten_iterator_impl<I, util::category_t<detail::flatten_iterator_traits<I>>>::
         flatten_iterator_impl;
 };
 

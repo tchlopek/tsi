@@ -1,19 +1,20 @@
 #pragma once
 
-#include "iterator/iterator_helper.hpp"
+#include "iterator/util/iterator_traits_facade.hpp"
+#include "iterator/util/wrapped_iterator.hpp"
 
 namespace cppiter::range {
 
 template<typename R>
 class range_facade_impl_base {
-    using Iterator = iter::detail::wrapped_iterator_t<R>;
+    using Iterator = iter::util::wrapped_iterator_t<R>;
 
 public:
-    using value_type = iter::value_t<Iterator>;
-    using difference_type = iter::difference_t<Iterator>;
-    using reference = iter::reference_t<Iterator>;
+    using value_type = iter::util::value_t<Iterator>;
+    using difference_type = iter::util::difference_t<Iterator>;
+    using reference = iter::util::reference_t<Iterator>;
     using const_reference = reference;
-    using pointer = iter::pointer_t<Iterator>;
+    using pointer = iter::util::pointer_t<Iterator>;
     using const_pointer = pointer;
     using iterator = Iterator;
     using const_iterator = Iterator;
@@ -64,7 +65,7 @@ public:
 };
 
 template<typename I>
-class range_facade : public range_facade_impl<range_facade<I>, iter::category_t<I>> {
+class range_facade : public range_facade_impl<range_facade<I>, iter::util::category_t<I>> {
 public:
     range_facade(I begin, I end) : b{ begin }, e{ end }
     {}

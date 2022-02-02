@@ -7,6 +7,7 @@
 namespace cppiter::range::iter {
 
 namespace detail {
+using namespace util;
 
 template<typename Iter>
 struct enumerate_iterator_traits : iterator_traits_facade<
@@ -29,7 +30,7 @@ class enumerate_iterator :
     friend class iterator_accessor;
 
 public:
-    enumerate_iterator(Iter iter, difference_t<Iter> index) : iter{ iter }, index{ index }
+    enumerate_iterator(Iter iter, util::difference_t<Iter> index) : iter{ iter }, index{ index }
     {}
 
 private:
@@ -47,21 +48,21 @@ private:
         --index;
     }
 
-    reference_t<detail::enumerate_iterator_traits<Iter>> dereference() const {
+    util::reference_t<detail::enumerate_iterator_traits<Iter>> dereference() const {
         return { index, std::ref(*iter) };
     }
 
-    void advance(difference_t<Iter> n) {
+    void advance(util::difference_t<Iter> n) {
         iter += n;
         index += n;
     }
 
-    difference_t<Iter> distance_to(const enumerate_iterator& other) const {
+    util::difference_t<Iter> distance_to(const enumerate_iterator& other) const {
         return iter - other.iter;
     }
 
     Iter iter;
-    difference_t<Iter> index;
+    util::difference_t<Iter> index;
 };
 
 }

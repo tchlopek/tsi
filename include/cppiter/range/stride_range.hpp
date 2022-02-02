@@ -1,8 +1,9 @@
 #pragma once
 
+#include "iterator/stride_iterator.hpp"
+
 #include "range_facade.hpp"
 #include "range_iterator.hpp"
-#include "iterator/stride_iterator.hpp"
 
 namespace cppiter::range {
 
@@ -10,11 +11,11 @@ template<typename R>
 class stride_range : public range_facade<iter::stride_iterator<range_iterator_t<R>>> {
     using RngIt = range_iterator_t<R>;
     using StrideIt = iter::stride_iterator<RngIt>;
-    using Diff = iter::difference_t<RngIt>;
+    using Diff = iter::util::difference_t<RngIt>;
 
 public:
     stride_range(RngIt begin, RngIt end, Diff n) :
-        stride_range{ begin, end, n, iter::category_t<RngIt>{} }
+        stride_range{ begin, end, n, iter::util::category_t<RngIt>{} }
     {}
 
 private:

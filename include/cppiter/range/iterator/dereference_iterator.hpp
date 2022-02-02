@@ -5,6 +5,7 @@
 namespace cppiter::range::iter {
 
 namespace detail {
+using namespace util;
 
 template<typename I>
 struct dereference_iterator_traits : iterator_traits_facade<
@@ -40,15 +41,15 @@ private:
         --iter;
     }
 
-    reference_t<detail::dereference_iterator_traits<I>> dereference() const {
+    util::reference_t<detail::dereference_iterator_traits<I>> dereference() const {
         return **iter;
     }
 
-    void advance(difference_t<I> n) {
+    void advance(util::difference_t<I> n) {
         iter += n;
     }
 
-    difference_t<I> distance_to(const dereference_iterator& other) const {
+    util::difference_t<I> distance_to(const dereference_iterator& other) const {
         return iter - other.iter;
     }
 

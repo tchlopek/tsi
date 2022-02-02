@@ -1,8 +1,9 @@
 #pragma once
 
+#include "iterator/take_iterator.hpp"
+
 #include "range_facade.hpp"
 #include "range_iterator.hpp"
-#include "iterator/take_iterator.hpp"
 
 namespace cppiter::range {
 
@@ -10,11 +11,11 @@ template<typename R>
 class take_range : public range_facade<iter::take_iterator<range_iterator_t<R>>> {
     using RngIt = range_iterator_t<R>;
     using TakeIt = iter::take_iterator<RngIt>;
-    using Diff = iter::difference_t<RngIt>;
+    using Diff = iter::util::difference_t<RngIt>;
 
 public:
     take_range(RngIt begin, RngIt end, Diff n) :
-        take_range{ begin, end, n, iter::category_t<RngIt>{} }
+        take_range{ begin, end, n, iter::util::category_t<RngIt>{} }
     {}
 
 private:

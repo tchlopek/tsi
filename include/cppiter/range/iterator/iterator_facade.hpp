@@ -1,6 +1,7 @@
 #pragma once
 
-#include "iterator_helper.hpp"
+#include "util/iterator_traits_facade.hpp"
+#include "util/wrapped_iterator.hpp"
 
 namespace cppiter::range::iter {
 
@@ -12,7 +13,7 @@ public:
     }
 
     template<typename I>
-    static reference_t<I> dereference(I& iter) {
+    static util::reference_t<I> dereference(I& iter) {
         return iter.dereference();
     }
 
@@ -27,12 +28,12 @@ public:
     }
 
     template<typename I>
-    static void advance(I& iter, difference_t<I> n) {
+    static void advance(I& iter, util::difference_t<I> n) {
         iter.advance(n);
     }
 
     template<typename I>
-    static difference_t<I> distance_to(const I& lhs, const I& rhs) {
+    static util::difference_t<I> distance_to(const I& lhs, const I& rhs) {
         return lhs.distance_to(rhs);
     }
 };
@@ -63,11 +64,11 @@ protected:
 public:
     using iterator_category = std::forward_iterator_tag;
 
-    reference_t<Base> operator*() const {
+    util::reference_t<Base> operator*() const {
         return iterator_accessor::dereference(derived());
     }
 
-    pointer_t<Base> operator->() const {
+    util::pointer_t<Base> operator->() const {
         return std::addressof(iterator_accessor::dereference(derived()));
     }
 
@@ -122,41 +123,41 @@ class iterator_facade_impl<DerivedIterator, Traits, std::random_access_iterator_
 public:
     using iterator_category = std::random_access_iterator_tag;
 
-    DerivedIterator& operator+=(difference_t<Base> n) {
+    DerivedIterator& operator+=(util::difference_t<Base> n) {
         iterator_accessor::advance(derived(), n);
         return derived();
     }
 
-    DerivedIterator& operator-=(difference_t<Base> n) {
+    DerivedIterator& operator-=(util::difference_t<Base> n) {
         iterator_accessor::advance(derived(), -n);
         return derived();
     }
 
-    DerivedIterator operator+(difference_t<Base> n) const {
+    DerivedIterator operator+(util::difference_t<Base> n) const {
         auto current = derived();
         iterator_accessor::advance(current, n);
         return current;
     }
 
-    DerivedIterator operator-(difference_t<Base> n) const {
+    DerivedIterator operator-(util::difference_t<Base> n) const {
         auto current = derived();
         iterator_accessor::advance(current, -n);
         return current;
     }
 
-    difference_t<Base> operator-(const DerivedIterator& other) const {
+    util::difference_t<Base> operator-(const DerivedIterator& other) const {
         return iterator_accessor::distance_to(derived(), other);
     }
 
-    reference_t<Base> operator[](difference_t<Base> n) const {
+    util::reference_t<Base> operator[](util::difference_t<Base> n) const {
         return iterator_accessor::dereference(*this + n);
     }
 };
 
 template<
     typename Derived,
-    typename Traits = detail::iterator_traits_facade<detail::wrapped_iterator_t<Derived>>>
-class iterator_facade : public iterator_facade_impl<Derived, Traits, category_t<Traits>>
+    typename Traits = util::iterator_traits_facade<util::wrapped_iterator_t<Derived>>>
+class iterator_facade : public iterator_facade_impl<Derived, Traits, util::category_t<Traits>>
 {};
 
 }

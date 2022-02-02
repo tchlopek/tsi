@@ -1,7 +1,8 @@
 #pragma once
 
-#include "range_facade.hpp"
 #include "iterator/flatten_iterator.hpp"
+
+#include "range_facade.hpp"
 
 namespace cppiter::range {
 
@@ -12,7 +13,7 @@ class flatten_range : public range_facade<iter::flatten_iterator<range_iterator_
 
 public:
     flatten_range(RngIt begin, RngIt end) :
-        flatten_range{ begin, end, iter::category_t<FlatIt>{} }
+        flatten_range{ begin, end, iter::util::category_t<FlatIt>{} }
     {}
 
 private:

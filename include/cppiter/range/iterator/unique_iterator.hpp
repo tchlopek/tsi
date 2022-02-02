@@ -1,10 +1,13 @@
 #pragma once
 
+#include "util/min_iterator_category.hpp"
+
 #include "iterator_facade.hpp"
 
 namespace cppiter::range::iter {
 
 namespace detail {
+using namespace util;
 
 template<typename Iter>
 struct unique_iterator_traits : iterator_traits_facade<
@@ -34,7 +37,7 @@ private:
         while (++iter != end && dereference() == beginVal);
     }
 
-    reference_t<Iter> dereference() const {
+    util::reference_t<Iter> dereference() const {
         return *iter;
     }
 
