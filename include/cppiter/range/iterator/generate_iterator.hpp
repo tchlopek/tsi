@@ -29,7 +29,7 @@ public:
     {}
 
 private:
-    bool equal(const generate_iterator& other) const {
+    bool equal(const generate_iterator&) const {
         return false;
     }
 

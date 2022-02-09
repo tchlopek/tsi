@@ -5,12 +5,12 @@
 namespace cppiter::range::iter::util {
 
 namespace detail {
-template<typename C> constexpr std::size_t iterator_category_rank;
-template<> constexpr std::size_t iterator_category_rank<std::input_iterator_tag> = 0;
-template<> constexpr std::size_t iterator_category_rank<std::output_iterator_tag> = 1;
-template<> constexpr std::size_t iterator_category_rank<std::forward_iterator_tag> = 2;
-template<> constexpr std::size_t iterator_category_rank<std::bidirectional_iterator_tag> = 3;
-template<> constexpr std::size_t iterator_category_rank<std::random_access_iterator_tag> = 4;
+template<typename C> constexpr std::size_t iterator_category_rank = 0;
+template<> inline constexpr std::size_t iterator_category_rank<std::input_iterator_tag> = 1;
+template<> inline constexpr std::size_t iterator_category_rank<std::output_iterator_tag> = 2;
+template<> inline constexpr std::size_t iterator_category_rank<std::forward_iterator_tag> = 3;
+template<> inline constexpr std::size_t iterator_category_rank<std::bidirectional_iterator_tag> = 4;
+template<> inline constexpr std::size_t iterator_category_rank<std::random_access_iterator_tag> = 5;
 }
 
 template<typename C1, typename C2>
