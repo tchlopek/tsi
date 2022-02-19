@@ -3,7 +3,7 @@
 #include "iterator_traits_facade.hpp"
 #include "wrapped_iterator.hpp"
 
-namespace cppiter::range::iter::util {
+namespace cppiter::rng::iter::util {
 
 class iterator_accessor {
 public:

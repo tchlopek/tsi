@@ -2,7 +2,7 @@
 
 #include <type_traits>
 
-namespace cppiter::range::util {
+namespace cppiter::rng::util {
 
 template<typename R>
 struct range_iterator {

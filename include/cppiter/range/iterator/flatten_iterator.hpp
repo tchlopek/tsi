@@ -5,13 +5,13 @@
 #include "util/iterator_facade.hpp"
 #include "util/min_iterator_category.hpp"
 
-namespace cppiter::range::iter {
+namespace cppiter::rng::iter {
 
 namespace detail {
 using namespace util;
 
 template<typename I>
-using inner_iterator_t = range::util::range_iterator_t<value_t<I>>;
+using inner_iterator_t = rng::util::range_iterator_t<value_t<I>>;
 
 template<typename Iter>
 struct flatten_iterator_traits : iterator_traits_facade<

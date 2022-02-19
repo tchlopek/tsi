@@ -3,7 +3,7 @@
 #include "util/iterator_facade.hpp"
 #include "util/min_iterator_category.hpp"
 
-namespace cppiter::range::iter {
+namespace cppiter::rng::iter {
 
 namespace detail {
 using namespace util;

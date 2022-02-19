@@ -5,7 +5,7 @@
 #include "util/range_facade.hpp"
 #include "util/range_iterator.hpp"
 
-namespace cppiter::range {
+namespace cppiter::rng {
 
 template<typename R>
 class unique_range : public util::range_facade<iter::unique_iterator<util::range_iterator_t<R>>> {

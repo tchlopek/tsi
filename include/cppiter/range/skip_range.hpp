@@ -3,7 +3,7 @@
 #include "util/range_facade.hpp"
 #include "util/range_iterator.hpp"
 
-namespace cppiter::range {
+namespace cppiter::rng {
 
 template<typename R>
 class skip_range : public util::range_facade<util::range_iterator_t<R>> {

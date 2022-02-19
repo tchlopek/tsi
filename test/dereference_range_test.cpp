@@ -30,7 +30,7 @@ TEST_F(DereferenceRangeTest, IsAbleToMutateSourceRange) {
     EXPECT_THAT(v, ElementsAre(Pointee(10), Pointee(11), Pointee(12)));
 }
 
-using DerefRange = cppiter::range::dereference_range<std::vector<const int*>>;
+using DerefRange = cppiter::rng::dereference_range<std::vector<const int*>>;
 
 static_assert(std::is_same_v<DerefRange::value_type, const int>);
 static_assert(std::is_same_v<DerefRange::reference, const int&>);

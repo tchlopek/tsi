@@ -15,7 +15,7 @@
 #include "take_range.hpp"
 #include "unique_range.hpp"
 
-namespace cppiter::range {
+namespace cppiter::rng {
 
 template<typename R>
 class range_factory :

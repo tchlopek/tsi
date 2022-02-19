@@ -1,6 +1,6 @@
 #pragma once
 
-namespace cppiter::range::iter::util {
+namespace cppiter::rng::iter::util {
 
 template<typename IteratorWrapper>
 struct wrapped_iterator;

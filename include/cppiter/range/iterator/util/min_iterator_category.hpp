@@ -2,7 +2,7 @@
 
 #include <iterator>
 
-namespace cppiter::range::iter::util {
+namespace cppiter::rng::iter::util {
 
 namespace detail {
 template<typename C> constexpr std::size_t iterator_category_rank = 0;

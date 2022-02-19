@@ -3,7 +3,7 @@
 #include <cppiter/range/iterator/util/iterator_traits_facade.hpp>
 #include <cppiter/range/iterator/util/wrapped_iterator.hpp>
 
-namespace cppiter::range::util {
+namespace cppiter::rng::util {
 namespace detail {
 
 template<typename R>

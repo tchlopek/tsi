@@ -2,7 +2,7 @@
 
 #include <iterator>
 
-namespace cppiter::range::iter::util {
+namespace cppiter::rng::iter::util {
 
 template<typename I>
 using value_t = typename std::iterator_traits<I>::value_type;

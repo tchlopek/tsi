@@ -4,7 +4,7 @@
 
 #include "util/range_facade.hpp"
 
-namespace cppiter::range {
+namespace cppiter::rng {
 
 template<typename T>
 class generate_range : public util::range_facade<iter::unbound_generate_iterator<T>> {

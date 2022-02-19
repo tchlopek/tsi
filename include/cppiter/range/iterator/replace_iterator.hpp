@@ -3,7 +3,7 @@
 #include "util/add_ref_const.hpp"
 #include "util/iterator_facade.hpp"
 
-namespace cppiter::range::iter {
+namespace cppiter::rng::iter {
 
 namespace detail {
 using namespace util;
