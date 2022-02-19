@@ -1,14 +1,14 @@
 #pragma once
 
-#include "iterator/generate_iterator.hpp"
+#include "iterator/unbound_generate_iterator.hpp"
 
 #include "util/range_facade.hpp"
 
 namespace cppiter::range {
 
 template<typename T>
-class generate_range : public util::range_facade<iter::generate_iterator<T>> {
-    using I = iter::generate_iterator<T>;
+class generate_range : public util::range_facade<iter::unbound_generate_iterator<T>> {
+    using I = iter::unbound_generate_iterator<T>;
 
 public:
     generate_range(const T& v) : util::range_facade<I>{ I{ v }, I{ v } }

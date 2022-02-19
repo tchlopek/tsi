@@ -7,7 +7,7 @@ namespace cppiter::range::iter {
 namespace detail {
 
 template<typename T>
-struct generate_iterator_traits : util::iterator_traits_facade<
+struct unbound_generate_iterator_traits : util::iterator_traits_facade<
     T,
     std::bidirectional_iterator_tag,
     T,
@@ -19,17 +19,19 @@ struct generate_iterator_traits : util::iterator_traits_facade<
 }
 
 template<typename T>
-class generate_iterator :
-    public util::iterator_facade<generate_iterator<T>, detail::generate_iterator_traits<T>> {
+class unbound_generate_iterator :
+    public util::iterator_facade<
+        unbound_generate_iterator<T>,
+        detail::unbound_generate_iterator_traits<T>> {
 
     friend class util::iterator_accessor;
 
 public:
-    explicit generate_iterator(T v) : v{ std::move(v) }
+    explicit unbound_generate_iterator(T v) : v{ std::move(v) }
     {}
 
 private:
-    bool equal(const generate_iterator&) const {
+    bool equal(const unbound_generate_iterator&) const {
         return false;
     }
 
