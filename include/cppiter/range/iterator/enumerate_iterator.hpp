@@ -30,6 +30,7 @@ class enumerate_iterator :
     friend class util::iterator_accessor;
 
 public:
+    enumerate_iterator() = default;
     enumerate_iterator(Iter iter, util::difference_t<Iter> index) : iter{ iter }, index{ index }
     {}
 
@@ -59,6 +60,10 @@ private:
 
     util::difference_t<Iter> distance_to(const enumerate_iterator& other) const {
         return iter - other.iter;
+    }
+
+    bool less(const enumerate_iterator& other) const {
+        return iter < other.iter;
     }
 
     Iter iter;

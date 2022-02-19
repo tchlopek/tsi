@@ -58,6 +58,10 @@ private:
         return v - other.v;
     }
 
+    bool less(const bound_generate_iterator& other) const {
+        return v < other.v;
+    }
+
     mutable T v;
 };
 

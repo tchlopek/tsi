@@ -53,6 +53,10 @@ private:
         return iter - other.iter;
     }
 
+    bool less(const map_iterator& other) const {
+        return iter < other.iter;
+    }
+
     Iter iter;
     Func func;
 };

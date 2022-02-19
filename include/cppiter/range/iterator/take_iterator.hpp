@@ -79,6 +79,10 @@ public:
         return iter - other.iter;
     }
 
+    bool less(const take_iterator_impl& other) const {
+        return iter < other.iter;
+    }
+
     Iter iter;
 };
 

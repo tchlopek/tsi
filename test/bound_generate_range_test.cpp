@@ -1,7 +1,8 @@
+#include <functional>
+#include <vector>
+
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
-
-#include <vector>
 
 #include <cppiter/iter.hpp>
 
@@ -29,3 +30,30 @@ TEST(BoundGenerateRangeTest, CanIterateOverArraysWithDeref) {
     std::vector v{ 'a', 'r', 'r', 'a', 'y' };
     EXPECT_THAT(range(v.begin(), v.end()).deref(), ElementsAre('a', 'r', 'r', 'a', 'y'));
 }
+
+using I = cppiter::rng::iter::bound_generate_iterator<int>;
+
+struct BoundGenerateIteratorsRelationalOperatorTest :
+    public TestWithParam<
+        std::tuple<std::function<bool(I, I)>, int, int, bool>> {};
+
+TEST_P(BoundGenerateIteratorsRelationalOperatorTest, run) {
+    auto r = range(0, 5);
+    const auto [comp, offset1, offset2, result] = GetParam();
+    EXPECT_EQ(comp(r.begin() + offset1, r.begin() + offset2), result);
+}
+
+INSTANTIATE_TEST_SUITE_P(run, BoundGenerateIteratorsRelationalOperatorTest, Values(
+    std::tuple{ std::less<>{}, 0, 0, false },
+    std::tuple{ std::less<>{}, 1, 0, false },
+    std::tuple{ std::less<>{}, 0, 1, true },
+    std::tuple{ std::greater<>{}, 0, 0, false },
+    std::tuple{ std::greater<>{}, 1, 0, true },
+    std::tuple{ std::greater<>{}, 0, 1, false },
+    std::tuple{ std::less_equal<>{}, 0, 0, true },
+    std::tuple{ std::less_equal<>{}, 1, 0, false },
+    std::tuple{ std::less_equal<>{}, 0, 1, true },
+    std::tuple{ std::greater_equal<>{}, 0, 0, true },
+    std::tuple{ std::greater_equal<>{}, 1, 0, true },
+    std::tuple{ std::greater_equal<>{}, 0, 1, false }
+));

@@ -36,6 +36,11 @@ public:
     static difference_t<I> distance_to(const I& lhs, const I& rhs) {
         return lhs.distance_to(rhs);
     }
+
+    template<typename I>
+    static bool less(const I& lhs, const I& rhs) {
+        return lhs.less(rhs);
+    }
 };
 
 template<typename DerivedIterator, typename Traits>
@@ -151,6 +156,22 @@ public:
 
     reference_t<Base> operator[](difference_t<Base> n) const {
         return iterator_accessor::dereference(*this + n);
+    }
+
+    bool operator<(const DerivedIterator& other) const {
+        return iterator_accessor::less(derived(), other);
+    }
+
+    bool operator>(const DerivedIterator& other) const {
+        return iterator_accessor::less(other, derived());
+    }
+
+    bool operator<=(const DerivedIterator& other) const {
+        return !(*this > other);
+    }
+
+    bool operator>=(const DerivedIterator& other) const {
+        return !(*this < other);
     }
 };
 

@@ -53,6 +53,10 @@ private:
         return iter - other.iter;
     }
 
+    bool less(const dereference_iterator& other) const {
+        return iter < other.iter;
+    }
+
     I iter;
 };
 

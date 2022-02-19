@@ -55,6 +55,10 @@ private:
         return iter - other.iter;
     }
 
+    bool less(const replace_iterator& other) const {
+        return iter < other.iter;
+    }
+
     Iter iter;
     util::value_t<Iter> newVal;
     Pred pred;

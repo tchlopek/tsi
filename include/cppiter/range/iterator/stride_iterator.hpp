@@ -75,6 +75,10 @@ public:
         return (other.index - index) / step;
     }
 
+    bool less(const stride_iterator_impl& other) const {
+        return index < other.index;
+    }
+
     I begin;
     mutable I iter;
     difference_t<I> index;
