@@ -33,11 +33,12 @@ public:
     : baseIter{ iter }
     , baseEnd{ end }
     , innerIter{ inner } {
-    while (baseIter != baseEnd && baseIter->empty()) {
+    while (baseIter != baseEnd) {
+      if (!baseIter->empty()) {
+        innerIter = baseIter->begin();
+        break;
+      }
       ++baseIter;
-    }
-    if (baseIter != baseEnd) {
-      innerIter = baseIter->begin();
     }
   }
 
