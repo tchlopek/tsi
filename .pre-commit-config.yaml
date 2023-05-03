@@ -1,0 +1,6 @@
+repos:
+-   repo: https://github.com/jlebar/pre-commit-hooks.git
+    rev: 62ca83b
+    hooks:
+      - id: clang-format-diff
+        types_or: [c++, c]
