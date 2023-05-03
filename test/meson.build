@@ -32,6 +32,7 @@ src_test = [
 ut_bin = executable(
     'ut-range',
     src_test,
-    dependencies: ut_deps)
+    dependencies: ut_deps
+)
 
 test('range unit tests', ut_bin)

@@ -9,10 +9,11 @@ namespace detail {
 using namespace util;
 
 template<typename I>
-struct filter_iterator_traits : iterator_traits_facade<
-    I,
-    min_iterator_category_t<category_t<I>, std::bidirectional_iterator_tag>>
-{};
+struct filter_iterator_traits
+  : iterator_traits_facade<
+      I,
+      min_iterator_category_t<category_t<I>, std::bidirectional_iterator_tag>> {
+};
 
 template<typename I, typename P, typename C>
 class filter_iterator_impl;
@@ -20,84 +21,93 @@ class filter_iterator_impl;
 template<typename I, typename P>
 class filter_iterator_impl<I, P, std::forward_iterator_tag> {
 public:
-    filter_iterator_impl(I iter, I end, P pred) :
-        iter{ iter }, end{ end }, pred{ pred } {
-    }
+  filter_iterator_impl(I iter, I end, P pred)
+    : iter{ iter }
+    , end{ end }
+    , pred{ pred } {
+  }
 
-    bool equal(const filter_iterator_impl& other) const {
-        align_position();
-        return iter == other.iter;
-    }
+  bool equal(const filter_iterator_impl& other) const {
+    align_position();
+    return iter == other.iter;
+  }
 
-    void increment() {
-        ++iter;
-        align_position();
-    }
+  void increment() {
+    ++iter;
+    align_position();
+  }
 
-    reference_t<I> dereference() const {
-        return *iter;
-    }
+  reference_t<I> dereference() const {
+    return *iter;
+  }
 
-    void align_position() const {
-        while (iter != end && !pred(dereference())) {
-            ++iter;
-        }
+  void align_position() const {
+    while (iter != end && !pred(dereference())) {
+      ++iter;
     }
+  }
 
-    mutable I iter;
-    I end;
-    P pred;
+  mutable I iter;
+  I end;
+  P pred;
 };
 
 template<typename I, typename P>
 class filter_iterator_impl<I, P, std::bidirectional_iterator_tag> {
 public:
-    filter_iterator_impl(I iter, std::pair<I, I> bounds, P pred) :
-        iter{ iter }, bounds{ bounds }, pred{ pred } {
-    }
+  filter_iterator_impl(I iter, std::pair<I, I> bounds, P pred)
+    : iter{ iter }
+    , bounds{ bounds }
+    , pred{ pred } {
+  }
 
-    bool equal(const filter_iterator_impl& other) const {
-        align_position();
-        return iter == other.iter;
-    }
+  bool equal(const filter_iterator_impl& other) const {
+    align_position();
+    return iter == other.iter;
+  }
 
-    void increment() {
-        ++iter;
-        align_position();
-    }
+  void increment() {
+    ++iter;
+    align_position();
+  }
 
-    void decrement() {
-        while (iter != bounds.first && !pred(*--iter)) {
-        }
+  void decrement() {
+    while (iter != bounds.first && !pred(*--iter)) {
     }
+  }
 
-    reference_t<I> dereference() const {
-        return *iter;
+  reference_t<I> dereference() const {
+    return *iter;
+  }
+
+  void align_position() const {
+    while (iter != bounds.second && !pred(*iter)) {
+      ++iter;
     }
+  }
 
-    void align_position() const {
-        while (iter != bounds.second && !pred(*iter)) {
-            ++iter;
-        }
-    }
-
-    mutable I iter;
-    std::pair<I, I> bounds;
-    P pred;
+  mutable I iter;
+  std::pair<I, I> bounds;
+  P pred;
 };
 
-}
+}    // namespace detail
 
 template<typename I, typename P>
-class filter_iterator :
-    public util::iterator_facade<filter_iterator<I, P>, detail::filter_iterator_traits<I>>,
-    private detail::filter_iterator_impl<I, P, util::category_t<detail::filter_iterator_traits<I>>> {
-
-    friend class util::iterator_accessor;
+class filter_iterator
+  : public util::
+      iterator_facade<filter_iterator<I, P>, detail::filter_iterator_traits<I>>
+  , private detail::filter_iterator_impl<
+      I,
+      P,
+      util::category_t<detail::filter_iterator_traits<I>>> {
+  friend class util::iterator_accessor;
 
 public:
-    using detail::filter_iterator_impl<I, P, util::category_t<detail::filter_iterator_traits<I>>>::
-        filter_iterator_impl;
+  using detail::filter_iterator_impl<
+    I,
+    P,
+    util::category_t<detail::filter_iterator_traits<I>>>::filter_iterator_impl;
 };
 
-}
+}    // namespace cppiter::rng::iter

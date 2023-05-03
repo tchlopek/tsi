@@ -7,25 +7,25 @@ struct add_ref_const;
 
 template<typename T>
 struct add_ref_const<T&> {
-    using type = const T&;
+  using type = const T&;
 };
 
 template<typename T>
 struct add_ref_const<const T&> {
-    using type = const T&;
+  using type = const T&;
 };
 
 template<typename T>
 struct add_ref_const<T*> {
-    using type = const T*;
+  using type = const T*;
 };
 
 template<typename T>
 struct add_ref_const<const T*> {
-    using type = const T*;
+  using type = const T*;
 };
 
 template<typename T>
 using add_ref_const_t = typename add_ref_const<T>::type;
 
-}
+}    // namespace cppiter::rng::iter::util
