@@ -21,7 +21,7 @@ TEST(BoundGenerateRangeTest, GenerateValuesInDescendingOrder) {
   EXPECT_THAT(range(0, 5).reverse(), ElementsAre(4, 3, 2, 1, 0));
 }
 
-TEST(BoundGenerateRangeTest, CanBeContructedFromRelatedTypes) {
+TEST(BoundGenerateRangeTest, CanBeConstructedFromRelatedTypes) {
   const std::size_t b = 1;
   const unsigned char e = 5;
   EXPECT_THAT(range(b, e), ElementsAre(1, 2, 3, 4));
