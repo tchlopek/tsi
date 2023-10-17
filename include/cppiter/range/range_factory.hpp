@@ -1,5 +1,7 @@
 #pragma once
 
+#include <numeric>
+
 #include "util/range_facade.hpp"
 #include "util/range_iterator.hpp"
 
@@ -103,6 +105,16 @@ public:
   auto collect() {
     using VT = typename util::range_facade<util::range_iterator_t<R>>::value_type;
     return C<VT>{ begin(), end() };
+  }
+
+  template<typename val_t, typename binop_t>
+  val_t fold(val_t&& init, binop_t&& binop) {
+    return std::accumulate(
+      begin(),
+      end(),
+      std::forward<val_t>(init),
+      std::forward<binop_t>(binop)
+    );
   }
 };
 
