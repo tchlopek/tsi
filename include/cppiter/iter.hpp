@@ -2,23 +2,23 @@
 
 #include <type_traits>
 
-#include "cppiter/range/iterator/bound_generate_iterator.hpp"
-#include "range/generate_range.hpp"
+// #include "cppiter/range/iterator/bound_generate_iterator.hpp"
+// #include "range/generate_range.hpp"
 #include "range/range_factory.hpp"
 
 namespace cppiter {
 
-template<typename R>
-auto iter(R& r) {
-  return rng::range_factory<R>{ r };
+template<typename range_t>
+auto iter(range_t&& range) {
+  return rng::range_factory{ std::move(range) };
 }
 
-template<typename R>
-auto iter(const R& r) {
-  return rng::range_factory<const R>{ r };
+template<typename range_t>
+auto iter(const range_t& range) {
+  return rng::range_factory{ range };
 }
 
-template<typename T>
+/*template<typename T>
 auto gen(const T& v) {
   return rng::range_factory{ rng::generate_range<T>{ v } };
 }
@@ -31,6 +31,6 @@ auto range(T1&& b, T2&& e) {
   return rng::range_factory{ rng::util::range_facade{
     rng::iter::bound_generate_iterator{ common_t(std::forward<T1>(b)) },
     rng::iter::bound_generate_iterator{ common_t(std::forward<T2>(e)) } } };
-}
+}*/
 
 }    // namespace cppiter

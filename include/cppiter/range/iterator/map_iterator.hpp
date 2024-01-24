@@ -1,67 +1,64 @@
 #pragma once
 
+#include <type_traits>
+
 #include "util/iterator_facade.hpp"
 
 namespace cppiter::rng::iter {
 
-namespace detail {
-using namespace util;
+template<typename iter_t, typename map_fn>
+struct map_iterator_traits : public std::iterator_traits<iter_t> {
+  using reference = std::invoke_result_t<map_fn, typename iter_t::reference>;
+  using value_type = std::decay_t<reference>;
+  using pointer = std::add_pointer_t<reference>;
+};
 
-template<typename Iter, typename Func>
-struct map_iterator_traits
-  : iterator_traits_facade<
-      Iter,
-      category_t<Iter>,
-      std::decay_t<std::invoke_result_t<Func, reference_t<Iter>>>,
-      std::invoke_result_t<Func, reference_t<Iter>>,
-      std::add_pointer_t<std::invoke_result_t<Func, reference_t<Iter>>>> {};
-
-}    // namespace detail
-
-template<typename Iter, typename Func>
+template<typename iter_t, typename map_fn>
 class map_iterator
   : public util::iterator_facade<
-      map_iterator<Iter, Func>,
-      detail::map_iterator_traits<Iter, Func>> {
+      map_iterator<iter_t, map_fn>,
+      map_iterator_traits<iter_t, map_fn>> {
   friend class util::iterator_accessor;
 
 public:
-  map_iterator(Iter iter, Func func)
-    : iter{ iter }
-    , func{ func } {
+  map_iterator() = default;
+  map_iterator(const iter_t& it, const map_fn* fn)
+    : m_it{ it }
+    , m_fn{ fn } {
   }
 
 private:
   bool equal(const map_iterator& other) const {
-    return iter == other.iter;
+    return m_it == other.m_it;
   }
 
   void increment() {
-    ++iter;
+    ++m_it;
   }
 
   void decrement() {
-    --iter;
+    --m_it;
   }
 
-  util::reference_t<detail::map_iterator_traits<Iter, Func>> dereference() const {
-    return func(*iter);
+  decltype(auto) dereference() const {
+    return (*m_fn)(*m_it);
   }
 
-  void advance(util::difference_t<Iter> n) {
-    iter += n;
+  template<typename diff_t>
+  void advance(diff_t n) {
+    m_it += n;
   }
 
-  util::difference_t<Iter> distance_to(const map_iterator& other) const {
-    return iter - other.iter;
+  auto distance_to(const map_iterator& other) const {
+    return m_it - other.m_it;
   }
 
   bool less(const map_iterator& other) const {
-    return iter < other.iter;
+    return m_it < other.m_it;
   }
 
-  Iter iter;
-  Func func;
+  iter_t m_it;
+  const map_fn* m_fn = nullptr;
 };
 
 }    // namespace cppiter::rng::iter

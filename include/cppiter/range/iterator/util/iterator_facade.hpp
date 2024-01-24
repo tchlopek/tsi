@@ -1,9 +1,12 @@
 #pragma once
 
-#include "iterator_traits_facade.hpp"
-#include "wrapped_iterator.hpp"
+#include "iterator_traits.hpp"
 
 namespace cppiter::rng::iter::util {
+
+using fi = std::forward_iterator_tag;
+using bi = std::bidirectional_iterator_tag;
+using ri = std::random_access_iterator_tag;
 
 class iterator_accessor {
 public:
@@ -13,7 +16,7 @@ public:
   }
 
   template<typename I>
-  static reference_t<I> dereference(I& iter) {
+  static decltype(auto) dereference(I& iter) {
     return iter.dereference();
   }
 
@@ -27,13 +30,13 @@ public:
     iter.decrement();
   }
 
-  template<typename I>
-  static void advance(I& iter, difference_t<I> n) {
+  template<typename I, typename diff_t>
+  static void advance(I& iter, diff_t n) {
     iter.advance(n);
   }
 
   template<typename I>
-  static difference_t<I> distance_to(const I& lhs, const I& rhs) {
+  static auto distance_to(const I& lhs, const I& rhs) {
     return lhs.distance_to(rhs);
   }
 
@@ -43,148 +46,131 @@ public:
   }
 };
 
-template<typename DerivedIterator, typename Traits>
-class iterator_facade_impl_base : public Traits {
+template<typename iter_t>
+class iterator_facade_impl_base {
 public:
-  DerivedIterator& derived() {
-    return *static_cast<DerivedIterator*>(this);
+  iter_t& derived() {
+    return *static_cast<iter_t*>(this);
   }
 
-  const DerivedIterator& derived() const {
-    return *static_cast<const DerivedIterator*>(this);
+  const iter_t& derived() const {
+    return *static_cast<const iter_t*>(this);
   }
 };
 
-template<typename DerivedIterator, typename Traits, typename Category>
+template<typename iter_t, typename traits_t, typename cat_t>
 class iterator_facade_impl;
 
-template<typename DerivedIterator, typename Traits>
-class iterator_facade_impl<DerivedIterator, Traits, std::forward_iterator_tag>
-  : public iterator_facade_impl_base<DerivedIterator, Traits> {
-  using Base = iterator_facade_impl_base<DerivedIterator, Traits>;
-
+template<typename iter_t, typename traits_t>
+class iterator_facade_impl<iter_t, traits_t, fi>
+  : public iterator_facade_impl_base<iter_t> {
 protected:
-  using Base::derived;
+  using iterator_facade_impl_base<iter_t>::derived;
 
 public:
-  using iterator_category = std::forward_iterator_tag;
-
-  reference_t<Base> operator*() const {
+  decltype(auto) operator*() const {
     return iterator_accessor::dereference(derived());
   }
 
-  pointer_t<Base> operator->() const {
+  auto operator->() const {
     return std::addressof(iterator_accessor::dereference(derived()));
   }
 
-  DerivedIterator& operator++() {
+  iter_t& operator++() {
     iterator_accessor::increment(derived());
     return derived();
   }
 
-  DerivedIterator operator++(int) {
+  iter_t operator++(int) {
     auto current = derived();
     iterator_accessor::increment(derived());
     return current;
   }
 
-  bool operator==(const DerivedIterator& other) const {
+  bool operator==(const iter_t& other) const {
     return iterator_accessor::equal(derived(), other);
   }
 
-  bool operator!=(const DerivedIterator& other) const {
+  bool operator!=(const iter_t& other) const {
     return !(derived() == other);
   }
 };
 
-template<typename DerivedIterator, typename Traits>
-class iterator_facade_impl<DerivedIterator, Traits, std::bidirectional_iterator_tag>
-  : public iterator_facade_impl<DerivedIterator, Traits, std::forward_iterator_tag> {
+template<typename iter_t, typename traits_t>
+class iterator_facade_impl<iter_t, traits_t, bi>
+  : public iterator_facade_impl<iter_t, traits_t, fi> {
 protected:
-  using iterator_facade_impl<DerivedIterator, Traits, std::forward_iterator_tag>::
-    derived;
+  using iterator_facade_impl_base<iter_t>::derived;
 
 public:
-  using iterator_category = std::bidirectional_iterator_tag;
-
-  DerivedIterator& operator--() {
+  iter_t& operator--() {
     iterator_accessor::decrement(derived());
     return derived();
   }
 
-  DerivedIterator operator--(int) {
+  iter_t operator--(int) {
     auto current = derived();
     iterator_accessor::decrement(derived());
     return current;
   }
 };
 
-template<typename DerivedIterator, typename Traits>
-class iterator_facade_impl<DerivedIterator, Traits, std::random_access_iterator_tag>
-  : public iterator_facade_impl<
-      DerivedIterator,
-      Traits,
-      std::bidirectional_iterator_tag> {
-  using Base = iterator_facade_impl<
-    DerivedIterator,
-    Traits,
-    std::bidirectional_iterator_tag>;
-  using Base::derived;
+template<typename iter_t, typename traits_t>
+class iterator_facade_impl<iter_t, traits_t, ri>
+  : public iterator_facade_impl<iter_t, traits_t, bi> {
+private:
+  using iterator_facade_impl_base<iter_t>::derived;
 
 public:
-  using iterator_category = std::random_access_iterator_tag;
-
-  DerivedIterator& operator+=(difference_t<Base> n) {
+  iter_t& operator+=(difference_t<traits_t> n) {
     iterator_accessor::advance(derived(), n);
     return derived();
   }
 
-  DerivedIterator& operator-=(difference_t<Base> n) {
+  iter_t& operator-=(difference_t<traits_t> n) {
     iterator_accessor::advance(derived(), -n);
     return derived();
   }
 
-  DerivedIterator operator+(difference_t<Base> n) const {
+  iter_t operator+(difference_t<traits_t> n) const {
     auto current = derived();
     iterator_accessor::advance(current, n);
     return current;
   }
 
-  DerivedIterator operator-(difference_t<Base> n) const {
+  iter_t operator-(difference_t<traits_t> n) const {
     auto current = derived();
     iterator_accessor::advance(current, -n);
     return current;
   }
 
-  difference_t<Base> operator-(const DerivedIterator& other) const {
+  difference_t<traits_t> operator-(const iter_t& other) const {
     return iterator_accessor::distance_to(derived(), other);
   }
 
-  reference_t<Base> operator[](difference_t<Base> n) const {
+  reference_t<traits_t> operator[](difference_t<traits_t> n) const {
     return iterator_accessor::dereference(*this + n);
   }
 
-  bool operator<(const DerivedIterator& other) const {
+  bool operator<(const iter_t& other) const {
     return iterator_accessor::less(derived(), other);
   }
 
-  bool operator>(const DerivedIterator& other) const {
+  bool operator>(const iter_t& other) const {
     return iterator_accessor::less(other, derived());
   }
 
-  bool operator<=(const DerivedIterator& other) const {
+  bool operator<=(const iter_t& other) const {
     return !(*this > other);
   }
 
-  bool operator>=(const DerivedIterator& other) const {
+  bool operator>=(const iter_t& other) const {
     return !(*this < other);
   }
 };
 
-template<
-  typename Derived,
-  typename Traits = iterator_traits_facade<wrapped_iterator_t<Derived>>>
+template<typename iter_t, typename traits_t>
 class iterator_facade
-  : public iterator_facade_impl<Derived, Traits, category_t<Traits>> {};
-
+  : public iterator_facade_impl<iter_t, traits_t, category_t<traits_t>>
+  , public traits_t {};
 }    // namespace cppiter::rng::iter::util
