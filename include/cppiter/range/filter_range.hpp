@@ -3,33 +3,51 @@
 #include "iterator/filter_iterator.hpp"
 #include "util/range_facade.hpp"
 #include "util/range_iterator.hpp"
+#include "util/range_traits.hpp"
 
 namespace cppiter::rng {
 
-template<typename R, typename P>
+template<typename range_t, typename pred_t>
 class filter_range
-  : public util::range_facade<iter::filter_iterator<util::range_iterator_t<R>, P>> {
-  using RngIt = util::range_iterator_t<R>;
-  using FilterIt = iter::filter_iterator<RngIt, P>;
+  : public util::range_facade<filter_range<range_t, pred_t>>
+  , public util::range_traits<
+      iter::filter_iterator<util::iterator_t<range_t>, filter_range<range_t, pred_t>>,
+      iter::filter_iterator<
+        util::const_iterator_t<range_t>,
+        filter_range<range_t, pred_t>>> {
+  friend class util::range_accessor;
+  friend class iter::
+    filter_iterator<util::iterator_t<range_t>, filter_range<range_t, pred_t>>;
+  friend class iter::filter_iterator<
+    util::const_iterator_t<range_t>,
+    filter_range<range_t, pred_t>>;
 
 public:
-  filter_range(RngIt begin, RngIt end, P pred)
-    : filter_range{ begin, end, pred, iter::util::category_t<RngIt>{} } {
+  template<typename predicate>
+  filter_range(range_t&& range, predicate&& fn)
+    : m_range{ std::move(range) }
+    , m_fn{ std::forward<predicate>(fn) } {
   }
 
 private:
-  filter_range(RngIt begin, RngIt end, P pred, std::forward_iterator_tag)
-    : util::range_facade<FilterIt>{ FilterIt{ begin, end, pred },
-                                    FilterIt{ end, end, pred } } {
+  auto make_begin() {
+    return typename filter_range::iterator{ m_range.begin(), this };
   }
 
-  template<typename Cat>
-  filter_range(RngIt begin, RngIt end, P pred, Cat)
-    : util::range_facade<FilterIt>{
-      FilterIt{ begin, std::pair{ begin, end }, pred },
-      FilterIt{ end, std::pair{ begin, end }, pred }
-    } {
+  auto make_end() {
+    return typename filter_range::iterator{ m_range.end(), this };
   }
+
+  auto make_const_begin() const {
+    return typename filter_range::const_iterator{ m_range.cbegin(), this };
+  }
+
+  auto make_const_end() const {
+    return typename filter_range::const_iterator{ m_range.cend(), this };
+  }
+
+  range_t m_range;
+  pred_t m_fn;
 };
 
 }    // namespace cppiter::rng

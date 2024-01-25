@@ -4,10 +4,10 @@
 
 namespace cppiter::rng::util {
 
-template<typename R>
-using iterator_t = decltype(std::begin(std::declval<R&>()));
+template<typename range_t>
+using iterator_t = decltype(std::begin(std::declval<range_t&>()));
 
-template<typename R>
-using const_iterator_t = decltype(std::cbegin(std::declval<R&>()));
+template<typename range_t>
+using const_iterator_t = decltype(std::cbegin(std::declval<range_t&>()));
 
 }    // namespace cppiter::rng::util

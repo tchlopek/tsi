@@ -1,47 +1,44 @@
 #pragma once
 
+#include "category_types.hpp"
 #include "iterator_traits.hpp"
 
 namespace cppiter::rng::iter::util {
 
-using fi = std::forward_iterator_tag;
-using bi = std::bidirectional_iterator_tag;
-using ri = std::random_access_iterator_tag;
-
 class iterator_accessor {
 public:
-  template<typename I>
-  static bool equal(const I& lhs, const I& rhs) {
+  template<typename iter_t>
+  static bool equal(const iter_t& lhs, const iter_t& rhs) {
     return lhs.equal(rhs);
   }
 
-  template<typename I>
-  static decltype(auto) dereference(I& iter) {
+  template<typename iter_t>
+  static decltype(auto) dereference(iter_t& iter) {
     return iter.dereference();
   }
 
-  template<typename I>
-  static void increment(I& iter) {
+  template<typename iter_t>
+  static void increment(iter_t& iter) {
     iter.increment();
   }
 
-  template<typename I>
-  static void decrement(I& iter) {
+  template<typename iter_t>
+  static void decrement(iter_t& iter) {
     iter.decrement();
   }
 
-  template<typename I, typename diff_t>
-  static void advance(I& iter, diff_t n) {
+  template<typename iter_t, typename diff_t>
+  static void advance(iter_t& iter, diff_t n) {
     iter.advance(n);
   }
 
-  template<typename I>
-  static auto distance_to(const I& lhs, const I& rhs) {
+  template<typename iter_t>
+  static auto distance_to(const iter_t& lhs, const iter_t& rhs) {
     return lhs.distance_to(rhs);
   }
 
-  template<typename I>
-  static bool less(const I& lhs, const I& rhs) {
+  template<typename iter_t>
+  static bool less(const iter_t& lhs, const iter_t& rhs) {
     return lhs.less(rhs);
   }
 };

@@ -2,6 +2,7 @@
 
 #include "iterator/map_iterator.hpp"
 #include "util/range_facade.hpp"
+#include "util/range_iterator.hpp"
 #include "util/range_traits.hpp"
 
 namespace cppiter::rng {
@@ -15,14 +16,10 @@ class map_range
   friend class util::range_accessor;
 
 public:
-  map_range(range_t&& range, const map_fn& fn)
+  template<typename transform_fn>
+  map_range(range_t&& range, transform_fn&& fn)
     : m_range{ std::move(range) }
-    , m_fn{ fn } {
-  }
-
-  map_range(range_t&& range, map_fn&& fn)
-    : m_range{ std::move(range) }
-    , m_fn{ std::move(fn) } {
+    , m_fn{ std::forward<transform_fn>(fn) } {
   }
 
 private:

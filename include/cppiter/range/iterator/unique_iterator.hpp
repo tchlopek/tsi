@@ -12,7 +12,7 @@ template<typename Iter>
 struct unique_iterator_traits
   : iterator_traits_facade<
       Iter,
-      min_iterator_category_t<category_t<Iter>, std::forward_iterator_tag>> {};
+      min_category_t<category_t<Iter>, std::forward_iterator_tag>> {};
 
 }    // namespace detail
 

@@ -4,19 +4,19 @@
 
 namespace cppiter::rng::iter::util {
 
-template<typename I>
-using value_t = typename std::iterator_traits<I>::value_type;
+template<typename iter_t>
+using value_t = typename std::iterator_traits<iter_t>::value_type;
 
-template<typename I>
-using reference_t = typename std::iterator_traits<I>::reference;
+template<typename iter_t>
+using reference_t = typename std::iterator_traits<iter_t>::reference;
 
-template<typename I>
-using category_t = typename std::iterator_traits<I>::iterator_category;
+template<typename iter_t>
+using category_t = typename std::iterator_traits<iter_t>::iterator_category;
 
-template<typename I>
-using pointer_t = typename std::iterator_traits<I>::pointer;
+template<typename iter_t>
+using pointer_t = typename std::iterator_traits<iter_t>::pointer;
 
-template<typename I>
-using difference_t = typename std::iterator_traits<I>::difference_type;
+template<typename iter_t>
+using difference_t = typename std::iterator_traits<iter_t>::difference_type;
 
 }    // namespace cppiter::rng::iter::util

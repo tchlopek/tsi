@@ -8,15 +8,15 @@
 
 /*#include "dereference_range.hpp"
 #include "enumerate_range.hpp"
-#include "filter_range.hpp"
 #include "flatten_range.hpp"
 #include "replace_range.hpp"
-#include "reverse_range.hpp"
 #include "skip_range.hpp"
 #include "stride_range.hpp"
 #include "take_range.hpp"
 #include "unique_range.hpp"*/
+#include "filter_range.hpp"
 #include "map_range.hpp"
+#include "reverse_range.hpp"
 
 namespace cppiter::rng {
 
@@ -48,6 +48,20 @@ public:
                                                       std::forward<map_fn>(fn) };
   }
 
+  template<typename pred_t>
+  auto filter(pred_t&& pred) {
+    return range_factory<filter_range<range_t, pred_t>>{
+      std::in_place,
+      std::move(m_range),
+      std::forward<pred_t>(pred)
+    };
+  }
+
+  auto reverse() {
+    return range_factory<reverse_range<range_t>>{ std::in_place,
+                                                  std::move(m_range) };
+  }
+
   /*auto deref() {
     return range_factory<dereference_range<R>>{ { begin(), end() } };
   }
@@ -55,12 +69,6 @@ public:
   auto enumerate(typename R::difference_type index = {}) {
     return range_factory<enumerate_range<R>>{ { begin(), end(), index } };
   }
-
-  template<typename P>
-  auto filter(P pred) {
-    return range_factory<filter_range<R, P>>{ { begin(), end(), pred } };
-  }
-
   auto flatten() {
     return range_factory<flatten_range<R>>{ { begin(), end() } };
   }
@@ -84,10 +92,6 @@ public:
     return range_factory<replace_range<R, decltype(pred)>>{
       { begin(), end(), pred, newVal }
     };
-  }
-
-  auto reverse() {
-    return range_factory<reverse_range<R>>{ { begin(), end() } };
   }
 
   auto skip(typename R::difference_type n) {

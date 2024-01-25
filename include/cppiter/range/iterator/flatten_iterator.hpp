@@ -17,9 +17,9 @@ template<typename Iter>
 struct flatten_iterator_traits
   : iterator_traits_facade<
       inner_iterator_t<Iter>,
-      min_iterator_category_t<
+      min_category_t<
         category_t<Iter>,
-        min_iterator_category_t<
+        min_category_t<
           category_t<inner_iterator_t<Iter>>,
           std::bidirectional_iterator_tag>>> {};
 

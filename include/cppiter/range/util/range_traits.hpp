@@ -1,7 +1,5 @@
 #pragma once
 
-#include "range_iterator.hpp"
-
 namespace cppiter::rng::util {
 
 template<typename iter_t, typename const_iter_t>
