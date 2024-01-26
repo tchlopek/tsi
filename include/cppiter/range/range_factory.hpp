@@ -8,13 +8,14 @@
 
 /*#include "dereference_range.hpp"
 #include "enumerate_range.hpp"
-#include "flatten_range.hpp"
 #include "replace_range.hpp"
 #include "skip_range.hpp"
 #include "stride_range.hpp"
 #include "take_range.hpp"
 #include "unique_range.hpp"*/
+
 #include "filter_range.hpp"
+#include "flatten_range.hpp"
 #include "map_range.hpp"
 #include "reverse_range.hpp"
 
@@ -57,6 +58,21 @@ public:
     };
   }
 
+  auto flatten() {
+    return range_factory<flatten_range<range_t>>{ std::in_place,
+                                                  std::move(m_range) };
+  }
+
+  template<typename val_t, typename binop_t>
+  val_t fold(val_t&& init, binop_t&& binop) {
+    return std::accumulate(
+      m_range.begin(),
+      m_range.end(),
+      std::forward<val_t>(init),
+      std::forward<binop_t>(binop)
+    );
+  }
+
   auto reverse() {
     return range_factory<reverse_range<range_t>>{ std::in_place,
                                                   std::move(m_range) };
@@ -69,11 +85,6 @@ public:
   auto enumerate(typename R::difference_type index = {}) {
     return range_factory<enumerate_range<R>>{ { begin(), end(), index } };
   }
-  auto flatten() {
-    return range_factory<flatten_range<R>>{ { begin(), end() } };
-  }
-
-
 
   template<typename P>
   auto replace(P pred, const typename R::value_type& newVal) {
@@ -120,16 +131,7 @@ public:
     using VT = typename util::range_facade<util::range_iterator_t<R>>::value_type;
     return C<VT>{ begin(), end() };
   }
-
-  template<typename val_t, typename binop_t>
-  val_t fold(val_t&& init, binop_t&& binop) {
-    return std::accumulate(
-      begin(),
-      end(),
-      std::forward<val_t>(init),
-      std::forward<binop_t>(binop)
-    );
-  }*/
+  */
 
 private:
   auto make_begin() {
