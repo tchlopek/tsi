@@ -7,17 +7,18 @@
 #include "util/range_traits.hpp"
 
 /*#include "dereference_range.hpp"
-#include "enumerate_range.hpp"
 #include "replace_range.hpp"
 #include "skip_range.hpp"
 #include "stride_range.hpp"
 #include "take_range.hpp"
-#include "unique_range.hpp"*/
+*/
 
+#include "enumerate_range.hpp"
 #include "filter_range.hpp"
 #include "flatten_range.hpp"
 #include "map_range.hpp"
 #include "reverse_range.hpp"
+#include "unique_range.hpp"
 
 namespace cppiter::rng {
 
@@ -40,6 +41,12 @@ public:
 
   explicit range_factory(range_t&& range)
     : m_range{ std::move(range) } {
+  }
+
+  auto enumerate(std::ptrdiff_t index = 0) {
+    return range_factory<enumerate_range<range_t>>{ std::in_place,
+                                                    std::move(m_range),
+                                                    index };
   }
 
   template<typename map_fn>
@@ -78,12 +85,13 @@ public:
                                                   std::move(m_range) };
   }
 
-  /*auto deref() {
-    return range_factory<dereference_range<R>>{ { begin(), end() } };
+  auto unique() {
+    return range_factory<unique_range<range_t>>{ std::in_place,
+                                                 std::move(m_range) };
   }
 
-  auto enumerate(typename R::difference_type index = {}) {
-    return range_factory<enumerate_range<R>>{ { begin(), end(), index } };
+  /*auto deref() {
+    return range_factory<dereference_range<R>>{ { begin(), end() } };
   }
 
   template<typename P>
@@ -115,10 +123,6 @@ public:
 
   auto take(typename R::difference_type n) {
     return range_factory<take_range<R>>{ { begin(), end(), n } };
-  }
-
-  auto unique() {
-    return range_factory<unique_range<R>>{ { begin(), end() } };
   }
 
   template<typename T>

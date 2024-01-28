@@ -16,7 +16,7 @@ src_test = [
     #'bound_generate_range_test.cpp',
     #'collect_test.cpp',
     #'dereference_range_test.cpp',
-    #'enumerate_range_test.cpp',
+    'enumerate_range_test.cpp',
     'filter_range_test.cpp',
     'flatten_range_test.cpp',
     'fold_test.cpp',
@@ -27,7 +27,7 @@ src_test = [
     #'stride_range_test.cpp',
     #'take_range_test.cpp',
     #'unbound_generate_range_test.cpp',
-    #'unique_range_test.cpp'
+    'unique_range_test.cpp'
 ]
 
 ut_bin = executable(
