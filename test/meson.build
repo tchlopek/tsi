@@ -15,7 +15,7 @@ src_test = [
     'main.cpp',
     #'bound_generate_range_test.cpp',
     #'collect_test.cpp',
-    #'dereference_range_test.cpp',
+    'dereference_range_test.cpp',
     'enumerate_range_test.cpp',
     'filter_range_test.cpp',
     'flatten_range_test.cpp',
