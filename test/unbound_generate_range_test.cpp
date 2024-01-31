@@ -1,6 +1,6 @@
 #include <vector>
 
-#include <cppiter/iter.hpp>
+#include <cppiter/gen.hpp>
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
