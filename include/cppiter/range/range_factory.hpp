@@ -6,11 +6,7 @@
 #include "util/range_iterator.hpp"
 #include "util/range_traits.hpp"
 
-/*
-#include "skip_range.hpp"
-#include "stride_range.hpp"
-
-*/
+// #include "skip_range.hpp"
 
 #include "dereference_range.hpp"
 #include "enumerate_range.hpp"
@@ -19,6 +15,7 @@
 #include "map_range.hpp"
 #include "replace_range.hpp"
 #include "reverse_range.hpp"
+#include "stride_range.hpp"
 #include "take_range.hpp"
 #include "unique_range.hpp"
 
@@ -43,6 +40,17 @@ public:
 
   explicit range_factory(range_t&& range)
     : m_range{ std::move(range) } {
+  }
+
+  template<typename collect_t>
+  collect_t collect() {
+    return collect_t{ m_range.begin(), m_range.end() };
+  }
+
+  template<template<typename...> class collect_tpl>
+  auto collect() {
+    using value_type = typename range_t::value_type;
+    return collect_tpl<value_type>{ m_range.begin(), m_range.end() };
   }
 
   auto deref() {
@@ -102,6 +110,12 @@ public:
                                                   std::move(m_range) };
   }
 
+  auto stride(std::ptrdiff_t n) {
+    return range_factory<stride_range<range_t>>{ std::in_place,
+                                                 std::move(m_range),
+                                                 n };
+  }
+
   auto take(std::ptrdiff_t n) {
     return range_factory<take_range<range_t>>{ std::in_place,
                                                std::move(m_range),
@@ -114,30 +128,8 @@ public:
   }
 
   /*
-  template<typename P>
-  auto replace(P pred, const typename R::value_type& newVal) {
-    return range_factory<replace_range<R, P>>{
-      { begin(), end(), pred, newVal }
-    };
-  }
-
   auto skip(typename R::difference_type n) {
     return range_factory<skip_range<R>>{ { begin(), end(), n } };
-  }
-
-  auto stride(typename R::difference_type n) {
-    return range_factory<stride_range<R>>{ { begin(), end(), n } };
-  }
-
-  template<typename T>
-  T collect() {
-    return T{ begin(), end() };
-  }
-
-  template<template<typename...> class C>
-  auto collect() {
-    using VT = typename util::range_facade<util::range_iterator_t<R>>::value_type;
-    return C<VT>{ begin(), end() };
   }
   */
 

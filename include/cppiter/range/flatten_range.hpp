@@ -16,11 +16,9 @@ class flatten_range
         util::const_iterator_t<range_t>,
         const flatten_range<range_t>>> {
   friend class util::range_accessor;
-  friend class iter::
-    flatten_iterator<util::iterator_t<range_t>, flatten_range<range_t>>;
-  friend class iter::flatten_iterator<
-    util::const_iterator_t<range_t>,
-    const flatten_range<range_t>>;
+
+  template<typename, typename>
+  friend class iter::flatten_iterator;
 
 public:
   explicit flatten_range(range_t&& range)

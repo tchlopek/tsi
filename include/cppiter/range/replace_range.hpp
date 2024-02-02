@@ -18,11 +18,9 @@ class replace_range
         util::const_iterator_t<range_t>,
         const replace_range<range_t, pred_t>>> {
   friend class util::range_accessor;
-  friend class iter::
-    replace_iterator<util::iterator_t<range_t>, replace_range<range_t, pred_t>>;
-  friend class iter::replace_iterator<
-    util::const_iterator_t<range_t>,
-    const replace_range<range_t, pred_t>>;
+
+  template<typename, typename>
+  friend class iter::replace_iterator;
 
 public:
   template<typename predicate, typename value>

@@ -16,11 +16,9 @@ class unique_range
         util::const_iterator_t<range_t>,
         const unique_range<range_t>>> {
   friend class util::range_accessor;
-  friend class iter::
-    unique_iterator<util::iterator_t<range_t>, unique_range<range_t>>;
-  friend class iter::unique_iterator<
-    util::const_iterator_t<range_t>,
-    const unique_range<range_t>>;
+
+  template<typename, typename>
+  friend class iter::unique_iterator;
 
 public:
   explicit unique_range(range_t&& range)

@@ -14,7 +14,7 @@ ut_deps = [
 src_test = [
     'main.cpp',
     'bound_generate_range_test.cpp',
-    #'collect_test.cpp',
+    'collect_test.cpp',
     'dereference_range_test.cpp',
     'enumerate_range_test.cpp',
     'filter_range_test.cpp',
@@ -24,7 +24,7 @@ src_test = [
     'replace_range_test.cpp',
     'reverse_range_test.cpp',
     #'skip_range_test.cpp',
-    #'stride_range_test.cpp',
+    'stride_range_test.cpp',
     'take_range_test.cpp',
     'unbound_generate_range_test.cpp',
     'unique_range_test.cpp'

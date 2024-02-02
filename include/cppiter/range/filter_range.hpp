@@ -16,11 +16,9 @@ class filter_range
         util::const_iterator_t<range_t>,
         filter_range<range_t, pred_t>>> {
   friend class util::range_accessor;
-  friend class iter::
-    filter_iterator<util::iterator_t<range_t>, filter_range<range_t, pred_t>>;
-  friend class iter::filter_iterator<
-    util::const_iterator_t<range_t>,
-    filter_range<range_t, pred_t>>;
+
+  template<typename, typename>
+  friend class iter::filter_iterator;
 
 public:
   template<typename predicate>
