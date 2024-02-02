@@ -9,7 +9,7 @@
 /*
 #include "skip_range.hpp"
 #include "stride_range.hpp"
-#include "take_range.hpp"
+
 */
 
 #include "dereference_range.hpp"
@@ -19,6 +19,7 @@
 #include "map_range.hpp"
 #include "replace_range.hpp"
 #include "reverse_range.hpp"
+#include "take_range.hpp"
 #include "unique_range.hpp"
 
 namespace cppiter::rng {
@@ -101,6 +102,12 @@ public:
                                                   std::move(m_range) };
   }
 
+  auto take(std::ptrdiff_t n) {
+    return range_factory<take_range<range_t>>{ std::in_place,
+                                               std::move(m_range),
+                                               n };
+  }
+
   auto unique() {
     return range_factory<unique_range<range_t>>{ std::in_place,
                                                  std::move(m_range) };
@@ -120,10 +127,6 @@ public:
 
   auto stride(typename R::difference_type n) {
     return range_factory<stride_range<R>>{ { begin(), end(), n } };
-  }
-
-  auto take(typename R::difference_type n) {
-    return range_factory<take_range<R>>{ { begin(), end(), n } };
   }
 
   template<typename T>

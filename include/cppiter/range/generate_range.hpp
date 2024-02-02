@@ -2,6 +2,7 @@
 
 #include "iterator/unbound_generate_iterator.hpp"
 #include "util/range_facade.hpp"
+#include "util/range_traits.hpp"
 
 namespace cppiter::rng {
 
@@ -26,7 +27,7 @@ private:
   }
 
   auto make_end() {
-    return typename generate_range::iterator{ m_val };
+    return make_begin();
   }
 
   auto make_const_begin() const {
@@ -34,7 +35,7 @@ private:
   }
 
   auto make_const_end() const {
-    return typename generate_range::const_iterator{ m_val };
+    return make_const_begin();
   }
 
   val_t m_val;

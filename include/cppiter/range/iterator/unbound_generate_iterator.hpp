@@ -45,7 +45,7 @@ private:
     return m_val;
   }
 
-  mutable val_t m_val;
+  val_t m_val;
 };
 
 }    // namespace cppiter::rng::iter

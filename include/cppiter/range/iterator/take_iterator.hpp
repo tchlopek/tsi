@@ -1,102 +1,104 @@
 #pragma once
 
+#include <type_traits>
+
+#include "util/category_types.hpp"
 #include "util/iterator_facade.hpp"
+#include "util/min_category.hpp"
 
 namespace cppiter::rng::iter {
 
 namespace detail {
+
+template<typename iter_t>
+struct take_iterator_traits : public std::iterator_traits<iter_t> {
+  using iterator_category = std::conditional_t<
+    std::is_same_v<util::category_t<iter_t>, util::bi>,
+    util::fi,
+    util::category_t<iter_t>>;
+};
+
 using namespace util;
 
-template<typename Iter, typename Category>
-class take_iterator_impl;
-
-template<typename Iter>
-class take_iterator_impl<Iter, std::forward_iterator_tag> {
+template<typename iter_t, typename cat_t>
+class take_iterator_impl {
 public:
-  take_iterator_impl(Iter iter, difference_t<Iter> index)
-    : iter{ iter }
-    , index{ index } {
+  take_iterator_impl() = default;
+  take_iterator_impl(const iter_t& it, std::ptrdiff_t index)
+    : m_it{ it }
+    , m_index{ index } {
   }
 
   bool equal(const take_iterator_impl& other) const {
-    return iter == other.iter || index == other.index;
+    return m_it == other.m_it || m_index == other.m_index;
   }
 
   void increment() {
-    ++index;
-    ++iter;
+    ++m_it;
+    ++m_index;
   }
 
-  reference_t<Iter> dereference() const {
-    return *iter;
+  decltype(auto) dereference() const {
+    return *m_it;
   }
 
-  Iter iter;
-  difference_t<Iter> index;
+  iter_t m_it;
+  ptrdiff_t m_index = 0;
 };
 
-template<typename Iter>
-class take_iterator_impl<Iter, std::bidirectional_iterator_tag>
-  : public take_iterator_impl<Iter, std::forward_iterator_tag> {
-  using Base = take_iterator_impl<Iter, std::forward_iterator_tag>;
-
+template<typename iter_t>
+class take_iterator_impl<iter_t, util::ri> {
 public:
-  using Base::take_iterator_impl;
-
-  void decrement() {
-    --Base::index;
-    --Base::iter;
-  }
-};
-
-template<typename Iter>
-class take_iterator_impl<Iter, std::random_access_iterator_tag> {
-public:
-  take_iterator_impl(Iter iter)
-    : iter{ iter } {
+  take_iterator_impl(const iter_t& it)
+    : m_it{ it } {
   }
 
   bool equal(const take_iterator_impl& other) const {
-    return iter == other.iter;
+    return m_it == other.m_it;
   }
 
   void increment() {
-    ++iter;
+    ++m_it;
   }
 
   void decrement() {
-    --iter;
+    --m_it;
   }
 
-  reference_t<Iter> dereference() const {
-    return *iter;
+  decltype(auto) dereference() const {
+    return *m_it;
   }
 
-  void advance(difference_t<Iter> n) {
-    iter += n;
+  template<typename diff_T>
+  void advance(diff_T n) {
+    m_it += n;
   }
 
-  difference_t<Iter> distance_to(const take_iterator_impl& other) const {
-    return iter - other.iter;
+  auto distance_to(const take_iterator_impl& other) const {
+    return m_it - other.m_it;
   }
 
   bool less(const take_iterator_impl& other) const {
-    return iter < other.iter;
+    return m_it < other.m_it;
   }
 
-  Iter iter;
+  iter_t m_it;
 };
 
 }    // namespace detail
 
-template<typename Iter>
+template<typename iter_t>
 class take_iterator
-  : public util::iterator_facade<take_iterator<Iter>>
-  , private detail::take_iterator_impl<Iter, util::category_t<Iter>> {
+  : public util::iterator_facade<
+      take_iterator<iter_t>,
+      detail::take_iterator_traits<iter_t>>
+  , private detail::take_iterator_impl<iter_t, util::category_t<iter_t>> {
   friend class util::iterator_accessor;
 
+  using base_t = detail::take_iterator_impl<iter_t, util::category_t<iter_t>>;
+
 public:
-  using detail::take_iterator_impl<Iter, util::category_t<Iter>>::take_iterator_impl;
+  using base_t::take_iterator_impl;
 };
 
 }    // namespace cppiter::rng::iter
