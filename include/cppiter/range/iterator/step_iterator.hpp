@@ -11,7 +11,7 @@ namespace cppiter::rng::iter {
 namespace detail {
 
 template<typename iter_t>
-struct stride_iterator_traits : public std::iterator_traits<iter_t> {
+struct step_iterator_traits : public std::iterator_traits<iter_t> {
   using iterator_category = std::conditional_t<
     std::is_same_v<util::category_t<iter_t>, util::bi>,
     util::fi,
@@ -19,15 +19,15 @@ struct stride_iterator_traits : public std::iterator_traits<iter_t> {
 };
 
 template<typename iter_t, typename range_t, typename cat_t>
-class stride_iterator_impl {
+class step_iterator_impl {
 public:
-  stride_iterator_impl() = default;
-  stride_iterator_impl(const iter_t& it, range_t* range)
+  step_iterator_impl() = default;
+  step_iterator_impl(const iter_t& it, range_t* range)
     : m_it{ it }
     , m_range{ range } {
   }
 
-  bool equal(const stride_iterator_impl& other) const {
+  bool equal(const step_iterator_impl& other) const {
     return m_it == other.m_it;
   }
 
@@ -53,10 +53,10 @@ public:
 };
 
 template<typename iter_t, typename range_t>
-class stride_iterator_impl<iter_t, range_t, util::ri> {
+class step_iterator_impl<iter_t, range_t, util::ri> {
 public:
-  stride_iterator_impl() = default;
-  stride_iterator_impl(const iter_t& it, range_t* range)
+  step_iterator_impl() = default;
+  step_iterator_impl(const iter_t& it, range_t* range)
     : m_it{ it }
     , m_range{ range }
     , m_index{ m_it - get_begin() } {
@@ -65,7 +65,7 @@ public:
     }
   }
 
-  bool equal(const stride_iterator_impl& other) const {
+  bool equal(const step_iterator_impl& other) const {
     return m_index == other.m_index;
   }
 
@@ -87,11 +87,11 @@ public:
     m_index += get_step() * n;
   }
 
-  auto distance_to(const stride_iterator_impl& other) const {
+  auto distance_to(const step_iterator_impl& other) const {
     return (other.m_index - m_index) / get_step();
   }
 
-  bool less(const stride_iterator_impl& other) const {
+  bool less(const step_iterator_impl& other) const {
     return m_index < other.m_index;
   }
 
@@ -115,23 +115,23 @@ public:
 }    // namespace detail
 
 template<typename iter_t, typename range_t>
-class stride_iterator
+class step_iterator
   : public util::iterator_facade<
-      stride_iterator<iter_t, range_t>,
-      detail::stride_iterator_traits<iter_t>>
-  , private detail::stride_iterator_impl<
+      step_iterator<iter_t, range_t>,
+      detail::step_iterator_traits<iter_t>>
+  , private detail::step_iterator_impl<
       iter_t,
       range_t,
-      util::category_t<detail::stride_iterator_traits<iter_t>>> {
+      util::category_t<detail::step_iterator_traits<iter_t>>> {
   friend class util::iterator_accessor;
 
-  using base_t = detail::stride_iterator_impl<
+  using base_t = detail::step_iterator_impl<
     iter_t,
     range_t,
-    util::category_t<detail::stride_iterator_traits<iter_t>>>;
+    util::category_t<detail::step_iterator_traits<iter_t>>>;
 
 public:
-  using base_t::stride_iterator_impl;
+  using base_t::step_iterator_impl;
 };
 
 }    // namespace cppiter::rng::iter

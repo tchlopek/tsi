@@ -27,5 +27,5 @@ TEST(CollectTest, ElementsCanBeCollectedToAutoDeducedContainerType) {
 
 TEST(CollectTest, GeneratedValuesCanBeColletedToContainerTemplate) {
   std::deque exp{ 2, 4, 6 };
-  EXPECT_EQ(gen(2).stride(2).take(3).collect<std::deque>(), exp);
+  EXPECT_EQ(gen(2).step(2).take(3).collect<std::deque>(), exp);
 }

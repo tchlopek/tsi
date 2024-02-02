@@ -14,7 +14,7 @@
 #include "replace_range.hpp"
 #include "reverse_range.hpp"
 #include "skip_range.hpp"
-#include "stride_range.hpp"
+#include "step_range.hpp"
 #include "take_range.hpp"
 #include "unique_range.hpp"
 
@@ -115,10 +115,10 @@ public:
                                                n };
   }
 
-  auto stride(std::ptrdiff_t n) {
-    return range_factory<stride_range<range_t>>{ std::in_place,
-                                                 std::move(m_range),
-                                                 n };
+  auto step(std::ptrdiff_t n) {
+    return range_factory<step_range<range_t>>{ std::in_place,
+                                               std::move(m_range),
+                                               n };
   }
 
   auto take(std::ptrdiff_t n) {

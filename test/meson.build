@@ -24,7 +24,7 @@ src_test = [
     'replace_range_test.cpp',
     'reverse_range_test.cpp',
     'skip_range_test.cpp',
-    'stride_range_test.cpp',
+    'step_range_test.cpp',
     'take_range_test.cpp',
     'unbound_generate_range_test.cpp',
     'unique_range_test.cpp'
