@@ -23,7 +23,7 @@ src_test = [
     'map_range_test.cpp',
     'replace_range_test.cpp',
     'reverse_range_test.cpp',
-    #'skip_range_test.cpp',
+    'skip_range_test.cpp',
     'stride_range_test.cpp',
     'take_range_test.cpp',
     'unbound_generate_range_test.cpp',

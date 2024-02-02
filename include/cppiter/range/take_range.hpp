@@ -30,12 +30,8 @@ public:
 
 private:
   template<typename iter_t>
-  decltype(auto) get_end(iter_t&& f, iter_t&& l) const {
-    if constexpr (std::is_same_v<iter::util::category_t<iter_t>, iter::util::ri>) {
-      return f + std::min(l - f, m_count);
-    } else {
-      return std::move(l);
-    }
+  auto get_end(iter_t&& f, iter_t&& l) const {
+    return f + std::min(l - f, m_count);
   }
 
   auto make_begin() {

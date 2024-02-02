@@ -6,8 +6,6 @@
 #include "util/range_iterator.hpp"
 #include "util/range_traits.hpp"
 
-// #include "skip_range.hpp"
-
 #include "dereference_range.hpp"
 #include "enumerate_range.hpp"
 #include "filter_range.hpp"
@@ -15,6 +13,7 @@
 #include "map_range.hpp"
 #include "replace_range.hpp"
 #include "reverse_range.hpp"
+#include "skip_range.hpp"
 #include "stride_range.hpp"
 #include "take_range.hpp"
 #include "unique_range.hpp"
@@ -110,6 +109,12 @@ public:
                                                   std::move(m_range) };
   }
 
+  auto skip(std::ptrdiff_t n) {
+    return range_factory<skip_range<range_t>>{ std::in_place,
+                                               std::move(m_range),
+                                               n };
+  }
+
   auto stride(std::ptrdiff_t n) {
     return range_factory<stride_range<range_t>>{ std::in_place,
                                                  std::move(m_range),
@@ -126,12 +131,6 @@ public:
     return range_factory<unique_range<range_t>>{ std::in_place,
                                                  std::move(m_range) };
   }
-
-  /*
-  auto skip(typename R::difference_type n) {
-    return range_factory<skip_range<R>>{ { begin(), end(), n } };
-  }
-  */
 
 private:
   auto make_begin() {
