@@ -1,76 +1,75 @@
 #pragma once
 
 #include <functional>
+#include <type_traits>
 
+#include "util/category_types.hpp"
 #include "util/iterator_facade.hpp"
+#include "util/iterator_traits.hpp"
 
 namespace cppiter::rng::iter {
 
-namespace detail {
-using namespace util;
+template<typename iter_t>
+struct enumerate_iterator_traits {
+  using iterator_category = std::conditional_t<
+    std::is_same_v<util::category_t<iter_t>, util::bi>,
+    util::fi,
+    util::category_t<iter_t>>;
+  using value_type = std::pair<std::ptrdiff_t, util::value_t<iter_t>>;
+  using reference = std::pair<std::ptrdiff_t, util::reference_t<iter_t>>;
+  using pointer = std::pair<std::ptrdiff_t, util::pointer_t<iter_t>>;
+  using difference_type = util::difference_t<iter_t>;
+};
 
-template<typename Iter>
-struct enumerate_iterator_traits
-  : iterator_traits_facade<
-      Iter,
-      std::conditional_t<
-        std::is_same_v<category_t<Iter>, std::bidirectional_iterator_tag>,
-        std::forward_iterator_tag,
-        category_t<Iter>>,
-      std::pair<difference_t<Iter>, value_t<Iter>>,
-      std::pair<difference_t<Iter>, reference_t<Iter>>,
-      std::pair<difference_t<Iter>, pointer_t<Iter>>> {};
-
-}    // namespace detail
-
-template<typename Iter>
+template<typename iter_t>
 class enumerate_iterator
   : public util::iterator_facade<
-      enumerate_iterator<Iter>,
-      detail::enumerate_iterator_traits<Iter>> {
+      enumerate_iterator<iter_t>,
+      enumerate_iterator_traits<iter_t>> {
   friend class util::iterator_accessor;
 
 public:
   enumerate_iterator() = default;
-  enumerate_iterator(Iter iter, util::difference_t<Iter> index)
-    : iter{ iter }
-    , index{ index } {
+  enumerate_iterator(const iter_t& it, std::ptrdiff_t index)
+    : m_it{ it }
+    , m_index{ index } {
   }
 
 private:
   bool equal(const enumerate_iterator& other) const {
-    return iter == other.iter;
+    return m_it == other.m_it;
   }
 
   void increment() {
-    ++iter;
-    ++index;
+    ++m_it;
+    ++m_index;
   }
 
   void decrement() {
-    --iter;
-    --index;
+    --m_it;
+    --m_index;
   }
 
-  util::reference_t<detail::enumerate_iterator_traits<Iter>> dereference() const {
-    return { index, std::ref(*iter) };
+  util::reference_t<enumerate_iterator_traits<iter_t>> dereference() const {
+    return { m_index, std::ref(*m_it) };
   }
 
-  void advance(util::difference_t<Iter> n) {
-    iter += n;
-    index += n;
+  template<typename diff_t>
+  void advance(diff_t n) {
+    m_it += n;
+    m_index += n;
   }
 
-  util::difference_t<Iter> distance_to(const enumerate_iterator& other) const {
-    return iter - other.iter;
+  auto distance_to(const enumerate_iterator& other) const {
+    return m_it - other.m_it;
   }
 
   bool less(const enumerate_iterator& other) const {
-    return iter < other.iter;
+    return m_it < other.m_it;
   }
 
-  Iter iter;
-  util::difference_t<Iter> index;
+  iter_t m_it;
+  std::ptrdiff_t m_index = 0;
 };
 
 }    // namespace cppiter::rng::iter

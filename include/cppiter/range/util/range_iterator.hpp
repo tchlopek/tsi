@@ -4,22 +4,10 @@
 
 namespace cppiter::rng::util {
 
-template<typename R>
-struct range_iterator {
-  using type = typename R::iterator;
-};
+template<typename range_t>
+using iterator_t = decltype(std::begin(std::declval<range_t&>()));
 
-template<typename R>
-struct range_iterator<const R> {
-  using type = typename R::const_iterator;
-};
-
-template<typename Value, std::size_t Size>
-struct range_iterator<Value[Size]> {
-  using type = std::decay_t<Value[Size]>;
-};
-
-template<typename R>
-using range_iterator_t = typename range_iterator<R>::type;
+template<typename range_t>
+using const_iterator_t = decltype(std::cbegin(std::declval<range_t&>()));
 
 }    // namespace cppiter::rng::util

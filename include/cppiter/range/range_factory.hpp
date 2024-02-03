@@ -4,6 +4,7 @@
 
 #include "util/range_facade.hpp"
 #include "util/range_iterator.hpp"
+#include "util/range_traits.hpp"
 
 #include "dereference_range.hpp"
 #include "enumerate_range.hpp"
@@ -19,103 +20,136 @@
 
 namespace cppiter::rng {
 
-template<typename R>
-class range_factory : public util::range_facade<util::range_iterator_t<R>> {
-  using BaseRange = util::range_facade<util::range_iterator_t<R>>;
+template<typename range_t>
+class range_factory
+  : public util::range_facade<range_factory<range_t>>
+  , public util::
+      range_traits<util::iterator_t<range_t>, util::const_iterator_t<range_t>> {
+  friend class util::range_accessor;
 
 public:
-  using BaseRange::begin;
-  using BaseRange::end;
-
-  range_factory(R& range)
-    : BaseRange{ std::begin(range), std::end(range) } {
+  template<typename... arg_ts>
+  range_factory(std::in_place_t, arg_ts&&... args)
+    : m_range{ std::forward<arg_ts>(args)... } {
   }
 
-  range_factory(R&& range)
-    : BaseRange{ std::begin(range), std::end(range) } {
+  explicit range_factory(const range_t& range)
+    : m_range{ range } {
+  }
+
+  explicit range_factory(range_t&& range)
+    : m_range{ std::move(range) } {
+  }
+
+  template<typename collect_t>
+  collect_t collect() {
+    return collect_t{ m_range.begin(), m_range.end() };
+  }
+
+  template<template<typename...> class collect_tpl>
+  auto collect() {
+    using value_type = typename range_t::value_type;
+    return collect_tpl<value_type>{ m_range.begin(), m_range.end() };
   }
 
   auto deref() {
-    return range_factory<dereference_range<R>>{ { begin(), end() } };
+    return range_factory<dereference_range<range_t>>{ std::in_place,
+                                                      std::move(m_range) };
   }
 
-  auto enumerate(typename R::difference_type index = {}) {
-    return range_factory<enumerate_range<R>>{ { begin(), end(), index } };
+  auto enumerate(std::ptrdiff_t index = 0) {
+    return range_factory<enumerate_range<range_t>>{ std::in_place,
+                                                    std::move(m_range),
+                                                    index };
   }
 
-  template<typename P>
-  auto filter(P pred) {
-    return range_factory<filter_range<R, P>>{ { begin(), end(), pred } };
+  template<typename map_fn>
+  auto map(map_fn&& fn) {
+    return range_factory<map_range<range_t, map_fn>>{ std::in_place,
+                                                      std::move(m_range),
+                                                      std::forward<map_fn>(fn) };
+  }
+
+  template<typename pred_t>
+  auto filter(pred_t&& pred) {
+    return range_factory<filter_range<range_t, pred_t>>{
+      std::in_place,
+      std::move(m_range),
+      std::forward<pred_t>(pred)
+    };
   }
 
   auto flatten() {
-    return range_factory<flatten_range<R>>{ { begin(), end() } };
-  }
-
-  template<typename F>
-  auto map(F func) {
-    return range_factory<map_range<R, F>>{ { begin(), end(), func } };
-  }
-
-  template<typename P>
-  auto replace(P pred, const typename R::value_type& newVal) {
-    return range_factory<replace_range<R, P>>{
-      { begin(), end(), pred, newVal }
-    };
-  }
-
-  auto replace(
-    const typename R::value_type& oldVal,
-    const typename R::value_type& newVal
-  ) {
-    const auto pred = [oldVal](const auto& current) {
-      return oldVal == current;
-    };
-    return range_factory<replace_range<R, decltype(pred)>>{
-      { begin(), end(), pred, newVal }
-    };
-  }
-
-  auto reverse() {
-    return range_factory<reverse_range<R>>{ { begin(), end() } };
-  }
-
-  auto skip(typename R::difference_type n) {
-    return range_factory<skip_range<R>>{ { begin(), end(), n } };
-  }
-
-  auto stride(typename R::difference_type n) {
-    return range_factory<stride_range<R>>{ { begin(), end(), n } };
-  }
-
-  auto take(typename R::difference_type n) {
-    return range_factory<take_range<R>>{ { begin(), end(), n } };
-  }
-
-  auto unique() {
-    return range_factory<unique_range<R>>{ { begin(), end() } };
-  }
-
-  template<typename T>
-  T collect() {
-    return T{ begin(), end() };
-  }
-
-  template<template<typename...> class C>
-  auto collect() {
-    using VT = typename util::range_facade<util::range_iterator_t<R>>::value_type;
-    return C<VT>{ begin(), end() };
+    return range_factory<flatten_range<range_t>>{ std::in_place,
+                                                  std::move(m_range) };
   }
 
   template<typename val_t, typename binop_t>
   val_t fold(val_t&& init, binop_t&& binop) {
     return std::accumulate(
-      begin(),
-      end(),
+      m_range.begin(),
+      m_range.end(),
       std::forward<val_t>(init),
       std::forward<binop_t>(binop)
     );
   }
+
+  template<typename pred_t, typename value_t>
+  auto replace(pred_t&& pred, value_t&& val) {
+    return range_factory<replace_range<range_t, pred_t>>{
+      std::in_place,
+      std::move(m_range),
+      std::forward<pred_t>(pred),
+      std::forward<value_t>(val)
+    };
+  }
+
+  auto reverse() {
+    return range_factory<reverse_range<range_t>>{ std::in_place,
+                                                  std::move(m_range) };
+  }
+
+  auto skip(std::ptrdiff_t n) {
+    return range_factory<skip_range<range_t>>{ std::in_place,
+                                               std::move(m_range),
+                                               n };
+  }
+
+  auto stride(std::ptrdiff_t n) {
+    return range_factory<stride_range<range_t>>{ std::in_place,
+                                                 std::move(m_range),
+                                                 n };
+  }
+
+  auto take(std::ptrdiff_t n) {
+    return range_factory<take_range<range_t>>{ std::in_place,
+                                               std::move(m_range),
+                                               n };
+  }
+
+  auto unique() {
+    return range_factory<unique_range<range_t>>{ std::in_place,
+                                                 std::move(m_range) };
+  }
+
+private:
+  auto make_begin() {
+    return m_range.begin();
+  }
+
+  auto make_end() {
+    return m_range.end();
+  }
+
+  auto make_const_begin() const {
+    return m_range.cbegin();
+  }
+
+  auto make_const_end() const {
+    return m_range.cend();
+  }
+
+  range_t m_range;
 };
 
 }    // namespace cppiter::rng

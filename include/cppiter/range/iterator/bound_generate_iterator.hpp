@@ -7,63 +7,58 @@
 
 namespace cppiter::rng::iter {
 
-namespace detail {
+template<typename val_t>
+struct bound_generate_iterator_traits {
+  using iterator_category = std::random_access_iterator_tag;
+  using value_type = val_t;
+  using reference = val_t;
+  using pointer = std::add_pointer_t<std::add_const_t<val_t>>;
+  using difference_type = std::ptrdiff_t;
+};
 
-template<typename T>
-struct bound_generate_iterator_traits
-  : util::iterator_traits_facade<
-      T,
-      std::random_access_iterator_tag,
-      T,
-      T,
-      std::add_pointer_t<T>,
-      std::ptrdiff_t> {};
-
-}    // namespace detail
-
-template<typename T>
+template<typename val_t>
 class bound_generate_iterator
   : public util::iterator_facade<
-      bound_generate_iterator<T>,
-      detail::bound_generate_iterator_traits<T>> {
+      bound_generate_iterator<val_t>,
+      bound_generate_iterator_traits<val_t>> {
   friend class util::iterator_accessor;
 
 public:
   bound_generate_iterator() = default;
-  explicit bound_generate_iterator(const T& v)
-    : v{ v } {
+  explicit bound_generate_iterator(const val_t& v)
+    : m_val{ v } {
   }
 
 private:
   bool equal(const bound_generate_iterator& other) const {
-    return v == other.v;
+    return m_val == other.m_val;
   }
 
   void increment() {
-    ++v;
+    ++m_val;
   }
 
   void decrement() {
-    --v;
+    --m_val;
   }
 
-  T dereference() const {
-    return v;
+  auto dereference() const {
+    return m_val;
   }
 
   void advance(std::ptrdiff_t n) {
-    v += n;
+    m_val += n;
   }
 
   std::ptrdiff_t distance_to(const bound_generate_iterator& other) const {
-    return v - other.v;
+    return m_val - other.m_val;
   }
 
   bool less(const bound_generate_iterator& other) const {
-    return v < other.v;
+    return m_val < other.m_val;
   }
 
-  mutable T v;
+  mutable val_t m_val;
 };
 
 }    // namespace cppiter::rng::iter

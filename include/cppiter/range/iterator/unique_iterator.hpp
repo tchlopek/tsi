@@ -1,51 +1,51 @@
 #pragma once
 
+#include <iterator>
+
 #include "util/iterator_facade.hpp"
-#include "util/min_iterator_category.hpp"
 
 namespace cppiter::rng::iter {
 
-namespace detail {
-using namespace util;
+template<typename iter_t>
+struct unique_iterator_traits : public std::iterator_traits<iter_t> {
+  using iterator_category = std::forward_iterator_tag;
+};
 
-template<typename Iter>
-struct unique_iterator_traits
-  : iterator_traits_facade<
-      Iter,
-      min_iterator_category_t<category_t<Iter>, std::forward_iterator_tag>> {};
-
-}    // namespace detail
-
-template<typename Iter>
+template<typename iter_t, typename range_t>
 class unique_iterator
   : public util::iterator_facade<
-      unique_iterator<Iter>,
-      detail::unique_iterator_traits<Iter>> {
+      unique_iterator<iter_t, range_t>,
+      unique_iterator_traits<iter_t>> {
   friend class util::iterator_accessor;
 
 public:
-  unique_iterator(Iter iter, Iter end)
-    : iter{ iter }
-    , end{ end } {
+  unique_iterator() = default;
+  unique_iterator(const iter_t& it, range_t* range)
+    : m_it{ it }
+    , m_range{ range } {
   }
 
 private:
   bool equal(const unique_iterator& other) const {
-    return iter == other.iter;
+    return m_it == other.m_it;
   }
 
   void increment() {
     const auto& beginVal = dereference();
-    while (++iter != end && dereference() == beginVal)
+    while (++m_it != end() && dereference() == beginVal)
       ;
   }
 
-  util::reference_t<Iter> dereference() const {
-    return *iter;
+  decltype(auto) dereference() const {
+    return *m_it;
   }
 
-  Iter iter;
-  Iter end;
+  auto end() const {
+    return m_range->m_range.end();
+  }
+
+  iter_t m_it;
+  range_t* m_range = nullptr;
 };
 
 }    // namespace cppiter::rng::iter

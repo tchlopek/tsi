@@ -1,33 +1,31 @@
 #pragma once
 
+#include <iterator>
+
 #include "util/iterator_facade.hpp"
 
 namespace cppiter::rng::iter {
 
-namespace detail {
+template<typename val_t>
+struct unbound_generate_iterator_traits {
+  using iterator_category = std::bidirectional_iterator_tag;
+  using value_type = val_t;
+  using reference = val_t;
+  using pointer = std::add_pointer_t<std::add_const_t<val_t>>;
+  using difference_type = std::ptrdiff_t;
+};
 
-template<typename T>
-struct unbound_generate_iterator_traits
-  : util::iterator_traits_facade<
-      T,
-      std::bidirectional_iterator_tag,
-      T,
-      T,
-      std::add_pointer_t<T>,
-      std::ptrdiff_t> {};
-
-}    // namespace detail
-
-template<typename T>
+template<typename val_t>
 class unbound_generate_iterator
   : public util::iterator_facade<
-      unbound_generate_iterator<T>,
-      detail::unbound_generate_iterator_traits<T>> {
+      unbound_generate_iterator<val_t>,
+      unbound_generate_iterator_traits<val_t>> {
   friend class util::iterator_accessor;
 
 public:
-  explicit unbound_generate_iterator(T v)
-    : v{ std::move(v) } {
+  unbound_generate_iterator() = default;
+  explicit unbound_generate_iterator(const val_t& v)
+    : m_val{ v } {
   }
 
 private:
@@ -36,18 +34,18 @@ private:
   }
 
   void increment() {
-    ++v;
+    ++m_val;
   }
 
   void decrement() {
-    --v;
+    --m_val;
   }
 
-  T dereference() const {
-    return v;
+  auto dereference() const {
+    return m_val;
   }
 
-  mutable T v;
+  val_t m_val;
 };
 
 }    // namespace cppiter::rng::iter

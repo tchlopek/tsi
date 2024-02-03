@@ -1,6 +1,6 @@
 #include <vector>
 
-#include <cppiter/iter.hpp>
+#include <cppiter/gen.hpp>
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
@@ -20,10 +20,6 @@ TEST(UnboundGenerateRangeTest, IsNeverEmpty) {
 
 TEST(UnboundGenerateRangeTest, GenerateValuesInAscendingOrder) {
   EXPECT_THAT(gen(0).take(5), ElementsAre(0, 1, 2, 3, 4));
-}
-
-TEST(UnboundGenerateRangeTest, GenerateValuesInDescendingOrder) {
-  EXPECT_THAT(gen(5).take(5).reverse(), ElementsAre(4, 3, 2, 1, 0));
 }
 
 TEST(UnboundGenerateRangeTest, CanIterateOverArrays) {

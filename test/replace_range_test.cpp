@@ -14,6 +14,12 @@ bool isValue2Or3(int v) {
   return v == 2 || v == 3;
 }
 
+template<typename val>
+auto eq(val v) {
+  return [v](const auto& old) {
+    return old == v;
+  };
+}
 }    // namespace
 
 class ReplaceRangeForRandomAccessTest : public Test {
@@ -26,9 +32,9 @@ TEST_F(ReplaceRangeForRandomAccessTest, ReplacedElementsUsingPredicate) {
 }
 
 TEST_F(ReplaceRangeForRandomAccessTest, ElementsReplacedUsingValueMatcher) {
-  ASSERT_THAT(iter(v).replace(4, 7), ElementsAre(7, 2, 3, 7, 5));
+  ASSERT_THAT(iter(v).replace(eq(4), 7), ElementsAre(7, 2, 3, 7, 5));
 }
 
 TEST_F(ReplaceRangeForRandomAccessTest, EmptyTest) {
-  ASSERT_THAT(iter(std::vector<int>{}).replace(0, 1), IsEmpty());
+  ASSERT_THAT(iter(std::vector<int>{}).replace(eq(0), 1), IsEmpty());
 }

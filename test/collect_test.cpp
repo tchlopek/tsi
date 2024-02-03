@@ -3,6 +3,7 @@
 #include <set>
 #include <vector>
 
+#include <cppiter/gen.hpp>
 #include <cppiter/iter.hpp>
 
 #include <gtest/gtest.h>

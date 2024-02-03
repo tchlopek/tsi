@@ -3,32 +3,49 @@
 #include "iterator/stride_iterator.hpp"
 #include "util/range_facade.hpp"
 #include "util/range_iterator.hpp"
+#include "util/range_traits.hpp"
 
 namespace cppiter::rng {
 
-template<typename R>
+template<typename range_t>
 class stride_range
-  : public util::range_facade<iter::stride_iterator<util::range_iterator_t<R>>> {
-  using RngIt = util::range_iterator_t<R>;
-  using StrideIt = iter::stride_iterator<RngIt>;
-  using Diff = iter::util::difference_t<RngIt>;
+  : public util::range_facade<stride_range<range_t>>
+  , public util::range_traits<
+      iter::stride_iterator<util::iterator_t<range_t>, stride_range<range_t>>,
+      iter::stride_iterator<
+        util::const_iterator_t<range_t>,
+        const stride_range<range_t>>> {
+  friend class util::range_accessor;
+
+  template<typename, typename, typename>
+  friend class iter::detail::stride_iterator_impl;
 
 public:
-  stride_range(RngIt begin, RngIt end, Diff n)
-    : stride_range{ begin, end, n, iter::util::category_t<RngIt>{} } {
+  stride_range(range_t&& range, std::ptrdiff_t n)
+    : m_range{ std::move(range) }
+    , m_step{ n } {
   }
 
 private:
-  template<typename C>
-  stride_range(RngIt begin, RngIt end, Diff n, C)
-    : util::range_facade<StrideIt>{ StrideIt{ begin, end, n },
-                                    StrideIt{ end, end, n } } {
+  auto make_begin() {
+    return typename stride_range::iterator{ m_range.begin(), this };
   }
 
-  stride_range(RngIt begin, RngIt end, Diff n, std::random_access_iterator_tag)
-    : util::range_facade<StrideIt>{ StrideIt{ begin, begin, n },
-                                    StrideIt{ begin, end, n } } {
+  auto make_end() {
+    return typename stride_range::iterator{ m_range.end(), this };
   }
+
+  auto make_const_begin() const {
+    return typename stride_range::const_iterator{ m_range.cbegin(), this };
+  }
+
+  auto make_const_end() const {
+    return typename stride_range::const_iterator{ m_range.cend(), this };
+  }
+
+private:
+  range_t m_range;
+  std::ptrdiff_t m_step;
 };
 
 }    // namespace cppiter::rng

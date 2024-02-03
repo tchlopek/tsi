@@ -1,66 +1,63 @@
 #pragma once
 
+#include <iterator>
+
 #include "util/iterator_facade.hpp"
+#include "util/iterator_traits.hpp"
 
 namespace cppiter::rng::iter {
 
-namespace detail {
-using namespace util;
+template<typename iter_t>
+struct dereference_iterator_traits : public std::iterator_traits<iter_t> {
+  using reference = decltype(*std::declval<util::reference_t<iter_t>>());
+  using value_type = std::remove_cv_t<std::remove_reference_t<reference>>;
+  using pointer = std::add_pointer_t<reference>;
+};
 
-template<typename I>
-struct dereference_iterator_traits
-  : iterator_traits_facade<
-      I,
-      category_t<I>,
-      std::remove_reference_t<decltype(*std::declval<value_t<I>>())>,
-      decltype(*std::declval<value_t<I>>()),
-      std::add_pointer_t<
-        std::remove_reference_t<decltype(*std::declval<value_t<I>>())>>> {};
-
-}    // namespace detail
-
-template<typename I>
+template<typename iter_t>
 class dereference_iterator
   : public util::iterator_facade<
-      dereference_iterator<I>,
-      detail::dereference_iterator_traits<I>> {
+      dereference_iterator<iter_t>,
+      dereference_iterator_traits<iter_t>> {
   friend class util::iterator_accessor;
 
 public:
-  explicit dereference_iterator(I iter)
-    : iter{ iter } {
+  dereference_iterator() = default;
+  explicit dereference_iterator(const iter_t& it)
+    : m_it{ it } {
   }
 
 private:
   bool equal(const dereference_iterator& other) const {
-    return iter == other.iter;
+    return m_it == other.m_it;
   }
 
   void increment() {
-    ++iter;
+    ++m_it;
   }
 
   void decrement() {
-    --iter;
+    --m_it;
   }
 
-  util::reference_t<detail::dereference_iterator_traits<I>> dereference() const {
-    return **iter;
+  decltype(auto) dereference() const {
+    return **m_it;
   }
 
-  void advance(util::difference_t<I> n) {
-    iter += n;
+  template<typename diff_t>
+  void advance(diff_t n) {
+    m_it += n;
   }
 
-  util::difference_t<I> distance_to(const dereference_iterator& other) const {
-    return iter - other.iter;
+  auto distance_to(const dereference_iterator& other) const {
+    return m_it - other.m_it;
   }
 
   bool less(const dereference_iterator& other) const {
-    return iter < other.iter;
+    return m_it < other.m_it;
   }
 
-  I iter;
+  iter_t m_it;
 };
 
 }    // namespace cppiter::rng::iter

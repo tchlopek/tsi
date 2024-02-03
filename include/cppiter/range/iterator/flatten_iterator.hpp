@@ -2,119 +2,95 @@
 
 #include <cppiter/range/util/range_iterator.hpp>
 
+#include "util/category_types.hpp"
 #include "util/iterator_facade.hpp"
-#include "util/min_iterator_category.hpp"
+#include "util/min_category.hpp"
 
 namespace cppiter::rng::iter {
 
-namespace detail {
-using namespace util;
-
-template<typename I>
-using inner_iterator_t = rng::util::range_iterator_t<value_t<I>>;
-
-template<typename Iter>
-struct flatten_iterator_traits
-  : iterator_traits_facade<
-      inner_iterator_t<Iter>,
-      min_iterator_category_t<
-        category_t<Iter>,
-        min_iterator_category_t<
-          category_t<inner_iterator_t<Iter>>,
-          std::bidirectional_iterator_tag>>> {};
-
-template<typename Iter, typename C>
-class flatten_iterator_impl;
-
-template<typename Iter>
-class flatten_iterator_impl<Iter, std::forward_iterator_tag> {
-public:
-  flatten_iterator_impl(Iter iter, Iter end, inner_iterator_t<Iter> inner)
-    : baseIter{ iter }
-    , baseEnd{ end }
-    , innerIter{ inner } {
-    while (baseIter != baseEnd) {
-      if (!baseIter->empty()) {
-        innerIter = baseIter->begin();
-        break;
-      }
-      ++baseIter;
-    }
-  }
-
-  bool equal(const flatten_iterator_impl& other) const {
-    return innerIter == other.innerIter;
-  }
-
-  decltype(auto) dereference() const {
-    return *innerIter;
-  }
-
-  void increment() {
-    ++innerIter;
-    while (innerIter == baseIter->end()) {
-      if (++baseIter == baseEnd) {
-        innerIter = {};
-        break;
-      }
-      innerIter = baseIter->begin();
-    }
-  }
-
-  Iter baseIter;
-  Iter baseEnd;
-  inner_iterator_t<Iter> innerIter;
-};
-
-template<typename Iter>
-class flatten_iterator_impl<Iter, std::bidirectional_iterator_tag>
-  : public flatten_iterator_impl<Iter, std::forward_iterator_tag> {
-  using Base = flatten_iterator_impl<Iter, std::forward_iterator_tag>;
-
-public:
-  flatten_iterator_impl(
-    Iter begin,
-    Iter end,
-    Iter iter,
-    inner_iterator_t<Iter> inner
-  )
-    : Base{ iter, end, inner }
-    , baseBegin{ begin } {
-  }
-
-  void decrement() {
-    if (Base::baseIter == Base::baseEnd) {
-      --Base::baseIter;
-      Base::innerIter = Base::baseIter->end();
-    }
-    while (Base::baseIter != baseBegin
-           && Base::innerIter == Base::baseIter->begin()) {
-      --Base::baseIter;
-      Base::innerIter = Base::baseIter->end();
-    }
-    --Base::innerIter;
-  }
-
-  Iter baseBegin;
-};
-
-}    // namespace detail
+namespace util {
+template<typename iter_t>
+using inner_iterator_t = rng::util::iterator_t<reference_t<iter_t>>;
+}
 
 template<typename iter_t>
+struct flatten_iterator_traits
+  : public std::iterator_traits<util::inner_iterator_t<iter_t>> {
+  using iterator_category = util::min_category_t<
+    util::category_t<iter_t>,
+    util::
+      min_category_t<util::category_t<util::inner_iterator_t<iter_t>>, util::bi>>;
+};
+
+template<typename iter_t, typename range_t>
 class flatten_iterator
   : public util::iterator_facade<
-      flatten_iterator<iter_t>,
-      detail::flatten_iterator_traits<iter_t>>
-  , private detail::flatten_iterator_impl<
-      iter_t,
-      util::category_t<detail::flatten_iterator_traits<iter_t>>> {
-  using impl_t = detail::flatten_iterator_impl<
-    iter_t,
-    util::category_t<detail::flatten_iterator_traits<iter_t>>>;
+      flatten_iterator<iter_t, range_t>,
+      flatten_iterator_traits<iter_t>> {
   friend class util::iterator_accessor;
 
 public:
-  using impl_t::flatten_iterator_impl;
+  flatten_iterator() = default;
+  flatten_iterator(
+    const iter_t& base,
+    const util::inner_iterator_t<iter_t>& inner,
+    range_t* range
+  )
+    : m_base{ base }
+    , m_inner{ inner }
+    , m_range{ range } {
+    while (m_base != base_end()) {
+      if (!m_base->empty()) {
+        m_inner = m_base->begin();
+        break;
+      }
+      ++m_base;
+    }
+  }
+
+private:
+  bool equal(const flatten_iterator& other) const {
+    return m_inner == other.m_inner;
+  }
+
+  decltype(auto) dereference() const {
+    return *m_inner;
+  }
+
+  void increment() {
+    ++m_inner;
+    while (m_inner == m_base->end()) {
+      if (++m_base == base_end()) {
+        m_inner = {};
+        break;
+      }
+      m_inner = m_base->begin();
+    }
+  }
+
+  void decrement() {
+    if (m_base == base_end()) {
+      --m_base;
+      m_inner = m_base->end();
+    }
+    while (m_base != base_begin() && m_inner == m_base->begin()) {
+      --m_base;
+      m_inner = m_base->end();
+    }
+    --m_inner;
+  }
+
+  auto base_begin() const {
+    return m_range->m_range.begin();
+  }
+
+  auto base_end() const {
+    return m_range->m_range.end();
+  }
+
+  iter_t m_base;
+  util::inner_iterator_t<iter_t> m_inner;
+  range_t* m_range = nullptr;
 };
 
 }    // namespace cppiter::rng::iter

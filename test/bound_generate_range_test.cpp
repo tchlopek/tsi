@@ -1,7 +1,7 @@
 #include <functional>
 #include <vector>
 
-#include <cppiter/iter.hpp>
+#include <cppiter/range.hpp>
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
