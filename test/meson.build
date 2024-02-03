@@ -21,6 +21,7 @@ src_test = [
     'flatten_range_test.cpp',
     'fold_test.cpp',
     'map_range_test.cpp',
+    'reduce_test.cpp',
     'replace_range_test.cpp',
     'reverse_range_test.cpp',
     'skip_range_test.cpp',

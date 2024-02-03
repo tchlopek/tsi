@@ -1,6 +1,7 @@
 #pragma once
 
 #include <numeric>
+#include <optional>
 
 #include "util/range_facade.hpp"
 #include "util/range_iterator.hpp"
@@ -92,6 +93,21 @@ public:
       std::forward<val_t>(init),
       std::forward<binop_t>(binop)
     );
+  }
+
+  template<typename binop_t>
+  auto reduce(binop_t&& binop) {
+    std::optional<typename range_t::value_type> res;
+    if (!m_range.empty()) {
+      const auto b = m_range.begin();
+      res = std::accumulate(
+        std::next(b),
+        m_range.end(),
+        *b,
+        std::forward<binop_t>(binop)
+      );
+    }
+    return res;
   }
 
   template<typename pred_t, typename value_t>
