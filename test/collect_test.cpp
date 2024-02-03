@@ -3,14 +3,14 @@
 #include <set>
 #include <vector>
 
-#include <cppiter/gen.hpp>
-#include <cppiter/iter.hpp>
+#include <tsi/gen.hpp>
+#include <tsi/iter.hpp>
 
 #include <gtest/gtest.h>
 
 using namespace testing;
-using cppiter::gen;
-using cppiter::iter;
+using tsi::gen;
+using tsi::iter;
 
 TEST(CollectTest, ElementsCanBeCollectedIntoSomeOtherContainerType) {
   std::list<int> exp{ 48, 49, 50 };

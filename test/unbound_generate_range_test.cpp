@@ -1,12 +1,12 @@
 #include <vector>
 
-#include <cppiter/gen.hpp>
+#include <tsi/gen.hpp>
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
 using namespace testing;
-using cppiter::gen;
+using tsi::gen;
 
 TEST(UnboundGenerateRangeTest, IteratorsAreNeverEqual) {
   auto g = gen(0);

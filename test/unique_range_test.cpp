@@ -1,12 +1,12 @@
 #include <vector>
 
-#include <cppiter/iter.hpp>
+#include <tsi/iter.hpp>
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
 using namespace testing;
-using cppiter::iter;
+using tsi::iter;
 
 class UniqueRangeForRandomAccessTest : public Test {
 public:

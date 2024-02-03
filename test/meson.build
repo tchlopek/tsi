@@ -8,7 +8,7 @@ ut_deps = [
     gtest.dependency('gtest_main'),
     gtest.dependency('gmock'),
     gtest.dependency('gmock_main'),
-    cppiter_dep
+    tsi_dep
 ]
 
 src_test = [

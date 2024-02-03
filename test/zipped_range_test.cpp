@@ -1,12 +1,12 @@
 #include <vector>
 
-#include <cppiter/zip.hpp>
+#include <tsi/zip.hpp>
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
 using namespace testing;
-using cppiter::zip;
+using tsi::zip;
 
 template<typename... ts>
 auto Tuple(const ts&... val) {

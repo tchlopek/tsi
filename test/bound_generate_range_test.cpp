@@ -1,13 +1,13 @@
 #include <functional>
 #include <vector>
 
-#include <cppiter/range.hpp>
+#include <tsi/range.hpp>
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
 using namespace testing;
-using cppiter::range;
+using tsi::range;
 
 TEST(BoundGenerateRangeTest, IsEmptyForTheSameBeginAndEndValues) {
   EXPECT_THAT(range(0, 0), IsEmpty());
@@ -43,7 +43,7 @@ TEST(BoundGenerateRangeTest, CanIterateOverArraysWithDeref) {
   );
 }
 
-using I = cppiter::rng::iter::bound_generate_iterator<int>;
+using I = tsi::rng::iter::bound_generate_iterator<int>;
 
 struct BoundGenerateIteratorsRelationalOperatorTest
   : public TestWithParam<std::tuple<std::function<bool(I, I)>, int, int, bool>> {
