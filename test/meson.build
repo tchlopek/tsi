@@ -27,7 +27,8 @@ src_test = [
     'step_range_test.cpp',
     'take_range_test.cpp',
     'unbound_generate_range_test.cpp',
-    'unique_range_test.cpp'
+    'unique_range_test.cpp',
+    'zipped_range_test.cpp'
 ]
 
 ut_bin = executable(
