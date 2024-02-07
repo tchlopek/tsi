@@ -1,5 +1,6 @@
 #pragma once
 
+#include <algorithm>
 #include <numeric>
 #include <optional>
 
@@ -40,6 +41,24 @@ public:
 
   explicit range_factory(range_t&& range)
     : m_range{ std::move(range) } {
+  }
+
+  template<typename pred_t>
+  bool any(pred_t&& pred) {
+    return std::any_of(
+      m_range.begin(),
+      m_range.end(),
+      std::forward<pred_t>(pred)
+    );
+  }
+
+  template<typename pred_t>
+  bool all(pred_t&& pred) {
+    return std::all_of(
+      m_range.begin(),
+      m_range.end(),
+      std::forward<pred_t>(pred)
+    );
   }
 
   template<typename collect_t>
