@@ -1,7 +1,55 @@
 cmake_minimum_required(VERSION 3.13)
-project(tsi CXX)
+project(TSI
+  VERSION 1.0.0
+  DESCRIPTION "TSI"
+  LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 
+include(CMakePackageConfigHelpers)
+include(GNUInstallDirs)
+
+set(TSI_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
+
 add_library(tsi INTERFACE)
-target_include_directories(tsi INTERFACE include)
+target_include_directories(tsi
+  INTERFACE
+    $<BUILD_INTERFACE:${TSI_INCLUDE_DIR}>
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
+
+configure_package_config_file(
+  cmake/${PROJECT_NAME}Config.cmake.in
+  ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
+  PATH_VARS CMAKE_INSTALL_INCLUDEDIR
+  INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
+)
+
+write_basic_package_version_file(
+  ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
+  VERSION ${PROJECT_VERSION}
+  COMPATIBILITY SameMajorVersion
+)
+
+install(
+  FILES
+    ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
+  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
+)
+
+install(TARGETS tsi EXPORT ${PROJECT_NAME})
+install(DIRECTORY
+  ${TSI_INCLUDE_DIR}/tsi
+  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+
+install(EXPORT ${PROJECT_NAME}
+  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
+  FILE ${PROJECT_NAME}Targets.cmake
+  NAMESPACE ${PROJECT_NAME}::)
+
+export(
+  EXPORT ${PROJECT_NAME}
+  NAMESPACE ${PROJECT_NAME}::
+  FILE ${PROJECT_NAME}Targets.cmake
+)
+

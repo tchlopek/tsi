@@ -1,0 +1,8 @@
+@PACKAGE_INIT@
+
+include("${CMAKE_CURRENT_LIST_DIR}/TSITargets.cmake")
+
+set_and_check(TSI "@PACKAGE_CMAKE_INSTALL_INCLUDEDIR@")
+set(TSI_LIBRARIES TSI::tsi)
+check_required_components(TSI)
+
