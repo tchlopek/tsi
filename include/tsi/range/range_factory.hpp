@@ -85,9 +85,18 @@ public:
 
   template<typename map_fn>
   auto map(map_fn&& fn) {
-    return range_factory<map_range<range_t, map_fn>>{ std::in_place,
-                                                      std::move(m_range),
-                                                      std::forward<map_fn>(fn) };
+    if constexpr (std::is_pointer_v<std::decay_t<map_fn>>) {
+      return range_factory<map_range<range_t, std::decay_t<map_fn>>>{
+        std::in_place,
+        std::move(m_range),
+        fn
+      };
+    } else {
+      return range_factory<map_range<range_t, map_fn>>{ std::in_place,
+                                                        std::move(m_range),
+                                                        std::forward<map_fn>(fn
+                                                        ) };
+    }
   }
 
   template<typename pred_t>
